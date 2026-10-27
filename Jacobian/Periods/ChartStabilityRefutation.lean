@@ -117,4 +117,13 @@ theorem not_chartStable_of_compactSpace
   -- But `ℂ` is not compact.
   exact NoncompactSpace.noncompact_univ (X := ℂ) (huniv ▸ htgt)
 
+/--
+Under chart stability, the *indexed* chart `achart` also agrees at nearby
+points. This is the form the tangent-bundle `coordChange` arguments want.
+-/
+theorem ChartStable.achart_eq_of_mem_source (hs : ChartStable H M)
+    {p q : M} (hq : q ∈ (chartAt H p).source) :
+    achart H q = achart H p :=
+  Subtype.ext (hs p q hq)
+
 end JacobianChallenge.Periods
