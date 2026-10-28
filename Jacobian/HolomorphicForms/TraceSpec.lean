@@ -8,6 +8,7 @@ import Jacobian.HolomorphicForms.ToFunApplyVec
 import Jacobian.HolomorphicForms.PullbackBundled
 import Jacobian.HolomorphicForms.TangentSpaceComplexBridge
 import Jacobian.TraceDegree.TraceDefinition
+import Jacobian.HolomorphicForms.TraceLocal
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Jacobian.Blueprint.Sec02.BranchedDegreeFromHolomorphic
@@ -2593,16 +2594,18 @@ omit [CompactSpace Y] in
 branched-cover datum): the fibre-sum trace `traceAtRegularValue hbc η`, defined on
 the regular values of `f`, is the restriction of a global holomorphic 1-form on `Y`.
 
-GAP (`sorry`), a true classical statement: the trace is holomorphic on the regular
-locus and locally bounded near the finitely many branch values, so it extends by
-Riemann's removable-singularity theorem applied in a chart at each branch value.
+Proof (`HolomorphicForms/TraceLocal.lean`): in the chart at any `y₀`, the trace is the
+derivative of `Tr H`, the fibre sum of local primitives of `η`; `Tr H` is holomorphic off
+`y₀` (inverse branches at unramified points) and continuous at `y₀`, hence holomorphic
+by Riemann's removable-singularity theorem. `traceHolomorphicForm` is the resulting form.
+For constant `f` no value is regular (the compatible index would be `0`), and `τ = 0`.
 
 History: the previous proof read cotangent covectors through the eval-at-`1`
 global-frame identification (`bundleSection_contMDiff_of_pointwiseHolomorphic`,
 `regularLocus_dite_trace_holomorphicAt`, …), which needs the refuted
 `StableChartAt`; those helpers are retired to
-`Attic/StableChartRetired/TraceSpec.lean`. An honest proof must read the trace
-through `ContinuousLinearMap.inCoordinates` at each point.
+`Attic/StableChartRetired/TraceSpec.lean`. The proof now reads the trace through the
+cotangent trivialization at each point.
 -/
 private theorem traceForm_extension_per_BCD
     (f : X → Y) (hf : ContMDiff 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (⊤ : WithTop ℕ∞) f)
@@ -2612,8 +2615,34 @@ private theorem traceForm_extension_per_BCD
     ∃ τ : HolomorphicOneForm ℂ Y,
       ∀ (y : Y) (hy : isRegularValue hbc y),
         τ.toFun y = traceAtRegularValue hbc (fun x => η.toFun x) y hy := by
-  -- GAP: removable-singularity extension of the trace; see docstring.
-  sorry
+  classical
+  by_cases hnc : ∃ y₀ : Y, ∀ x, f x = y₀
+  · -- constant `f`: a regular value has empty fibre
+    obtain ⟨c, hc⟩ := hnc
+    refine ⟨0, fun y hy => ?_⟩
+    have hnot : ∀ x, f x ≠ y := by
+      intro x hx
+      have h1 := hy x hx
+      rw [hcompat x (IsHolomorphicAt.of_contMDiff hf x)] at h1
+      have hF : (fun t => chartLocalAt f x t - chartLocalAt f x (chartAt ℂ x x)) =
+          fun _ => (0 : ℂ) := by
+        funext t; simp [chartLocalAt, Function.comp_def, hc]
+      have h0 : mapAnalyticOrderAt f x = 0 := by
+        unfold mapAnalyticOrderAt analyticOrderNatAt
+        rw [hF, analyticOrderAt_eq_top.mpr (Filter.Eventually.of_forall fun _ => rfl)]
+        rfl
+      omega
+    symm
+    unfold traceAtRegularValue
+    refine Finset.sum_eq_zero fun x _ => ?_
+    have h : x.1 ∈ f ⁻¹' {y} := (Set.Finite.mem_toFinset _).mp x.2
+    exact absurd h (hnot x.1)
+  · refine ⟨traceHolomorphicForm hf hbc.finite_fiber hnc η, fun y hy => ?_⟩
+    have hu : Unram f y := fun x hx => by
+      rw [← hcompat x (IsHolomorphicAt.of_contMDiff hf x)]; exact hy x hx
+    rw [traceHolomorphicForm_apply_of_unram hf hbc.finite_fiber hnc η hu]
+    unfold fiberTrace traceAtRegularValue fiberFin
+    exact (Finset.sum_attach _ _).symm
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
   [T2Space Y] [CompactSpace Y] [ConnectedSpace Y] in
@@ -2663,7 +2692,7 @@ theorem traceForm_extension_at_branch_of_canonical_BCD
 
 omit [CompactSpace Y] in
 /--
-**Narrow classical leaf: trace-form holomorphic extension.** For a
+**Trace-form holomorphic extension.** For a
 nonconstant smooth map `f : X → Y` between compact Riemann surfaces
 and a nonzero holomorphic 1-form `η` on `X`, there exists a global
 holomorphic 1-form `τ` on `Y` whose pointwise values agree with the
@@ -2706,8 +2735,8 @@ theorem traceForm_global_extension
 /--
 **Narrow trace construction provider (nonconstant nonzero case).**
 
-The remaining classical content lives entirely inside the strictly
-smaller leaf `traceForm_global_extension`.
+The analytic content is `traceForm_global_extension` (proved, via
+`HolomorphicForms/TraceLocal.lean`).
 -/
 noncomputable def traceFormsConstructionData_nonconstant_nonzero_provider
     (f : X → Y) (hf : ContMDiff 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (⊤ : WithTop ℕ∞) f)
@@ -2932,5 +2961,33 @@ noncomputable def traceFormsBundledLM
         rfl
       rw [h_eq]
       exact traceAtRegularValue_smul hbc k (fun x => η.toFun x) y hy
+
+/-- The bundled trace map is the trace form built from local primitives
+(`HolomorphicForms/TraceLocal.lean`), for any choice of fibre-finiteness witness. -/
+theorem traceFormsBundled_eq_traceHolomorphicForm
+    (f : X → Y) (hf : ContMDiff 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (⊤ : WithTop ℕ∞) f)
+    (hfin : ∀ y : Y, (f ⁻¹' {y}).Finite) (hnc : ¬ ∃ y₀ : Y, ∀ x, f x = y₀)
+    (η : HolomorphicOneForm ℂ X) :
+    traceFormsBundled f hf η = traceHolomorphicForm hf hfin hnc η := by
+  classical
+  set hkfold := hasLocalKfoldRamification_of_contMDiff hf
+  set hw := hasWeightedFiberConservation_of_contMDiff hf
+  set hHol := isHolomorphic_of_contMDiff hf hkfold
+  set hbc := JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic
+    hHol hw hnc
+  have hcompat :=
+    JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic_compatible
+      hHol hw hnc
+  apply holomorphicOneForm_ext_on (regularLocus_dense hbc)
+  intro y hy
+  have hreg := (traceFormsConstructionData_provider f hf η).regular_spec hbc hcompat y hy
+  change (traceFormsConstructionData_provider f hf η).traceForm.toFun y = _
+  rw [hreg]
+  have hu : Unram f y := fun x hx => by
+    rw [← hcompat x (IsHolomorphicAt.of_contMDiff hf x)]; exact hy x hx
+  rw [traceHolomorphicForm_apply_of_unram hf hfin hnc η hu]
+  unfold fiberTrace traceAtRegularValue fiberFin
+  symm
+  exact (Finset.sum_attach _ _).symm
 
 end JacobianChallenge.HolomorphicForms

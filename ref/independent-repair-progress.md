@@ -338,6 +338,86 @@ could retire the whole Type-0 mirror layer and the polygon tower to `Attic/`.
 
 ---
 
+## 2026-10-28 — every labelled gap on the public path closed
+
+Four commits (`c1bbbf6`, `268fb9f`, `eac1735`, and this one). After them the only `sorry`s
+reachable from the public API are the five named classical inputs C1–C5.
+
+### What changed
+
+1. **Chart chains** (`Periods/ChartChain.lean`, new, axiom-clean). The chart reading
+   `chartForm p ω` of a holomorphic 1-form is holomorphic on the chart target, and on any
+   ball inside it the form is exact (Mathlib's Poincaré lemma; a one-variable holomorphic
+   form is closed). A chart chain is a list of segments, each inside a ball in one chart,
+   glued end to end; integrals are additive and linear in the form; a connected surface is
+   chain-connected (`exists_chain`). The period lattice and the Abel–Jacobi integral now run
+   on chart chains, so the `C¹`-path gap **`exists_isC1Path` is gone** (not needed).
+2. **Abel–Jacobi holomorphy** — `analyticOfCurve_contMDiffU` **proved**: near `Q₀`, the map
+   is `[v₀ + G(chart Q)]` with `G` the vector of local primitives.
+3. **Pushforward preserves periods** — `pushforwardTraceLift_preserves_latticeU` **proved**
+   (`Periods/ChainPushforward.lean`, new): chain rule in charts for `f^*`, local change of
+   variables on balls, Lebesgue-number subdivision; every chain `l` of `X` has an image chain
+   `l'` of `Y` with `∫_{l'} η = ∫_l f^*η` for all `η`.
+4. **Removable singularities on a surface** — `meromorphic_no_poles_holomorphic_representative`
+   **proved** (the normal-form value is the punctured limit, hence chart-independent). The
+   genus-zero route now uses classical input C5 directly; gap 19 is off the public path.
+5. **Trace extends across branch values** — `traceForm_extension_per_BCD` **proved**
+   (`HolomorphicForms/TraceLocal.lean`, new). Near any `y₀`, in the chart at `y₀`, the
+   trace is the derivative of `Tr H(w) = Σ_{x' ∈ f⁻¹(w)} m(x') H_x(x')`, the multiplicity-
+   weighted fibre sum of local primitives `H_x` on disjoint coordinate balls around the
+   fibre points of `y₀`. `Tr H` is holomorphic off `y₀` (inverse branches at unramified
+   points) and continuous at `y₀` (the fibre collapses onto the fibre of `y₀`), so holomorphic
+   on the whole ball by Riemann's removable-singularity theorem. The global form
+   `traceHolomorphicForm` is the fibre sum at unramified values and `d(Tr H)` at branch
+   values; its section is read through the cotangent trivialization at each point (no
+   global frame, no chart stability). `traceFormsBundled_eq_traceHolomorphicForm` ties it
+   to the existing linear trace map. Constant `f`: no value is regular, `τ = 0`.
+6. **Pullback preserves periods** — `traceDualPullbackLift_preserves_latticeU` **proved**
+   (`TraceDegree/TracePeriods.lean`, new), *without lifting curves*. Fix `x₀ ∈ X` and chosen
+   chains from `x₀`; let `Φ(y) = Σ_{f x' = y} m(x') · (∫_{x₀}^{x'} ω_j)_j`. For every chain
+   `l` from `P` to `Q` in `Y`, `(∫_l Tr ω_j)_j − (Φ(Q) − Φ(P))` is a period of `X`:
+   locally `∫ Tr ω` is a difference of `Tr H`, `H_x(x') ≡ ∫_{x₀}^{x'} − ∫_{x₀}^{x}` mod
+   periods, and the fibre points in each ball number `m(x)` with multiplicity at every
+   point of the ball (`sum_order_S`), so `Tr H − Φ` is constant mod periods. A loop gives a
+   period.
+
+### Builds and counts
+
+`lake build Jacobian`: **green** (4354 jobs). `lake build Jacobian.Solution`: green.
+
+| metric | after (e) | now |
+|---|---|---|
+| engine sorry declarations (whole `Jacobian`, excl. `Challenge.lean`) | 15 | **9** |
+| reachable from the public API (decl-level graph, private/aux included) | 11 | **5** (= C1–C5) |
+| custom axioms | 0 | 0 |
+
+The 9: C1–C5 (reachable), gap 19 `complexSimplePolePrincipalPart_of_biholomorph_onePoint`
+and gaps 11–13 in `Periods/Hurewicz.lean` (true, **unreachable**). The new files are
+axiom-clean (`#print axioms traceHolomorphicForm`, `traceDualPullbackLift_genuinePeriods`,
+`traceFormsBundled_eq_traceHolomorphicForm` → `[propext, Classical.choice, Quot.sound]`).
+
+### Public API: which classical inputs each declaration rests on
+
+| declaration | inputs |
+|---|---|
+| `genus`, `ContMDiff.degree` | none (axiom-clean) |
+| `Jacobian` and its instances, `ofCurve`, `pushforward`, `pullback`, `ofCurve_self`, `ofCurve_contMDiff`, `pushforward_contMDiff`, `pullback_contMDiff`, `pushforward_id_apply`, `pushforward_comp_apply`, `pullback_id_apply`, `pullback_comp_apply`, `pushforward_pullback` | C1 (finite-dimensionality), C2 (lattice discreteness/fullness) |
+| `ofCurve_inj` | C1, C2, C3 (Abel) |
+| `genus_eq_zero_iff_homeo` | C1, C4, C5 (genus-0 uniformization) |
+
+### Comparator
+
+* `comparator/jacobian-smoketest.json`: **pass** ("Lean default kernel accepts the solution.
+  Your solution is okay!").
+* `comparator/jacobian.json` (strict): **fail**, `Illegal axiom detected: 'sorryAx'` — from
+  C1–C5 only.
+
+### Plain-English blocks
+
+None touched in this round (no `tex/` edits; the closed gaps had no `\lean{}` pointers).
+
+---
+
 ## Commit hashes
 
 | time (EDT) | hash | summary |
@@ -348,3 +428,8 @@ could retire the whole Type-0 mirror layer and the polygon tower to `Attic/`.
 | 2026-10-27 | `839601f` | goals (b), (c): genuine period lattice and Abel–Jacobi map |
 | 2026-10-27 | `3492fa3` | goal (d): false gaps retired, gap 7 proved |
 | 2026-10-27 | `cec6833` | goal (e): degree fallback lemma; comparator pinned; `genus` clean |
+| 2026-10-27 | `219e033` | ledger the remaining unreachable placeholders |
+| 2026-10-28 | `c1bbbf6` | chart chains; Abel–Jacobi holomorphy proved |
+| 2026-10-28 | `268fb9f` | pushforward preserves the period lattice |
+| 2026-10-28 | `eac1735` | removable singularities on surfaces; genus-zero short-circuit |
+| 2026-10-28 | (this commit) | trace extends across branch values; pullback preserves the period lattice |
