@@ -1,4 +1,5 @@
 import Jacobian.TraceDegree.PushforwardTraceLiftU
+import Jacobian.Periods.ChainPushforward
 import Jacobian.AbelJacobi.AnalyticOfCurveU
 import Jacobian.ComplexTorus.OfClm
 
@@ -47,27 +48,73 @@ variable {Y : Type v} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 
+/-- The ambient pushforward (transpose of `f^*` in basis coordinates) sends the period vector
+of a chain `l` to the period vector of any chain `l'` with `∫_{l'} η = ∫_l f^*η` for all `η`. -/
+theorem pushforwardTraceLiftCLMU_periodVector
+    (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f)
+    (l : List (ChartSegment X)) (l' : List (ChartSegment Y))
+    (hl : ∀ η : HolomorphicOneForm ℂ Y,
+      chainIntegral η l' = chainIntegral (pullbackFormsBundled f hf η) l) :
+    pushforwardTraceLiftCLMU f hf (periodVector X l) = periodVector Y l' := by
+  funext j
+  simp only [pushforwardTraceLiftCLMU, LinearMap.coe_toContinuousLinearMap',
+    pushforwardTraceLiftLinearMapU, Matrix.toLin'_apply, Matrix.mulVec, dotProduct,
+    Matrix.transpose_apply, LinearMap.toMatrix'_apply]
+  have hcoord : ∀ i, holomorphicTraceCoordU f hf (Pi.single j 1) i =
+      (holomorphicOneFormFinBasis ℂ X).repr
+        (pullbackFormsBundled f hf (holomorphicOneFormFinBasis ℂ Y j)) i := by
+    intro i
+    have h1 : (holomorphicOneFormFinBasis ℂ Y).equivFun.symm (Pi.single j 1) =
+        holomorphicOneFormFinBasis ℂ Y j := by
+      rw [Module.Basis.equivFun_symm_apply]
+      simp [Pi.single_apply]
+    show (holomorphicOneFormFinBasis ℂ X).equivFun
+      (pullbackFormsBundledLM X Y f hf
+        ((holomorphicOneFormFinBasis ℂ Y).equivFun.symm (Pi.single j 1))) i = _
+    rw [h1, Module.Basis.equivFun_apply]
+    rfl
+  simp_rw [hcoord]
+  rw [show periodVector Y l' j = chainIntegral (holomorphicOneFormFinBasis ℂ Y j) l' from rfl,
+    hl]
+  conv_rhs => rw [← (holomorphicOneFormFinBasis ℂ X).sum_repr
+    (pullbackFormsBundled f hf (holomorphicOneFormFinBasis ℂ Y j))]
+  rw [← chainIntegralLM_apply, map_sum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [map_smul, chainIntegralLM_apply, smul_eq_mul]
+  rfl
+
 /--
 **The pushforward maps periods to periods.** The ambient pushforward
 `pushforwardTraceLiftCLMU f hf` — the transpose of the pullback of forms `f^*` in
 basis coordinates — sends the period lattice of `X` into that of `Y`.
 
-GAP (`sorry`), true: a generator of `Λ_X` is `periodVector γ₁ - periodVector γ₂` for
-`C¹` paths with common endpoints; its image is `periodVector (f ∘ γ₁) - periodVector (f ∘ γ₂)`
-because `∫_{f∘γ} ω = ∫_γ f^*ω` (chain rule in charts) and `∫_γ` is linear in the form;
-and `f ∘ γᵢ` are `C¹` paths in `Y` with common endpoints. Needs: linearity of
-`pathIntegralViaCover` in `ω` for `C¹` paths, and the change-of-variables lemma.
+Proof: a generator of `Λ_X` is `periodVector l₁ - periodVector l₂` for chart chains with
+common endpoints `P, Q`; pushing both chains forward (`Periods.exists_pushforward_chain`,
+the change of variables `∫_{f∘γ} η = ∫_γ f^*η`) gives chains from `f P` to `f Q` whose
+period vectors are the images, so the image is a generator of `Λ_Y`.
 
-History: previously proved by the "`⊥` shortcut" — the old period subgroup was `⊥`
-because the period pairing was the zero placeholder. With the genuine lattice that
-shortcut is gone.
+History: previously "proved" by a `⊥` shortcut (the old period subgroup was `⊥` because the
+period pairing was the zero placeholder), then a labelled gap.
 -/
 theorem pushforwardTraceLift_preserves_latticeU
     (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
     ∀ v ∈ (periodFullComplexLatticeU X).subgroup,
       pushforwardTraceLiftCLMU f hf v ∈ (periodFullComplexLatticeU Y).subgroup := by
-  -- GAP: see docstring.
-  sorry
+  intro v hv
+  rw [periodFullComplexLatticeU_subgroup] at hv ⊢
+  have hle : genuinePeriodSubgroup X ≤ (genuinePeriodSubgroup Y).comap
+      (pushforwardTraceLiftCLMU f hf).toLinearMap.toAddMonoidHom := by
+    refine AddSubgroup.closure_le _ |>.mpr ?_
+    rintro _ ⟨P, Q, l₁, l₂, h₁, h₂, rfl⟩
+    obtain ⟨l₁', hl₁', hint₁⟩ := exists_pushforward_chain hf h₁
+    obtain ⟨l₂', hl₂', hint₂⟩ := exists_pushforward_chain hf h₂
+    rw [SetLike.mem_coe, AddSubgroup.mem_comap]
+    show pushforwardTraceLiftCLMU f hf (periodVector X l₁ - periodVector X l₂) ∈
+      genuinePeriodSubgroup Y
+    rw [map_sub, pushforwardTraceLiftCLMU_periodVector f hf l₁ l₁' hint₁,
+      pushforwardTraceLiftCLMU_periodVector f hf l₂ l₂' hint₂]
+    exact periodVector_sub_mem hl₁' hl₂'
+  exact hle hv
 
 /--
 The universe-`u` analytic pushforward induced by a holomorphic map of compact
