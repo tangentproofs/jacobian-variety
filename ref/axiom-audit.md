@@ -1,6 +1,6 @@
 # Whole-Project Axiom Audit
 
-## §0. Current state — independent repair (2026-10-27, branch `independent-repair`)
+## §0. Current state — independent repair (2026-10-28, branch `independent-repair`)
 
 **Supersedes everything below for the current tree;** §1–§7 are the 2026-06-01 record.
 
@@ -11,9 +11,9 @@
   hidden binder stands in for any of them).
 * Comparator (official, pinned at `leanprover/comparator@3afea23`, the last revision on
   `v4.31.0-rc1`): **smoketest passes** ("Your solution is okay!"); **strict fails** with
-  `Illegal axiom detected: 'sorryAx'`, as expected while the inputs/gaps below are open.
+  `Illegal axiom detected: 'sorryAx'`, from the classical inputs C1–C5 only.
 * `#print axioms` on the public API: `genus` and `ContMDiff.degree` are **axiom-clean**; every
-  other public declaration reaches `sorryAx` through the inputs/gaps below.
+  other public declaration reaches `sorryAx` only through the classical inputs C1–C5.
 * `StableChartAt` is deleted. The former axiom `localPullbackAt_holomorphic` (§1 below) is
   retired to `Attic/StableChartRetired/` with the rest of the eval-at-`1` chain.
 
@@ -35,16 +35,20 @@ says "CLASSICAL INPUT" and gives the reference.
 
 ### §0.2 Labelled gaps (true statements, proof not yet formalized)
 
-| declaration | file | why it is open |
+All labelled gaps that were on the public path are now **proved** (2026-10-28):
+`analyticOfCurve_contMDiffU`, `pushforwardTraceLift_preserves_latticeU`,
+`traceDualPullbackLift_preserves_latticeU`, `traceForm_extension_per_BCD`,
+`meromorphic_no_poles_holomorphic_representative`; `exists_isC1Path` is gone (chart chains
+replaced `C¹` paths). The remaining gaps are **unreachable** from the public API:
+
+| declaration | file | status |
 |---|---|---|
-| `analyticOfCurve_contMDiffU` | `AbelJacobi/AnalyticOfCurveU.lean` | holomorphy of Abel–Jacobi; needs local FTC for `pathIntegralViaCover` |
-| `exists_isC1Path` | `AbelJacobi/PathIntegralFunctionalU.lean` | `C¹` path-connectedness of a connected surface (not on the public path) |
-| `pushforwardTraceLift_preserves_latticeU` | `TraceDegree/AnalyticPushforwardU.lean` | change of variables `∫_{f∘γ}ω = ∫_γ f^*ω` + linearity in `ω` |
-| `traceDualPullbackLift_preserves_latticeU` | `TraceDegree/AnalyticPullbackU.lean` | lifting closed curves through a branched cover |
-| `traceForm_extension_per_BCD` (private) | `HolomorphicForms/TraceSpec.lean` | trace of a form extends across branch values (removable singularities); old proof used the refuted global frame |
-| `meromorphic_no_poles_holomorphic_representative` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | removable singularities on a surface; old proof used chart stability |
-| `complexSimplePolePrincipalPart_of_biholomorph_onePoint` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | pre-existing (gap 19) |
-| `polygon4g_quotient_path_finite_lift_subdivision`, `polygon4g_partial_side_arc_homologous_to_edge_chain`, `edgeChain_sum_singular_boundary_scalar_coefficient_zero` | `Periods/Hurewicz.lean` | pre-existing gaps 11–13; true, hard, **unreachable** from the public API |
+| `complexSimplePolePrincipalPart_of_biholomorph_onePoint` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | pre-existing (gap 19); off the public path since the genus-zero route uses C5 directly |
+| `polygon4g_quotient_path_finite_lift_subdivision`, `polygon4g_partial_side_arc_homologous_to_edge_chain`, `edgeChain_sum_singular_boundary_scalar_coefficient_zero` | `Periods/Hurewicz.lean` | pre-existing gaps 11–13; true, hard, unreachable |
+
+Engine `sorry` declarations: **9** (C1–C5 + the four above). Reachable from the public API:
+**5** (C1–C5). Per public declaration: `genus`, `ContMDiff.degree` clean; `ofCurve_inj` rests
+on C1–C3; `genus_eq_zero_iff_homeo` on C1, C4, C5; everything else on C1, C2.
 
 ### §0.3 Retired (not built; `Attic/`)
 
