@@ -1,5 +1,60 @@
 # Whole-Project Axiom Audit
 
+## §0. Current state — independent repair (2026-10-27, branch `independent-repair`)
+
+**Supersedes everything below for the current tree;** §1–§7 are the 2026-06-01 record.
+
+* Custom axioms (`axiom` declarations) in `Jacobian/`: **0**. `comparator/jacobian.json`
+  permits only `propext`, `Quot.sound`, `Classical.choice`.
+* `lake build Jacobian` green. Engine `sorry` declarations: see the tables below (every one
+  is either a **named classical input** or a **labelled gap**; no `axiom`, no typeclass, no
+  hidden binder stands in for any of them).
+* Comparator (official, pinned at `leanprover/comparator@3afea23`, the last revision on
+  `v4.31.0-rc1`): **smoketest passes** ("Your solution is okay!"); **strict fails** with
+  `Illegal axiom detected: 'sorryAx'`, as expected while the inputs/gaps below are open.
+* `#print axioms` on the public API: `genus` and `ContMDiff.degree` are **axiom-clean**; every
+  other public declaration reaches `sorryAx` through the inputs/gaps below.
+* `StableChartAt` is deleted. The former axiom `localPullbackAt_holomorphic` (§1 below) is
+  retired to `Attic/StableChartRetired/` with the rest of the eval-at-`1` chain.
+
+### §0.1 Classical inputs
+
+Big classical theorems admitted as single, clearly named `sorry`'d theorems. Each docstring
+says "CLASSICAL INPUT" and gives the reference.
+
+| # | declaration | file | statement | reference |
+|---|---|---|---|---|
+| C1 | `compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier` | `HolomorphicForms/CompactRiemannSurface.lean` | `H⁰(X, Ω¹)` is finite-dimensional | Forster, *Lectures on Riemann Surfaces*, §14 (finiteness theorem); Cartan–Serre |
+| C2 | `periodLattice_discrete_and_span` | `Periods/GenuinePeriodLattice.lean` | the period subgroup is discrete and spans `ℂ^g` over `ℝ` | Riemann bilinear relations; Forster §21; Griffiths–Harris Ch. 2 §2 |
+| C3 | `pathIntegralFunctional_separates_pointsU` | `AbelJacobi/AnalyticOfCurveInjectiveU.lean` | Abel's theorem, two-point form: for `g > 0`, Abel–Jacobi integrals congruent mod periods ⇒ equal endpoints | Forster §20 (Abel's theorem) and §21 |
+| C4 | `exists_biholomorph_onePoint_of_genus_zero` | `HolomorphicForms/GenusZeroClassification.lean` | genus-0 uniformization (a compact surface homeomorphic to `S²` is biholomorphic to `ℂ̂`) | Forster §27 (uniformization of simply connected surfaces) |
+| C5 | `exists_biholomorph_onePoint_of_analyticGenus_zero` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | analytic genus 0 ⇒ biholomorphic to `ℂ̂` (via Riemann–Roch) | Forster §16 (Riemann–Roch) |
+
+(C4/C5 pre-date the repair; they are listed so the table is complete. The genus-zero chain
+`genus_eq_zero_iff_homeo` rests on them.)
+
+### §0.2 Labelled gaps (true statements, proof not yet formalized)
+
+| declaration | file | why it is open |
+|---|---|---|
+| `analyticOfCurve_contMDiffU` | `AbelJacobi/AnalyticOfCurveU.lean` | holomorphy of Abel–Jacobi; needs local FTC for `pathIntegralViaCover` |
+| `exists_isC1Path` | `AbelJacobi/PathIntegralFunctionalU.lean` | `C¹` path-connectedness of a connected surface (not on the public path) |
+| `pushforwardTraceLift_preserves_latticeU` | `TraceDegree/AnalyticPushforwardU.lean` | change of variables `∫_{f∘γ}ω = ∫_γ f^*ω` + linearity in `ω` |
+| `traceDualPullbackLift_preserves_latticeU` | `TraceDegree/AnalyticPullbackU.lean` | lifting closed curves through a branched cover |
+| `traceForm_extension_per_BCD` (private) | `HolomorphicForms/TraceSpec.lean` | trace of a form extends across branch values (removable singularities); old proof used the refuted global frame |
+| `meromorphic_no_poles_holomorphic_representative` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | removable singularities on a surface; old proof used chart stability |
+| `complexSimplePolePrincipalPart_of_biholomorph_onePoint` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | pre-existing (gap 19) |
+| `polygon4g_quotient_path_finite_lift_subdivision`, `polygon4g_partial_side_arc_homologous_to_edge_chain`, `edgeChain_sum_singular_boundary_scalar_coefficient_zero` | `Periods/Hurewicz.lean` | pre-existing gaps 11–13; true, hard, **unreachable** from the public API |
+
+### §0.3 Retired (not built; `Attic/`)
+
+`Attic/StableChartRetired/` (goal (a)), `Attic/ZeroPeriodPairingU/` (goal (b): the zero
+period pairing and `…_eq_bot`), `Attic/FalseGaps/` (goal (d): gaps 5, 6, 8, 9, 10, 14, 16, 17
+with counterexamples). See `ref/independent-repair-progress.md`.
+
+---
+
+
 > ⚠ **PARTIALLY SUPERSEDED — architecture change 2026-06-03.**
 > This audit was written (2026-06-01) when `Jacobian/Solution.lean` carried a
 > **two-tier** structure: a sorry-free *Type-0* implementation namespace
