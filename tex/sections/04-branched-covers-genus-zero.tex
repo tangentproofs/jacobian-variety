@@ -837,8 +837,10 @@ with \(g(w)\,dw\) yields the identity.
 \label{lem:holomorphic-one-form-pointwise-limit-exists}
 A sup-norm Cauchy sequence of holomorphic 1-forms on a compact
 Riemann surface admits a pointwise limit at every point of \(X\).
-\lean{JacobianChallenge.HolomorphicForms.holomorphicOneForm_supNorm_cauchySeq_pointwise_limit_exists}
-\leanok
+\textit{Retired from the Lean development: the proof read 1-forms against the constant
+\(1\) in every chart, which needs a global tangent frame (the refuted chart-stability
+property). The classical statement stands; finiteness of \(H^0(X,\Omega^1)\) is now a named
+classical input.}
 \end{lemma}
 \begin{proof}\leanok
 Sup-norm Cauchy implies pointwise Cauchy in each fiber
@@ -851,8 +853,10 @@ exists.
 \uses{lem:holomorphic-one-form-pointwise-limit-exists}
 The pointwise limit of a sup-norm Cauchy sequence of holomorphic
 1-forms is continuous.
-\lean{JacobianChallenge.HolomorphicForms.holomorphicOneForm_supNorm_cauchySeq_limit_continuous}
-\leanok
+\textit{Retired from the Lean development: the proof read 1-forms against the constant
+\(1\) in every chart, which needs a global tangent frame (the refuted chart-stability
+property). The classical statement stands; finiteness of \(H^0(X,\Omega^1)\) is now a named
+classical input.}
 \end{lemma}
 \begin{proof}\leanok
 Sup-norm Cauchy convergence is uniform; the uniform limit of
@@ -864,8 +868,10 @@ continuous functions is continuous (\code{TendstoUniformly.continuous}).
 \uses{lem:holomorphic-one-form-pointwise-limit-exists}
 The pointwise limit of a sup-norm Cauchy sequence of holomorphic
 1-forms is holomorphic.
-\lean{JacobianChallenge.HolomorphicForms.holomorphicOneForm_supNorm_cauchySeq_limit_holomorphic}
-\leanok
+\textit{Retired from the Lean development: the proof read 1-forms against the constant
+\(1\) in every chart, which needs a global tangent frame (the refuted chart-stability
+property). The classical statement stands; finiteness of \(H^0(X,\Omega^1)\) is now a named
+classical input.}
 \end{lemma}
 \begin{proof}\leanok
 Classical Weierstrass convergence theorem: a uniform limit of
@@ -966,7 +972,7 @@ isomorphism because \(de\) is invertible at every point.
 The cotangent-bundle section \(\omega.\code{toFun}\) pulled back through
 \(\code{identityChart}.\code{symm}\) and evaluated at \(1:\C\) gives a
 \(C^{\infty}\) function on \(\C\).
-\lean{JacobianChallenge.HolomorphicForms.ContMDiffSection_localRepr_identityChart_contDiff,identityChartCoeff_contDiff,identityChartCoeff_tendsto_zero}
+\lean{JacobianChallenge.HolomorphicForms.ContMDiffSection_localRepr_identityChart_contDiff,JacobianChallenge.HolomorphicForms.identityChartCoeff_contDiff,JacobianChallenge.HolomorphicForms.identityChartCoeff_tendsto_zero}
 \leanok
 \end{lemma}
 \begin{proof}

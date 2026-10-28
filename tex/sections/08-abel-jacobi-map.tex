@@ -61,7 +61,7 @@ Changing the path changes \(I_{P,Q}\) by a period, so its class in
 \uses{def:period-pairing}
 The class of \(I_{P,Q}\) in \(\HdualX/\periods_X\) is independent of the path
 from \(P\) to \(Q\).
-\lean{JacobianChallenge.AbelJacobi.analyticOfCurve}
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctionalU_sub_mem, JacobianChallenge.AbelJacobi.analyticOfCurveU_eq_mk_periodVector}
 \leanok
 \end{lemma}
 
@@ -483,10 +483,11 @@ the hypothesis.
 \uses{thm:abel-point-separation}
 For \(g(X)>0\) the Abel--Jacobi map \(\AJ_P\) is injective. Follows from the
 point-separation theorem; matches the frozen public \code{ofCurve\_inj}
-signature. Open obligation (\code{sorry}) until the genus-zero single-pole
-route lands. Consumed by the challenge API (\ref{thm:challenge-api}).
+signature. The point-separation theorem stands as the named classical input
+\code{pathIntegralFunctional\_separates\_pointsU} (Abel's theorem, two-point form).
+Consumed by the challenge API (\ref{thm:challenge-api}).
 Tracking: \ghissue{224}.
-\lean{JacobianChallenge.AbelJacobi.analyticOfCurve_injective}
+\lean{JacobianChallenge.AbelJacobi.analyticOfCurve_injectiveU}
 \end{lemma}
 
 \begin{lemma}[Universe-polymorphic point separation (open)]

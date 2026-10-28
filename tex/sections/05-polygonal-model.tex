@@ -431,8 +431,9 @@ known \(H_1\) rank \(2g\), and Hodge / de Rham fixes that rank
 to be \(2 g_{\mathrm{an}}(X)\), so dividing by two gives
 \(g_{\mathrm{top}}(X) = g_{\mathrm{an}}(X)\). Project assembly:
 \code{Jacobian/Periods/AnalyticGenusEqTopologicalGenus.lean}.}
-\lean{JacobianChallenge.Periods.analyticGenus_eq_topologicalGenus}
-\leanok
+\textit{The Lean assembly is retired: it rested on the de Rham / Hodge statements of
+section~6, which were false as stated on the project's surrogate form type (gaps 16, 17).
+The public Jacobian needs only the analytic genus.}
 \end{theorem}
 \begin{proof}\leanok
 The Lean proof is a one-line delegate to
@@ -447,13 +448,13 @@ Hodge + UCT chain) plus \code{Nat.mul_div_cancel_left} to identify
 % These are the reachable `sorry`s underneath the analytic=topological genus
 % identification; each is a tracked open obligation in the Lean development.
 
-\begin{lemma}[Cut along non-tree edges yields an unfolded disk (open)]
+\begin{lemma}[Cut along non-tree edges yields an unfolded disk (retired)]
 \label{lem:cut-along-non-tree-yields-unfolded-disk}
 Cutting a triangulated compact surface along the non-tree edges of a dual
-spanning tree produces a disk (the fundamental polygon). Open obligation
-(\code{sorry}) in the Lean development.
+spanning tree produces a disk (the fundamental polygon). The Lean statement had
+placeholder (\code{PUnit}) hypotheses and was false as stated, so it is retired
+(\code{Attic/FalseGaps}); the classical statement is not on the path of the public Jacobian.
 Tracking: \ghissue{226}.
-\lean{JacobianChallenge.Periods.cut_along_nonTree_yields_unfoldedDisk}
 \end{lemma}
 
 \begin{lemma}[Polygon quotient local-lift substrate]
@@ -550,13 +551,13 @@ Tracking: \ghissue{230}.
 \lean{JacobianChallenge.Periods.edgeChain_sum_singular_boundary_scalar_coefficient_zero}
 \end{lemma}
 
-\begin{lemma}[Handle-prefix tail-rotation homeomorphism (open)]
+\begin{lemma}[Handle-prefix tail-rotation homeomorphism (retired)]
 \label{lem:handleprefix-tailrotate-homeomorph}
 Rotating the tail of a handle-prefixed edge word gives a homeomorphic quotient
-(a Tietze handle-swap step in the surface classification). Open obligation
-(\code{sorry}).
+(a Tietze handle-swap step in the surface classification). The Lean statement asked
+for a self-homeomorphism of the disk conjugating the two side pairings, which does not
+exist in general (gap 9), so it is retired (\code{Attic/FalseGaps}).
 Tracking: \ghissue{239}.
-\lean{JacobianChallenge.Periods.handlePrefix_tailRotate_homeomorph_nonzero}
 \end{lemma}
 
 \begin{layman}
