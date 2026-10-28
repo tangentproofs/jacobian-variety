@@ -6,11 +6,11 @@ import Jacobian.Periods.GenuinePeriodLattice
 The Abel–Jacobi map of a compact Riemann surface sends `Q` to
 `(∫_P^Q ω₁, …, ∫_P^Q ω_g)` modulo periods. This file defines the integral
 `pathIntegralFunctionalU X P Q : Fin (analyticGenus ℂ X) → ℂ` as the period vector
-(`Periods.periodVector`, built on the genuine multi-chart line integral
-`pathIntegralViaCover`) of a chosen `C¹` path from `P` to `Q`.
+(`Periods.periodVector`) of a chosen chart chain from `P` to `Q`; such a chain exists
+because `X` is connected (`Periods.exists_chain`).
 
-The vector depends on the chosen path; its class modulo the period lattice does not:
-any two `C¹` paths with the same endpoints have period vectors differing by a period,
+The vector depends on the chosen chain; its class modulo the period lattice does not:
+any two chains with the same endpoints have period vectors differing by a period,
 **by the definition of the period lattice** (`Periods.periodVector_sub_mem`). That is
 `pathIntegralFunctionalU_sub_mem` below.
 
@@ -20,14 +20,6 @@ structure whose only fields were `val`, `val P P = 0` and smoothness of `val P`,
 for the integral. (Its smoothness field was in fact unsatisfiable by a genuine path
 integral for `g ≥ 1`: a single-valued holomorphic map `X → ℂ^g` on a compact surface is
 constant.) The `opaque` is gone; the functional is now a definition.
-
-## The one remaining choice
-
-`C¹` paths between two points of a connected manifold always exist; that fact
-(`exists_isC1Path`) is a labelled gap here (standard, provable from chart-ball chains;
-not a classical theorem, just not yet formalized). The definition does not depend on
-it: it uses `if h : ∃ γ, IsC1Path γ then … else 0`, and the `else` branch is never
-taken once `exists_isC1Path` is proved (`pathIntegralFunctionalU_eq_periodVector`).
 -/
 
 namespace JacobianChallenge.AbelJacobi
@@ -37,62 +29,41 @@ open JacobianChallenge.HolomorphicForms JacobianChallenge.Periods
 
 universe u
 
-variable {X : Type u} [TopologicalSpace X] [ChartedSpace ℂ X]
-  [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
+variable (X : Type u) [TopologicalSpace X] [ChartedSpace ℂ X]
+  [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] [ConnectedSpace X]
+  [FiniteDimensionalHolomorphicOneForms ℂ X]
+
+/-- A chosen chart chain from `P` to `Q` (exists since `X` is connected). -/
+noncomputable def chosenChain (P Q : X) : List (ChartSegment X) :=
+  (exists_chain P Q).choose
+
+theorem chosenChain_isChain (P Q : X) : IsChain (chosenChain X P Q) P Q :=
+  (exists_chain P Q).choose_spec
 
 /--
-**`C¹` path-connectedness of a connected Riemann surface.** Any two points are joined by
-a path that is `C¹` in every chart.
-
-GAP (`sorry`): true and elementary (the set of points reachable from `P` by a `C¹` path
-is open — extend by a straight segment in a chart ball — and closed, so it is everything
-by connectedness; junctions are smoothed by a reparametrization flat at the endpoints),
-but not yet formalized.
--/
-theorem exists_isC1Path [ConnectedSpace X] (P Q : X) : ∃ γ : Path P Q, IsC1Path γ := by
-  -- GAP: C¹ path-connectedness of a connected manifold; see docstring.
-  sorry
-
-variable (X) [FiniteDimensionalHolomorphicOneForms ℂ X]
-
-/--
-The path-integral coordinates `(∫_P^Q ω₁, …, ∫_P^Q ω_g)` along a chosen `C¹` path from
-`P` to `Q` (`0` if there is none; see `exists_isC1Path` — that branch never occurs on a
-connected surface). Well defined modulo periods: `pathIntegralFunctionalU_sub_mem`.
+The path-integral coordinates `(∫_P^Q ω₁, …, ∫_P^Q ω_g)` along a chosen chart chain from
+`P` to `Q`. Well defined modulo periods: `pathIntegralFunctionalU_sub_mem`.
 -/
 noncomputable def pathIntegralFunctionalU (P Q : X) : Fin (analyticGenus ℂ X) → ℂ :=
-  open Classical in
-  if h : ∃ γ : Path P Q, IsC1Path γ then periodVector X h.choose else 0
+  periodVector X (chosenChain X P Q)
 
 variable {X}
 
-/-- On a connected surface the functional is the period vector of the chosen path. -/
-theorem pathIntegralFunctionalU_eq_periodVector [ConnectedSpace X] (P Q : X) :
-    ∃ γ : Path P Q, IsC1Path γ ∧ pathIntegralFunctionalU X P Q = periodVector X γ := by
-  have h := exists_isC1Path P Q
-  refine ⟨h.choose, h.choose_spec, ?_⟩
-  unfold pathIntegralFunctionalU
-  rw [dif_pos h]
-
 /--
-**Independence of the path, modulo periods.** If a `C¹` path from `P` to `Q` exists (which
-is always the case on a connected surface), then for *every* `C¹` path `γ` from `P` to
-`Q`, the functional differs from `periodVector γ` by a period.
+**Independence of the path, modulo periods.** For *every* chart chain `l` from `P` to `Q`,
+the functional differs from `periodVector l` by a period.
 -/
-theorem pathIntegralFunctionalU_sub_mem {P Q : X} {γ : Path P Q} (hγ : IsC1Path γ) :
-    pathIntegralFunctionalU X P Q - periodVector X γ ∈ genuinePeriodSubgroup X := by
-  have h : ∃ γ : Path P Q, IsC1Path γ := ⟨γ, hγ⟩
-  unfold pathIntegralFunctionalU
-  rw [dif_pos h]
-  exact periodVector_sub_mem h.choose_spec hγ
+theorem pathIntegralFunctionalU_sub_mem {P Q : X} {l : List (ChartSegment X)}
+    (hl : IsChain l P Q) :
+    pathIntegralFunctionalU X P Q - periodVector X l ∈ genuinePeriodSubgroup X :=
+  periodVector_sub_mem (chosenChain_isChain X P Q) hl
 
 /--
-At the base point the functional is a period (the integral over a closed `C¹` curve),
-so its class in the Jacobian is zero.
+At the base point the functional is a period (the integral over a closed chain), so its
+class in the Jacobian is zero.
 -/
 theorem pathIntegralFunctionalU_self_mem (P : X) :
-    pathIntegralFunctionalU X P P ∈ genuinePeriodSubgroup X := by
-  have h := pathIntegralFunctionalU_sub_mem (X := X) (isC1Path_refl P)
-  rwa [periodVector_refl, sub_zero] at h
+    pathIntegralFunctionalU X P P ∈ genuinePeriodSubgroup X :=
+  periodVector_mem_of_loop (chosenChain_isChain X P P)
 
 end JacobianChallenge.AbelJacobi
