@@ -1,43 +1,18 @@
 import Jacobian.AbelJacobi.AnalyticOfCurveU
-import Jacobian.Periods.BasisAlignedPeriodSubgroupU
 import Mathlib.GroupTheory.QuotientGroup.Basic
 
 /-!
 # Universe-polymorphic Abel-Jacobi injectivity
 
-`Jacobian/AbelJacobi/AnalyticOfCurveBasis.lean` proves the plain Abel-Jacobi
-injectivity `analyticOfCurve_injective (P) (h : 0 < analyticGenus ℂ X) :
-Function.Injective (analyticOfCurve X P)` by a trivial quotient assembly
-(`QuotientAddGroup.eq.mp`) on top of the genuine separating-points theorem
-`pathIntegralFunctional_separates_points`. That separating-points theorem is the
-deep content (Abel's theorem): its proof threads
-`abelJacobi_image_zero_implies_principal` — which produces a
-`HolomorphicForms.MeromorphicMapToSphere X` — and the genus-zero classification.
+`analyticOfCurve_injectiveU (P) (h : 0 < analyticGenus ℂ X)` — injectivity of the
+analytic Abel–Jacobi map in positive genus, needed by the public `ofCurve_inj`. The
+assembly (`QuotientAddGroup.eq.mp`) is proved here; the deep content is the single named
+classical input `pathIntegralFunctional_separates_pointsU` (Abel's theorem, two-point
+form).
 
-This file provides the universe-polymorphic companion `analyticOfCurve_injectiveU`
-(D2 of the Abel-Jacobi "D-chain"), needed by the public `ofCurve_inj` for
-`X : Type u` (Milestone B).
-
-## Why the separating-points fact is a tracked frontier obligation here
-
-Re-deriving the genuine separating-points proof at `Type u` would re-thread the
-entire Abel-existence / meromorphic-degree / genus-zero chain through
-`MeromorphicMapToSphere X` — precisely the surface currently being restructured
-(the `PoleModulusData` / `BranchedCoverDataOfPoleDegree` field un-bundling). To
-keep this step self-contained and avoid a moving-target collision, the deep
-content is isolated into a single named obligation
-`pathIntegralFunctional_separates_pointsU` (the universe-`u` analogue of the
-genuine Type-0 `pathIntegralFunctional_separates_points`); the injectivity
-assembly on top of it is genuine.
-
-This is a `theorem … := sorry`, NOT an `opaque`: the Type-0 separating-points
-declaration is itself a genuine `theorem`, and a `Prop`-valued result `Q₁ = Q₂`
-cannot be `opaque` (it has no `Inhabited`/`Nonempty` witness). It is a
-Periods/AbelJacobi layer-frontier sorry — NOT a sorry in `Jacobian/Solution.lean`'s
-public anti-hack block, NOT an axiom. It will be discharged genuinely once the
-universe-`u` Abel chain is built, after the `MeromorphicMapToSphere`
-restructuring settles. This file introduces **no** `MeromorphicMapToSphere`
-reference.
+Note on the Type-0 `analyticOfCurve_injective` in `AnalyticOfCurveBasis.lean`: it is not
+on the public path, and the chain feeding it is placeholder scaffolding (`Unit`/`True`
+fields; see `ref/rkirov-gap-comparison.md`, gap 2), not a proof of Abel's theorem.
 -/
 
 namespace JacobianChallenge.AbelJacobi
@@ -53,24 +28,29 @@ variable (X : Type u) [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 
 /--
-**Abel's theorem in universe-`u` basis-aligned path-integral coordinates
-(named tracked frontier obligation).** If two universe-`u` path-integral
-coordinate vectors differ by a period vector (lie in the same coset of the
-universe-`u` period subgroup), their endpoints coincide.
+**CLASSICAL INPUT — Abel's theorem, two-point form (point separation).** If the
+Abel–Jacobi integrals from `P` to `Q₁` and to `Q₂` differ by a period, and the genus is
+positive, then `Q₁ = Q₂`.
 
-Universe-polymorphic analogue of the genuine Type-0
-`pathIntegralFunctional_separates_points`. Recorded as a named tracked
-Periods/AbelJacobi layer-frontier obligation; see the module docstring for why
-the universe-`u` re-derivation is deferred (it would re-thread the
-`MeromorphicMapToSphere` surface currently being restructured). NOT a
-public-block sorry, NOT an axiom.
+Classical proof: by Abel's theorem the divisor `Q₂ - Q₁` is then principal, i.e. there is
+a meromorphic function with a single simple pole; such a function is a degree-one map to
+the Riemann sphere, hence a biholomorphism, so `X` has genus `0` — a contradiction.
+References: O. Forster, *Lectures on Riemann Surfaces*, Thm. 20.7 (Abel) and §21;
+Griffiths–Harris, Ch. 2 §2.
+
+Named classical input (`sorry`); see `ref/axiom-audit.md`, "Classical inputs".
+The statement is now about the **genuine** path integral and the **genuine** period
+lattice (`genuinePeriodSubgroup`). Previously it was stated about an `opaque` functional
+whose specification the zero functional satisfied, against a period subgroup equal to
+`⊥`, under the refuted `StableChartAt` binder.
 -/
 theorem pathIntegralFunctional_separates_pointsU
     (P : X) (h : 0 < analyticGenus ℂ X) (Q₁ Q₂ : X)
     (hperiod :
       -pathIntegralFunctionalU X P Q₁ + pathIntegralFunctionalU X P Q₂ ∈
-        basisAlignedPeriodSubgroupConcreteU X) :
-    Q₁ = Q₂ :=
+        genuinePeriodSubgroup X) :
+    Q₁ = Q₂ := by
+  -- CLASSICAL INPUT: Abel's theorem + degree-one maps; see docstring.
   sorry
 
 /--

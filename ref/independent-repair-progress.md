@@ -179,6 +179,79 @@ Goal (b): real line integral and period lattice.
 
 ---
 
+## 2026-10-27 — goals (b) and (c): genuine period lattice, genuine Abel–Jacobi map
+
+### What changed
+
+1. **`Jacobian/Periods/GenuinePeriodLattice.lean`** (new). Built on the project's existing,
+   sorry-free multi-chart line integral `pathIntegralViaCover` (chart pullback
+   `ω(c⁻¹ e) ∘ D(c⁻¹)(e)` integrated with Mathlib's `curveIntegral` on each segment of a
+   chart-cover subdivision; independent of subdivision and charts for `C¹` paths, by
+   `pathIntegralViaCoverWith_refinement_invariant'`). Defines
+   * `IsC1Path γ` (C¹ in every chart), `isC1Path_refl`;
+   * `lineIntegral ω γ := pathIntegralViaCover ω γ`;
+   * `periodVector X γ := (∫_γ ω₁, …, ∫_γ ω_g)` for the project basis `holomorphicOneFormFinBasis`;
+   * `genuinePeriodSubgroup X := AddSubgroup.closure {periodVector γ₁ - periodVector γ₂ |
+     γ₁ γ₂ : Path P Q C¹}` — integrals over closed `C¹` curves `γ₁·γ₂⁻¹` (closed loops are
+     the case `γ₂ = refl`, `periodVector_mem_of_loop`);
+   * **named classical input** `periodLattice_discrete_and_span` (discrete + `ℝ`-spanning;
+     Riemann bilinear relations, Forster §21);
+   * the compact fundamental domain (proved from the classical input via `ZSpan`) and the
+     bundled `genuinePeriodLattice X : FullComplexLattice (Fin g → ℂ)`.
+2. **`periodFullComplexLatticeU X := genuinePeriodLattice X`** — so the public
+   `Jacobian X = ULift (ℂ^g / Λ)` with `Λ` the genuine period lattice, no longer `ℂ^g / ⊥`.
+3. **Abel–Jacobi** (`AbelJacobi/PathIntegralFunctionalU.lean`, `AnalyticOfCurveU.lean`):
+   the `opaque pathIntegralFunctionalBundleU` (spec satisfied by `0`) is deleted.
+   `pathIntegralFunctionalU X P Q := periodVector X γ` for a chosen `C¹` path `γ : P → Q`
+   (`if … then … else 0`; the `else` never fires given `exists_isC1Path`). Proved:
+   well-definedness modulo periods (`pathIntegralFunctionalU_sub_mem`), `ofCurve P P = 0`
+   (`analyticOfCurve_selfU`, now a real proof: the self-integral is a period), and
+   `analyticOfCurveU_eq_mk_periodVector` (value = class of the period vector of **any**
+   `C¹` path). Labelled gap: `analyticOfCurve_contMDiffU` (holomorphy, via local
+   primitives). Gap `exists_isC1Path` (C¹ path-connectedness; not on the public path).
+4. **Injectivity**: `pathIntegralFunctional_separates_pointsU` restated over the genuine
+   functional and lattice; now labelled as the **named classical input** "Abel's theorem,
+   two-point form" (Forster 20.7, §21).
+5. **Pushforward / pullback descent**: the "`⊥` shortcut" proofs of
+   `pushforwardTraceLift_preserves_latticeU` and `traceDualPullbackLift_preserves_latticeU`
+   are gone; both are now true, labelled gaps (change of variables `∫_{f∘γ}ω = ∫_γ f^*ω`;
+   lifting closed curves through the branched cover).
+6. **Retired** to `Attic/ZeroPeriodPairingU/` (unbuilt): the six files of the universe-`u`
+   zero-pairing chain — `PeriodFunctionalU` (pairing `:= 0`), `PeriodSubgroupZLatticeU`
+   (incl. `basisAlignedPeriodSubgroupConcreteU_eq_bot`), `BasisAlignedPeriodSubgroupU`,
+   `PeriodFundamentalDomainU`, `PeriodVectorsLIU` (gap 15, false), `H1BasisU` (gaps 3, 4).
+   After step 2 nothing imported them.
+
+### Builds and counts
+
+`lake build Jacobian.Solution` and `lake build Jacobian`: **green** (4344 jobs).
+
+| metric | after (a) | after (b)+(c) |
+|---|---|---|
+| engine sorry declarations (whole `Jacobian`) | 23 | **25** |
+| reachable from the public API (decl-level graph, private/aux included) | 10 | **11** |
+| custom axioms | 0 | 0 |
+
+Sorries added: `periodLattice_discrete_and_span` (classical input),
+`analyticOfCurve_contMDiffU`, `exists_isC1Path`, the two lattice-preservation gaps.
+Removed with the retired chain: gaps 3, 4, 15. Gap 2 restated (count unchanged).
+
+### Neighbouring cases of the same class (zero / spec-only placeholders), ledgered
+
+All **unreachable** from the public API (decl-level graph), so ledgered rather than fixed:
+
+| placeholder | where | status |
+|---|---|---|
+| Type-0 `periodPairing` with chain integration `:= 0` | `Periods/PeriodFunctional.lean` | unreachable; feeds the Type-0 `AnalyticJacobian/*`, `PullbackBasis`/`PushforwardBasis`, Type-0 Abel chain |
+| `opaque pathIntegralFunctionalBundle` (Type-0, spec satisfied by `0`) | `AbelJacobi/AnalyticOfCurveBasis.lean` | unreachable |
+| `LogPeriodVanishing`, `SingleValuedLogPrimitive` (`witness : Unit`), `True`-valued gluing lemmas | `AbelJacobi/AnalyticOfCurveBasis.lean` | unreachable scaffolding |
+| `exteriorDerivative := 0` | `HolomorphicForms/SmoothDifferentialForm.lean` | unreachable (de Rham/Hodge layer) — see goal (d) |
+| "global Stokes" reducing to `0 = 0` | `Blueprint/Sec03/StokesOnRSWithBoundary.lean` | unreachable |
+| `Orientable := Nonempty Unit`, `Triangulation`/`DualGraph := PUnit` | `Periods/Orientable.lean`, `SurfaceClassificationData.lean`, `DualGraphCut.lean` | unreachable (polygon tower) — see goal (d) |
+| `wedge_integration_pairing_exists` witnessed by `0` | `Periods/PeriodFunctional.lean` | unreachable |
+
+---
+
 ## Commit hashes
 
 | time (EDT) | hash | summary |

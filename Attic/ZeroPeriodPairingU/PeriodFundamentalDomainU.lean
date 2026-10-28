@@ -1,3 +1,16 @@
+/-!
+# RETIRED — not built, not imported (was `Jacobian/Periods/PeriodFundamentalDomainU.lean`)
+
+Part of the universe-`u` period chain built on the **zero** period pairing
+(`periodPairingComplexU`, whose chain-level integration map was the placeholder `0`). On
+that pairing the period subgroup is `⊥` (`basisAlignedPeriodSubgroupConcreteU_eq_bot`), so
+the "Jacobian" was all of `ℂ^g`, and the full-rank statement `h1_basis_riemannClassicalPeriodBasisU`
+(gap 15) was false for `g ≥ 1`. The public `Jacobian` now uses the genuine lattice
+`Jacobian/Periods/GenuinePeriodLattice.lean` (integration of holomorphic 1-forms over closed
+`C¹` curves), and nothing imports this chain any more. Retired on branch `independent-repair`
+(goal (b)); the sorries it carried (gaps 3, 4, 15) left the build with it.
+-/
+
 import Jacobian.Periods.PeriodVectorsLIU
 import Jacobian.Periods.PeriodSubgroupZLatticeU
 import Mathlib.Algebra.Module.ZLattice.Basic
