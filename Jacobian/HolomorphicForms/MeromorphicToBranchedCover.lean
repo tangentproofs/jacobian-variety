@@ -1991,6 +1991,121 @@ theorem toMeromorphicNFAt_moving_center_coherent_of_orderAt_nonneg
       _ = toMeromorphicNFAt f z₀ z := by
         simpa [g] using hf.eqOn_compl_singleton_toMeromorphicNFAt hz
 
+/-- A meromorphic function of nonnegative order tends, along the punctured neighbourhood,
+to the value of its normal form at the centre. -/
+theorem tendsto_toMeromorphicNFAt_of_orderAt_nonneg {g : ℂ → ℂ} {z₀ : ℂ}
+    (hg : MeromorphicAt g z₀) (hord : (0 : WithTop ℤ) ≤ meromorphicOrderAt g z₀) :
+    Filter.Tendsto g (𝓝[≠] z₀) (𝓝 (toMeromorphicNFAt g z₀ z₀)) := by
+  have hord' : (0 : WithTop ℤ) ≤ meromorphicOrderAt (toMeromorphicNFAt g z₀) z₀ := by
+    simpa [meromorphicOrderAt_congr (hg.eq_nhdsNE_toMeromorphicNFAt)] using hord
+  have han : AnalyticAt ℂ (toMeromorphicNFAt g z₀) z₀ :=
+    (meromorphicNFAt_toMeromorphicNFAt (f := g) (x := z₀)).meromorphicOrderAt_nonneg_iff_analyticAt.mp
+      hord'
+  exact (han.continuousAt.tendsto.mono_left nhdsWithin_le_nhds).congr'
+    hg.eq_nhdsNE_toMeromorphicNFAt.symm
+
+/-- A chart maps punctured neighbourhoods to punctured neighbourhoods. -/
+theorem chartAt_tendsto_punctured {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
+    (x₀ : X) {q : X} (hq : q ∈ (chartAt ℂ x₀).source) :
+    Filter.Tendsto (chartAt ℂ x₀) (𝓝[≠] q) (𝓝[≠] (chartAt ℂ x₀ q)) := by
+  refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
+    (tendsto_nhdsWithin_of_tendsto_nhds ((chartAt ℂ x₀).continuousAt hq)) ?_
+  filter_upwards [nhdsWithin_le_nhds ((chartAt ℂ x₀).open_source.mem_nhds hq),
+    self_mem_nhdsWithin] with y hy hne hcontra
+  exact hne ((chartAt ℂ x₀).injOn hy hq hcontra)
+
+/-- The inverse chart maps punctured neighbourhoods to punctured neighbourhoods. -/
+theorem chartAt_symm_tendsto_punctured {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
+    (x₀ : X) {z : ℂ} (hz : z ∈ (chartAt ℂ x₀).target) :
+    Filter.Tendsto (chartAt ℂ x₀).symm (𝓝[≠] z) (𝓝[≠] ((chartAt ℂ x₀).symm z)) := by
+  refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
+    (tendsto_nhdsWithin_of_tendsto_nhds ((chartAt ℂ x₀).continuousAt_symm hz)) ?_
+  filter_upwards [nhdsWithin_le_nhds ((chartAt ℂ x₀).open_target.mem_nhds hz),
+    self_mem_nhdsWithin] with y hy hne hcontra
+  exact hne ((chartAt ℂ x₀).symm.injOn hy hz hcontra)
+
+/-- A point of a Riemann surface is not isolated. -/
+theorem nhdsNE_neBot_of_chartedSpace {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
+    (q : X) : (𝓝[≠] q).NeBot := by
+  have h := chartAt_symm_tendsto_punctured q ((chartAt ℂ q).map_source (mem_chart_source ℂ q))
+  rw [(chartAt ℂ q).left_inv (mem_chart_source ℂ q)] at h
+  exact h.neBot
+
+/-- Transport of a punctured limit from a chart to the surface. -/
+theorem tendsto_punctured_of_chart {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
+    (F : X → ℂ) (x₀ : X) {q : X} (hq : q ∈ (chartAt ℂ x₀).source) {v : ℂ}
+    (h : Filter.Tendsto (F ∘ (chartAt ℂ x₀).symm) (𝓝[≠] (chartAt ℂ x₀ q)) (𝓝 v)) :
+    Filter.Tendsto F (𝓝[≠] q) (𝓝 v) := by
+  refine (h.comp (chartAt_tendsto_punctured x₀ hq)).congr' ?_
+  filter_upwards [nhdsWithin_le_nhds ((chartAt ℂ x₀).open_source.mem_nhds hq)] with y hy
+  simp [(chartAt ℂ x₀).left_inv hy]
+
+/--
+**Chart independence of the normal-form value** (no chart stability). For `F` meromorphic
+of nonnegative order everywhere, the normal-form value of `F` at `q` read in the chart at
+`q` equals the normal form of `F` read in the chart at `p`, evaluated at the chart image of
+`q`, for all `q` near `p`: both are the punctured limit of `F` at `q`.
+-/
+theorem toMeromorphicNFAt_chartAt_eventuallyEq
+    {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
+    (F : X → ℂ)
+    (hmer : ∀ p : X,
+      JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX F p)
+    (horders : ∀ p : X,
+      (0 : WithTop ℤ) ≤
+        JacobianChallenge.HolomorphicForms.VanishingOrder.orderAt p F)
+    (p : X) :
+    (fun z : ℂ => toMeromorphicNFAt (F ∘ (chartAt ℂ ((chartAt ℂ p).symm z)).symm)
+        (chartAt ℂ ((chartAt ℂ p).symm z) ((chartAt ℂ p).symm z))
+        (chartAt ℂ ((chartAt ℂ p).symm z) ((chartAt ℂ p).symm z))) =ᶠ[𝓝 (chartAt ℂ p p)]
+      toMeromorphicNFAt (F ∘ (chartAt ℂ p).symm) (chartAt ℂ p p) := by
+  have hmerC : ∀ q : X, MeromorphicAt (F ∘ (chartAt ℂ q).symm) (chartAt ℂ q q) := by
+    intro q
+    have h := hmer q
+    unfold JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX at h
+    simpa [
+      JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_symm_eq_chartAt_symm,
+      JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_eq_chartAt] using h
+  have hordC : ∀ q : X,
+      (0 : WithTop ℤ) ≤ meromorphicOrderAt (F ∘ (chartAt ℂ q).symm) (chartAt ℂ q q) := by
+    intro q
+    simpa [JacobianChallenge.HolomorphicForms.VanishingOrder.orderAt_eq_chartAt] using horders q
+  set fₚ := F ∘ (chartAt ℂ p).symm
+  set zₚ := chartAt ℂ p p
+  set NF := toMeromorphicNFAt fₚ zₚ
+  have hord' : (0 : WithTop ℤ) ≤ meromorphicOrderAt NF zₚ := by
+    simpa [meromorphicOrderAt_congr ((hmerC p).eq_nhdsNE_toMeromorphicNFAt)] using hordC p
+  have han : AnalyticAt ℂ NF zₚ :=
+    (meromorphicNFAt_toMeromorphicNFAt (f := fₚ) (x := zₚ)).meromorphicOrderAt_nonneg_iff_analyticAt.mp
+      hord'
+  have hEq : ∀ᶠ z in 𝓝[≠] zₚ, fₚ z = NF z := (hmerC p).eq_nhdsNE_toMeromorphicNFAt
+  rw [eventually_nhdsWithin_iff] at hEq
+  obtain ⟨W, hW, hWopen, hzW⟩ := mem_nhds_iff.mp (Filter.inter_mem (Filter.inter_mem hEq
+    han.eventually_analyticAt) ((chartAt ℂ p).open_target.mem_nhds
+      ((chartAt ℂ p).map_source (mem_chart_source ℂ p))))
+  filter_upwards [hWopen.mem_nhds hzW] with z hz
+  obtain ⟨⟨_, hzan⟩, hzt⟩ := hW hz
+  set q := (chartAt ℂ p).symm z
+  have hq : q ∈ (chartAt ℂ p).source := (chartAt ℂ p).map_target hzt
+  have hcz : chartAt ℂ p q = z := (chartAt ℂ p).right_inv hzt
+  have hlimP : Filter.Tendsto fₚ (𝓝[≠] z) (𝓝 (NF z)) := by
+    by_cases hzz : z = zₚ
+    · rw [hzz]
+      exact tendsto_toMeromorphicNFAt_of_orderAt_nonneg (hmerC p) (hordC p)
+    · refine (hzan.continuousAt.tendsto.mono_left nhdsWithin_le_nhds).congr' ?_
+      have hU : W \ {zₚ} ∈ 𝓝 z :=
+        Filter.inter_mem (hWopen.mem_nhds hz) (isOpen_compl_singleton.mem_nhds hzz)
+      filter_upwards [nhdsWithin_le_nhds hU] with y hy
+      exact ((hW hy.1).1.1 hy.2).symm
+  have hlimF₁ : Filter.Tendsto F (𝓝[≠] q) (𝓝 (NF z)) :=
+    tendsto_punctured_of_chart F p hq (by rw [hcz]; exact hlimP)
+  have hlimF₂ : Filter.Tendsto F (𝓝[≠] q)
+      (𝓝 (toMeromorphicNFAt (F ∘ (chartAt ℂ q).symm) (chartAt ℂ q q) (chartAt ℂ q q))) :=
+    tendsto_punctured_of_chart F q (mem_chart_source ℂ q)
+      (tendsto_toMeromorphicNFAt_of_orderAt_nonneg (hmerC q) (hordC q))
+  haveI := nhdsNE_neBot_of_chartedSpace q
+  exact tendsto_nhds_unique hlimF₂ hlimF₁
+
 /--
 **Provider (removable no-poles representative).** A meromorphic
 complex-valued function whose chart-local order is nonnegative at every
@@ -2002,12 +2117,10 @@ it supplies a continuous representative with analytic chart-local
 germs, but does not yet package the result as manifold-level
 `ContMDiff`.
 
-GAP (`sorry`). The statement is true (Riemann's removable-singularity theorem,
-read in a chart at each point), but the previous proof identified
-`chartAt ℂ ((chartAt ℂ p).symm z)` with `chartAt ℂ p` on a coordinate ball, i.e.
-used the refuted chart-stability property (`ChartStabilityRefutation.lean`). An
-honest proof must show the chart-local normal-form value is independent of the
-chart, using the analyticity of chart transitions.
+
+Proved with no chart stability: the chart independence of the normal-form value
+(`toMeromorphicNFAt_chartAt_eventuallyEq`) replaces the earlier identification of
+`chartAt ℂ ((chartAt ℂ p).symm z)` with `chartAt ℂ p`.
 -/
 theorem meromorphic_no_poles_holomorphic_representative
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
@@ -2023,8 +2136,133 @@ theorem meromorphic_no_poles_holomorphic_representative
       Continuous G ∧
       (∀ p : X, JacobianChallenge.HolomorphicForms.IsHolomorphicAt G p) ∧
       ∀ p : X, F =ᶠ[𝓝[≠] p] G := by
-  -- GAP: honest chart-independent removable-singularity argument pending.
-  sorry
+  classical
+  let G : X → ℂ := fun p =>
+    toMeromorphicNFAt (F ∘ (chartAt ℂ p).symm) (chartAt ℂ p p) (chartAt ℂ p p)
+  refine ⟨G, ?_, ?_, ?_⟩
+  · rw [continuous_iff_continuousAt]
+    intro p
+    let fₚ : ℂ → ℂ := F ∘ (chartAt ℂ p).symm
+    let zₚ : ℂ := chartAt ℂ p p
+    have hfₚ : MeromorphicAt fₚ zₚ := by
+      unfold fₚ zₚ
+      have h := hmer p
+      unfold JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX at h
+      simpa [
+        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_symm_eq_chartAt_symm,
+        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_eq_chartAt]
+        using h
+    have horderₚ : (0 : WithTop ℤ) ≤ meromorphicOrderAt fₚ zₚ := by
+      unfold fₚ zₚ
+      simpa [JacobianChallenge.HolomorphicForms.VanishingOrder.orderAt_eq_chartAt]
+        using horders p
+    have hG_chart :
+        (fun z : ℂ => G ((chartAt ℂ p).symm z)) =ᶠ[𝓝 zₚ]
+          toMeromorphicNFAt fₚ zₚ :=
+      toMeromorphicNFAt_chartAt_eventuallyEq F hmer horders p
+    have hfixed_order :
+        (0 : WithTop ℤ) ≤ meromorphicOrderAt (toMeromorphicNFAt fₚ zₚ) zₚ := by
+      simpa [meromorphicOrderAt_congr (hfₚ.eq_nhdsNE_toMeromorphicNFAt)] using horderₚ
+    have hfixed_an :
+        AnalyticAt ℂ (toMeromorphicNFAt fₚ zₚ) zₚ :=
+      (meromorphicNFAt_toMeromorphicNFAt
+        (f := fₚ) (x := zₚ)).meromorphicOrderAt_nonneg_iff_analyticAt.mp hfixed_order
+    have hcont_comp :
+        ContinuousAt (G ∘ (chartAt ℂ p).symm) zₚ := by
+      exact hfixed_an.continuousAt.congr hG_chart.symm
+    exact ((chartAt ℂ p).symm.continuousAt_iff_continuousAt_comp_right
+      (mem_chart_source ℂ p)).mpr (by
+        simpa [zₚ, Function.comp_def] using hcont_comp)
+  · intro p
+    let fₚ : ℂ → ℂ := F ∘ (chartAt ℂ p).symm
+    let zₚ : ℂ := chartAt ℂ p p
+    have hfₚ : MeromorphicAt fₚ zₚ := by
+      unfold fₚ zₚ
+      have h := hmer p
+      unfold JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX at h
+      simpa [
+        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_symm_eq_chartAt_symm,
+        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_eq_chartAt]
+        using h
+    have horderₚ : (0 : WithTop ℤ) ≤ meromorphicOrderAt fₚ zₚ := by
+      unfold fₚ zₚ
+      simpa [JacobianChallenge.HolomorphicForms.VanishingOrder.orderAt_eq_chartAt]
+        using horders p
+    have hG_chart :
+        (fun z : ℂ => G ((chartAt ℂ p).symm z)) =ᶠ[𝓝 zₚ]
+          toMeromorphicNFAt fₚ zₚ :=
+      toMeromorphicNFAt_chartAt_eventuallyEq F hmer horders p
+    have hfixed_order :
+        (0 : WithTop ℤ) ≤ meromorphicOrderAt (toMeromorphicNFAt fₚ zₚ) zₚ := by
+      simpa [meromorphicOrderAt_congr (hfₚ.eq_nhdsNE_toMeromorphicNFAt)] using horderₚ
+    have hfixed_an :
+        AnalyticAt ℂ (toMeromorphicNFAt fₚ zₚ) zₚ :=
+      (meromorphicNFAt_toMeromorphicNFAt
+        (f := fₚ) (x := zₚ)).meromorphicOrderAt_nonneg_iff_analyticAt.mp hfixed_order
+    unfold JacobianChallenge.HolomorphicForms.IsHolomorphicAt
+    rw [chartLocalAt_scalar_eq]
+    exact hfixed_an.congr hG_chart.symm
+  · intro p
+    let fₚ : ℂ → ℂ := F ∘ (chartAt ℂ p).symm
+    let zₚ : ℂ := chartAt ℂ p p
+    have hfₚ : MeromorphicAt fₚ zₚ := by
+      unfold fₚ zₚ
+      have h := hmer p
+      unfold JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX at h
+      simpa [
+        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_symm_eq_chartAt_symm,
+        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_eq_chartAt]
+        using h
+    have horderₚ : (0 : WithTop ℤ) ≤ meromorphicOrderAt fₚ zₚ := by
+      unfold fₚ zₚ
+      simpa [JacobianChallenge.HolomorphicForms.VanishingOrder.orderAt_eq_chartAt]
+        using horders p
+    have hG_chart :
+        (fun z : ℂ => G ((chartAt ℂ p).symm z)) =ᶠ[𝓝 zₚ]
+          toMeromorphicNFAt fₚ zₚ :=
+      toMeromorphicNFAt_chartAt_eventuallyEq F hmer horders p
+    have hsrc_mem : (chartAt ℂ p).source ∈ 𝓝 p :=
+      (chartAt ℂ p).open_source.mem_nhds (mem_chart_source ℂ p)
+    have hchart_tendsto :
+        Filter.Tendsto (chartAt ℂ p) (𝓝 p) (𝓝 zₚ) := by
+      unfold zₚ
+      exact (chartAt ℂ p).continuousAt (mem_chart_source ℂ p)
+    have hsrc_mem_ne : (chartAt ℂ p).source ∈ 𝓝[≠] p :=
+      nhdsWithin_le_nhds hsrc_mem
+    have hcoord_agree :
+        ∀ᶠ y in 𝓝[≠] p,
+          F y = G y := by
+      have hF_fixed : fₚ =ᶠ[𝓝[≠] zₚ] toMeromorphicNFAt fₚ zₚ :=
+        hfₚ.eq_nhdsNE_toMeromorphicNFAt
+      have hchart_ne :
+          Filter.Tendsto (chartAt ℂ p) (𝓝[≠] p) (𝓝[≠] zₚ) := by
+        refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
+          (chartAt ℂ p) (tendsto_nhdsWithin_of_tendsto_nhds hchart_tendsto) ?_
+        filter_upwards [hsrc_mem_ne, self_mem_nhdsWithin]
+          with y hy_src hy_ne hcontra
+        exact hy_ne ((chartAt ℂ p).injOn hy_src (mem_chart_source ℂ p) hcontra)
+      have hF_pull : ∀ᶠ y in 𝓝[≠] p,
+          fₚ ((chartAt ℂ p) y) = toMeromorphicNFAt fₚ zₚ ((chartAt ℂ p) y) :=
+        hchart_ne.eventually hF_fixed
+      have hG_pull : ∀ᶠ y in 𝓝[≠] p,
+          G y = toMeromorphicNFAt fₚ zₚ ((chartAt ℂ p) y) := by
+        have hG_comp : ∀ᶠ y in 𝓝 p,
+            G ((chartAt ℂ p).symm ((chartAt ℂ p) y)) =
+              toMeromorphicNFAt fₚ zₚ ((chartAt ℂ p) y) :=
+          hchart_tendsto.eventually hG_chart
+        filter_upwards [hG_comp.filter_mono nhdsWithin_le_nhds,
+            hsrc_mem_ne] with y hyG hy_src
+        simpa [(chartAt ℂ p).left_inv hy_src] using hyG
+      filter_upwards [hF_pull, hG_pull, hsrc_mem_ne]
+        with y hyF hyG hy_src
+      have hFy : fₚ ((chartAt ℂ p) y) = F y := by
+        unfold fₚ
+        simp [(chartAt ℂ p).left_inv hy_src]
+      calc
+        F y = fₚ ((chartAt ℂ p) y) := hFy.symm
+        _ = toMeromorphicNFAt fₚ zₚ ((chartAt ℂ p) y) := hyF
+        _ = G y := hyG.symm
+    exact hcoord_agree
 
 /--
 **Provider (removable no-poles representative, `ContMDiff` form).**

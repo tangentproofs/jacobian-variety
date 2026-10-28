@@ -2682,10 +2682,13 @@ theorem genus_zero_homeomorph_onePointCx
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : analyticGenus ℂ X = 0) :
     Nonempty (X ≃ₜ OnePoint ℂ) := by
-  obtain ⟨⟨data, hmod, hbranch⟩⟩ := genusZero_fixedPole_routeData_nonempty X h
-  let ⟨g⟩ := simplePole_meromorphicMap_proper_degreeOne X data hmod hbranch
-  let ⟨b⟩ := proper_degreeOne_meromorphicMap_biholomorphic X g
-  exact ⟨b.toHomeomorph⟩
+  -- Directly from the classical input "genus zero ⇒ Riemann sphere"
+  -- (`exists_biholomorph_onePoint_of_analyticGenus_zero`). The former route took that
+  -- biholomorphism, built a single-pole function from it, and re-derived a biholomorphism
+  -- through the degree-one argument — the same classical input, with an extra open gap
+  -- (`complexSimplePolePrincipalPart_of_biholomorph_onePoint`) on the way.
+  obtain ⟨e, -, -⟩ := exists_biholomorph_onePoint_of_analyticGenus_zero X h
+  exact ⟨e⟩
 
 
 theorem genus_zero_homeomorph_onePointCx_of_routeData
