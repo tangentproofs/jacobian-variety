@@ -5,6 +5,8 @@ import Jacobian.Periods
 import Jacobian.TraceDegree
 import Jacobian.Analysis.PlaneCalculus
 import Jacobian.Analysis.WeylDbar
+import Jacobian.Analysis.Poincare
+import Jacobian.Surface.Stokes
 
 /-!
 # Jacobian Challenge
