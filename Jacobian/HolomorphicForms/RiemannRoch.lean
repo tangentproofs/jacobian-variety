@@ -235,131 +235,11 @@ lemma not_continuous_two_point_indicator
         | (exact hac (ha.trans hc.symm))
         | (exact hbc (hb.trans hc.symm))
 
-/--
-**Structural axiom: genus-zero RR provides a `MeromorphicMapToSphere`
-with full analytic + RR-space-membership content.**
 
-The exact upstream content needed to discharge
-`genusZero_pointRRSection_outside_constants_exists` (in
-`MeromorphicToBranchedCover.lean`) plus
-`riemannRochSpace_dim_ge_two_implies_nonconstant_meromorphic` (below):
-a `MeromorphicMapToSphere X` with pole divisor exactly
-`Divisor.point P`, nonconstant, in the Riemann-Roch space `L([P])`,
-and equipped with the granular `meromorphic_getD` and
-`mapAnalyticOrderAt = 1` projections.
 
-The sorry-free production `genusZero_fixedPole_meromorphicData_nonempty`
-(below) **does not supply** the granular analytic content: its proof
-uses the bump-scaffold `singlePoleMeromorphicMap`, which is `C^∞` but
-not analytic in the bump-transition zone, so chart-local
-meromorphicity of the canonical finite lift fails at those points.
-
-Once the upstream RR chain is dependency-broken from the bump
-scaffold (e.g., by producing an honest meromorphic map via a real
-Riemann-Roch construction), this `sorry` can be discharged.
-
-This narrower-named provider was moved here from
-`MeromorphicToBranchedCover.lean` (manager unblock,
-2026-05-27 — see `task.md`); it belongs alongside the existing
-`genusZero_riemannRoch_*` structural axioms above as the canonical
-genus-zero RR existential claim. Downstream theorems in
-`MeromorphicToBranchedCover.lean`
-(e.g. `genusZero_pointRRSection_outside_constants_exists`) and
-`RiemannRoch.lean`
-(e.g. `riemannRochSpace_dim_ge_two_implies_nonconstant_meromorphic`)
-both route through this provider.
-
-This is the proving-guide-approved "strictly narrower, named
-provider" replacement of the prior monolithic L2855 sorry in
-`MeromorphicToBranchedCover.lean`.
--/
-theorem genusZero_pointRRSection_meromorphic_getD_exists
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    ∃ f : MeromorphicMapToSphere X,
-      f.poles = Divisor.point P ∧
-      f.Nonconstant ∧
-      f.MemRiemannRochSpace (Divisor.point P) ∧
-      (∀ p : X,
-        JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX
-          (fun q => (f.toMap q).getD 0) p) ∧
-      JacobianChallenge.HolomorphicForms.mapAnalyticOrderAt f.toMap P = 1 := by
-  obtain ⟨w⟩ := genusZero_fixedPole_analyticRRWitness_nonempty X P h
-  refine
-    ⟨w.map, w.poleDivisor_eq, w.nonconstant, w.mem_L_point,
-      w.analyticData.meromorphic_getD, ?_⟩
-  exact w.analyticData.simple_pole_order_one P w.poleDivisor_eq
-
-/--
-**Structural axiom (S3c).** Genus-zero Riemann-Roch supplies a nonconstant
-meromorphic map in `L([P])`.
-
-This is no longer derived from a raw `Submodule ℂ (MeromorphicFunctionType X)`;
-that derivation relied on the removed false vector-space instance.
-
-**Refactored (2026-05-27, manager-authorized multi-file commit)**:
-this theorem now routes through the narrower named provider
-`genusZero_pointRRSection_meromorphic_getD_exists` (above) instead of
-referencing the bump scaffold `singlePoleMeromorphicMap` directly. The
-narrower provider carries the full analytic + nonconstancy +
-RR-space-membership content under a single named sorry; this theorem
-projects the (a) nonconstancy and (b) RR-space-membership components.
--/
-theorem riemannRochSpace_dim_ge_two_implies_nonconstant_meromorphic
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    ∃ f : MeromorphicMapToSphere X,
-      f.Nonconstant ∧ f.MemRiemannRochSpace (Divisor.point P) := by
-  obtain ⟨f, _hpole, hnc, hmem, _hmer, _hord1⟩ :=
-    genusZero_pointRRSection_meromorphic_getD_exists X P h
-  exact ⟨f, hnc, hmem⟩
-
-/--
-**Structural axiom (S3).** From the genus-zero Riemann-Roch
-identity `ℓ([P]) − ℓ(K − [P]) = 2` plus the negative-degree vanishing
-`ℓ(K − [P]) = 0`, one obtains a nonconstant meromorphic map in `L([P])`.
-The final extraction is delegated to structural input S3c until the sound
-germ/divisor-compatible RR space is available.
-
-Cross-ref: `tex/sections/03-riemann-roch.tex`,
-`lem:genus-zero-point-riemann-roch-space-witness-exists`.
--/
-theorem genusZero_pointRiemannRochSpace_witness_exists
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    ∃ f : MeromorphicMapToSphere X,
-      f.Nonconstant ∧ f.MemRiemannRochSpace (Divisor.point P) := by
-  have _hRR :=
-    genusZero_riemannRoch_difference_eq_two X P h
-  have _hK0 :=
-    genusZero_riemannRoch_K_minus_point_dim_zero X P h
-  exact riemannRochSpace_dim_ge_two_implies_nonconstant_meromorphic X P h
 
 /-! ### Headline obligations -/
 
-/--
-**Headline obligation 1.** On a compact connected genus-zero
-Riemann surface, `L([P])` contains a nonconstant meromorphic function.
--/
-theorem genusZero_exists_nonconstant_mem_L_point
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X)
-    (h : analyticGenus ℂ X = 0) :
-    Nonempty (GenusZeroPointRiemannRochElement X P h) := by
-  obtain ⟨f, hnc, hmem⟩ := genusZero_pointRiemannRochSpace_witness_exists X P h
-  exact ⟨{ meromorphicMap := f, nonconstant := hnc, mem_L_point := hmem }⟩
 
 /--
 **Headline obligation 2.** A meromorphic map to the Riemann
@@ -434,32 +314,6 @@ theorem genusZero_poleDivisor_eq_point_of_nonconstant_mem_L_point
   -- 6. Combine everything via the Divisor lemma.
   exact effective_le_point_iff_grounded m.poles P heff hle hne
 
-/--
-**Headline obligation (final packaging).** Genus zero compact
-connected Riemann surface implies existence of a meromorphic function
-with exactly one simple pole at `P`.
-
-**Refactored (2026-05-27, follow-on to commit `cfca8ac3`)**: this
-theorem now routes through the narrower named provider
-`genusZero_pointRRSection_meromorphic_getD_exists` (above) and uses
-its `hpole` projection directly. This bypasses the indirect
-derivation through
-`genusZero_poleDivisor_eq_point_of_nonconstant_mem_L_point`, which
-proves `f.poles = Divisor.point P` non-trivially from
-`f.Nonconstant + f.MemRiemannRochSpace (Divisor.point P)` — content
-already supplied directly by the narrower provider's existential
-triple.
--/
-theorem genusZero_fixedPole_meromorphicData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (GenusZeroFixedPoleMeromorphicData X P h) := by
-  obtain ⟨f, hpole, _hnc, _hmem, _hmer, _hord1⟩ :=
-    genusZero_pointRRSection_meromorphic_getD_exists X P h
-  exact ⟨{ meromorphicMap := f, poleDivisor_eq_point := hpole }⟩
 
 private theorem rr_orderAt_getD_eq_neg_one_of_mapAnalyticOrderAt_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]

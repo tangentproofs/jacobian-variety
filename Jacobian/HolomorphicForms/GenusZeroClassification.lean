@@ -14,6 +14,7 @@ import Mathlib.Topology.Compactification.OnePoint.Sphere
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Jacobian.Periods.PrimitiveCovering
+import Jacobian.Surface.GenusZero
 
 /-!
 # Genus-zero classification
@@ -1709,115 +1710,13 @@ abbrev GenusZeroRiemannRochFixedPoleData
     (h : analyticGenus ℂ X = 0) : Type _ :=
   GenusZeroFixedPoleMeromorphicData X P h
 
-/--
-**Fixed-pole Riemann-Roch existence leaf.** If a compact connected
-Riemann surface has analytic genus zero, then for any prescribed point `P`
-there is a meromorphic function with a single simple pole at `P`.
-
-Bottom-up content: divisor theory on compact Riemann surfaces and the
-Riemann-Roch calculation `ℓ(P) = 2` when `g = 0`, producing a nonconstant
-meromorphic function whose pole divisor is exactly `[P]`.
--/
-theorem genusZeroRiemannRochFixedPoleData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X)
-    (h : analyticGenus ℂ X = 0) :
-    Nonempty (GenusZeroRiemannRochFixedPoleData X P h) := by
-  exact genusZero_fixedPole_meromorphicData_nonempty X P h
-
-/--
-**Fixed-pole Riemann-Roch data assembly.** Extracts the map/certificate
-package from the named existence leaf.
--/
-noncomputable def genusZeroRiemannRochFixedPoleData
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X)
-    (h : analyticGenus ℂ X = 0) :
-    GenusZeroRiemannRochFixedPoleData X P h :=
-  Classical.choice (genusZeroRiemannRochFixedPoleData_nonempty X P h)
-
-/-- **Fixed-pole Riemann-Roch map projection.** -/
-noncomputable def genusZeroRiemannRochNonconstantMapAt
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X)
-    (h : analyticGenus ℂ X = 0) :
-    X → OnePoint ℂ :=
-  (genusZeroRiemannRochFixedPoleData X P h).meromorphicMap.toMap
-
-/--
-**Fixed-pole divisor/order certificate projection.** The Riemann-Roch
-map produced at `P` has exactly one simple pole, located at `P`, and no
-other poles.
--/
-theorem genusZeroRiemannRochSimplePoleAt
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X)
-    (h : analyticGenus ℂ X = 0) :
-    (genusZeroRiemannRochFixedPoleData X P h).meromorphicMap.poles =
-      Divisor.point P := by
-  exact (genusZeroRiemannRochFixedPoleData X P h).poleDivisor_eq_point
-
-/--
-**Fixed-pole Riemann-Roch assembly.** The map part of the fixed-pole
-simple-pole statement; the pole certificate is kept separately as
-`genusZeroRiemannRochSimplePoleAt`.
-
-This definition exists so callers that only need the eventual meromorphic map
-do not depend directly on the certificate packaging.
--/
-noncomputable def genusZeroSimplePoleMeromorphicMapAt
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X)
-    (h : analyticGenus ℂ X = 0) :
-    X → OnePoint ℂ :=
-  genusZeroRiemannRochNonconstantMapAt X P h
-
-/--
-**Assembly for the Riemann-Roch leaf.** Choose any point of the connected
-surface and package the fixed-pole Riemann-Roch map at that point.
-
-The remaining Riemann-Roch leaf is now the single fixed-pole existence
-statement `genusZeroRiemannRochFixedPoleData_nonempty`: for a prescribed
-point `P`, genus zero Riemann-Roch produces a meromorphic map whose only pole
-is simple and located at `P`.
--/
-noncomputable def simplePoleMeromorphicMapOfGenusZero
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (h : analyticGenus ℂ X = 0) :
-    GenusZeroSimplePoleMeromorphicMap X :=
-  let P : X := Classical.choice (inferInstance : Nonempty X)
-  let data := genusZeroRiemannRochFixedPoleData X P h
-  { meromorphicMap := data.meromorphicMap
-    pole := P
-    simple_pole_cert := genusZeroRiemannRochSimplePoleAt X P h }
 
 
-theorem genus_zero_exists_simplePole_meromorphicMap
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (h : analyticGenus ℂ X = 0) :
-    Nonempty (GenusZeroSimplePoleMeromorphicMap X) := by
-  exact ⟨simplePoleMeromorphicMapOfGenusZero X h⟩
+
+
+
+
+
 
 /--
 **Properness/degree data existence leaf.** A one-simple-pole map has
@@ -1896,48 +1795,7 @@ theorem proper_degreeOne_meromorphicMap_biholomorphic
     simpa [e] using f.continuous_toMap
   exact ⟨⟨he.homeoOfEquivCompactToT2⟩⟩
 
-/--
-**Uniformization (genus zero):** a compact connected Riemann surface
-with `analyticGenus = 0` is homeomorphic to the one-point
-compactification of `ℂ`.
 
-Pure assembly of the three Riemann-Roch route leaves above:
-simple-pole meromorphic function, proper degree-one map, and degree-one
-biholomorphic parametrization.
--/
-theorem genus_zero_homeomorph_onePointCx_with_routeData
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (h : analyticGenus ℂ X = 0)
-    (hmod : (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.PoleModulusData)
-    (hbranch :
-      (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.BranchedCoverDataOfPoleDegree) :
-    Nonempty (X ≃ₜ OnePoint ℂ) := by
-  let ⟨f⟩ := genus_zero_exists_simplePole_meromorphicMap X h
-  change Nonempty (X ≃ₜ OnePoint ℂ)
-  let ⟨g⟩ := simplePole_meromorphicMap_proper_degreeOne X
-    (simplePoleMeromorphicMapOfGenusZero X h) hmod hbranch
-  let ⟨b⟩ := proper_degreeOne_meromorphicMap_biholomorphic X g
-  exact ⟨b.toHomeomorph⟩
-
-/--
-The "hard" direction: if `analyticGenus ℂ X = 0` then `X` is
-homeomorphic to the standard 2-sphere.
--/
-theorem homeomorphic_sphere_of_analyticGenus_eq_zero_with_routeData
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (_h : analyticGenus ℂ X = 0)
-    (hmod : (simplePoleMeromorphicMapOfGenusZero X _h).meromorphicMap.PoleModulusData)
-    (hbranch :
-      (simplePoleMeromorphicMapOfGenusZero X _h).meromorphicMap.BranchedCoverDataOfPoleDegree) :
-    Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1) :=
-  let ⟨e⟩ := genus_zero_homeomorph_onePointCx_with_routeData X _h hmod hbranch
-  ⟨e.trans onePointCx_homeomorph_sphere⟩
 
 
 /--
@@ -1945,13 +1803,11 @@ theorem homeomorphic_sphere_of_analyticGenus_eq_zero_with_routeData
 with `analyticGenus = 0` is homeomorphic to the one-point
 compactification of `ℂ`.
 
-1. Extract the bundled `data : GenusZeroSimplePoleMeromorphicMap X`
-   together with `PoleModulusData` and `BranchedCoverDataOfPoleDegree`
-   for `data.meromorphicMap`.
-2. Apply `simplePole_meromorphicMap_proper_degreeOne` to package this
-   as a proper degree-one map to `OnePoint ℂ`.
-3. Apply `proper_degreeOne_meromorphicMap_biholomorphic` to package
-   that as a homeomorphism `X ≃ₜ OnePoint ℂ`.
+1. Genus zero means every holomorphic 1-form vanishes, so the Hodge decomposition makes
+   every smooth `(0,1)`-form `∂̄`-exact.
+2. Solving `∂̄u = ∂̄(χ/(w - z₀))` gives a function with a single simple pole at a chosen point.
+3. Its extension to `ℂ̂` is holomorphic of degree one, hence a homeomorphism
+   (`JacobianChallenge.Surface.homeomorph_onePoint_of_forall_eq_zero`).
 -/
 theorem genus_zero_homeomorph_onePointCx
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
@@ -1960,26 +1816,14 @@ theorem genus_zero_homeomorph_onePointCx
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : analyticGenus ℂ X = 0) :
     Nonempty (X ≃ₜ OnePoint ℂ) := by
-  -- Directly from the classical input "genus zero ⇒ Riemann sphere"
-  -- (`exists_biholomorph_onePoint_of_analyticGenus_zero`). The former route took that
-  -- biholomorphism, built a single-pole function from it, and re-derived a biholomorphism
-  -- through the degree-one argument — the same classical input, with an extra open gap
-  -- (`complexSimplePolePrincipalPart_of_biholomorph_onePoint`) on the way.
-  obtain ⟨e, -, -⟩ := exists_biholomorph_onePoint_of_analyticGenus_zero X h
-  exact ⟨e⟩
+  -- Genus zero: every holomorphic 1-form vanishes, so `∂̄` is solvable and there is a function
+  -- with a single simple pole; it is a degree-one holomorphic map to `ℂ̂`
+  -- (`JacobianChallenge.Surface.homeomorph_onePoint_of_forall_eq_zero`).
+  haveI := analyticGenus_eq_zero_iff_subsingleton.mp h
+  exact JacobianChallenge.Surface.homeomorph_onePoint_of_forall_eq_zero
+    (fun η => Subsingleton.elim η 0)
 
 
-theorem genus_zero_homeomorph_onePointCx_of_routeData
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (h : analyticGenus ℂ X = 0)
-    (hmod : (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.PoleModulusData)
-    (hbranch :
-      (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.BranchedCoverDataOfPoleDegree) :
-    Nonempty (X ≃ₜ OnePoint ℂ) :=
-  genus_zero_homeomorph_onePointCx_with_routeData X h hmod hbranch
 
 
 theorem homeomorphic_sphere_of_analyticGenus_eq_zero
@@ -1992,21 +1836,6 @@ theorem homeomorphic_sphere_of_analyticGenus_eq_zero
   let ⟨e⟩ := genus_zero_homeomorph_onePointCx X _h
   ⟨e.trans onePointCx_homeomorph_sphere⟩
 
-/--
-A compact connected Riemann surface has analytic genus zero iff it is
-homeomorphic to the standard 2-sphere.
--/
-theorem analyticGenus_eq_zero_with_routeData_homeomorphic_sphere
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X] :
-    (∃ h : analyticGenus ℂ X = 0,
-      (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.PoleModulusData ∧
-      (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.BranchedCoverDataOfPoleDegree) →
-      Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1) := by
-  rintro ⟨h, hmod, hbranch⟩
-  exact homeomorphic_sphere_of_analyticGenus_eq_zero_with_routeData X h hmod hbranch
 
 /--
 A compact connected Riemann surface has analytic genus zero iff it is

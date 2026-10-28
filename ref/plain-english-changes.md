@@ -667,3 +667,68 @@ Lemma~\ref{lem:holomorphic-one-form-equiv-of-homeo-sphere}, proved without
 uniformization; the former Lean statement (a named classical input) is removed.
 \end{theorem}
 ```
+
+### 35. `tex/sections/04-branched-covers-genus-zero.tex:932` (`lem:exists-biholomorph-one-point-of-analytic-genus-zero`)
+
+**Why.** Classical input C5 is now proved (`Jacobian/Surface/GenusZero.lean`), as a
+homeomorphism realized by a degree-one holomorphic map (the old Lean statement also asked for a
+holomorphic inverse, which nothing used). `\uses` on the uniformization theorem dropped: the new
+proof goes through the Hodge decomposition, not uniformization. Proof sketch added.
+
+**Old.**
+```latex
+\begin{lemma}[Analytic genus zero gives a sphere biholomorphism (open)]
+\label{lem:exists-biholomorph-one-point-of-analytic-genus-zero}
+\uses{thm:exists-biholomorph-one-point-of-genus-zero}
+A compact connected Riemann surface with \(g_{\mathrm{an}}(X)=0\) admits a
+biholomorphism \(X\simeq\code{OnePoint}\,\C\). Packages
+Theorem~\ref{thm:exists-biholomorph-one-point-of-genus-zero} into the
+\(g_{\mathrm{an}}=0\) hypothesis the meromorphic bridge consumes. Open
+obligation (\code{sorry}) in the Lean development.
+Tracking: \ghissue{233}.
+\lean{JacobianChallenge.HolomorphicForms.exists_biholomorph_onePoint_of_analyticGenus_zero}
+\end{lemma}
+```
+**New.**
+```latex
+\begin{lemma}[Analytic genus zero gives a sphere homeomorphism]
+\label{lem:exists-biholomorph-one-point-of-analytic-genus-zero}
+A compact connected Riemann surface with \(g_{\mathrm{an}}(X)=0\) admits a
+homeomorphism \(X\simeq\code{OnePoint}\,\C\), realized by a holomorphic map of
+degree one.
+Tracking: \ghissue{233}.
+\lean{JacobianChallenge.Surface.homeomorph_onePoint_of_forall_eq_zero}
+\leanok
+\end{lemma}
+\begin{proof}
+\leanok
+Fix \(P\in X\) and a chart ... (cutoff principal part, Hodge decomposition, degree one;
+see the file for the full paragraph)
+\end{proof}
+```
+
+### 36. `tex/sections/04-branched-covers-genus-zero.tex` (`lem:complex-simple-pole-principal-part-of-biholomorph-one-point`)
+
+**Why.** Its Lean declaration (gap 19, unreachable) was deleted together with the dead
+genus-zero Riemann–Roch section chain that depended on the old C5 `sorry`. Block removed.
+
+**Old.**
+```latex
+\begin{lemma}[Simple-pole principal part from a sphere biholomorphism (open)]
+\label{lem:complex-simple-pole-principal-part-of-biholomorph-one-point}
+\uses{thm:exists-biholomorph-one-point-of-genus-zero}
+Pulling the standard simple-pole coordinate on \(\code{OnePoint}\,\C\) back along
+the biholomorphism yields a map with a simple-pole principal part at the chosen
+point. Open obligation (\code{sorry}).
+Tracking: \ghissue{234}.
+\lean{JacobianChallenge.HolomorphicForms.complexSimplePolePrincipalPart_of_biholomorph_onePoint}
+\end{lemma}
+```
+**New.** (removed)
+
+### 37. `tex/sections/10-main-theorem-assembly.tex:47`
+
+**Why.** Dropped the `\uses` reference to the label removed in entry 36.
+
+**Old.** `..., lem:exists-biholomorph-one-point-of-analytic-genus-zero, lem:complex-simple-pole-principal-part-of-biholomorph-one-point}`
+**New.** `..., lem:exists-biholomorph-one-point-of-analytic-genus-zero}`
