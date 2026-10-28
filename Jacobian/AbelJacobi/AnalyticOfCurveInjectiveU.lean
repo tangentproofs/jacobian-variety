@@ -35,7 +35,7 @@ positive, then `Q₁ = Q₂`.
 Classical proof: by Abel's theorem the divisor `Q₂ - Q₁` is then principal, i.e. there is
 a meromorphic function with a single simple pole; such a function is a degree-one map to
 the Riemann sphere, hence a biholomorphism, so `X` has genus `0` — a contradiction.
-References: O. Forster, *Lectures on Riemann Surfaces*, Thm. 20.7 (Abel) and §21;
+References: O. Forster, *Lectures on Riemann Surfaces*, §20 (Abel's theorem) and §21;
 Griffiths–Harris, Ch. 2 §2.
 
 Named classical input (`sorry`); see `ref/axiom-audit.md`, "Classical inputs".

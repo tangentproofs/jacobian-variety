@@ -892,6 +892,12 @@ homeomorphic to the Riemann sphere admits a biholomorphism to `OnePoint ℂ`.
 
 The given homeomorphism is only topological; the theorem constructs a possibly
 different homeomorphism that is complex-smooth in both directions.
+
+**CLASSICAL INPUT — uniqueness of the complex structure on the sphere** (a compact Riemann
+surface homeomorphic to `S²` is simply connected, hence biholomorphic to `ℂ̂` by
+uniformization). Reference: O. Forster, *Lectures on Riemann Surfaces*, §27
+(uniformization of simply connected Riemann surfaces). Named classical input (`sorry`);
+see `ref/axiom-audit.md` §0.1.
 -/
 theorem exists_biholomorph_onePoint_of_genus_zero
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]

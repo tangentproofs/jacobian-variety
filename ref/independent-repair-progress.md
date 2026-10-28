@@ -282,8 +282,41 @@ All **unreachable** from the public API (decl-level graph), so ledgered rather t
 ### Builds and counts
 
 `lake build Jacobian` and `lake build Jacobian.Solution`: **green**.
-Engine sorry declarations: **25 → 14** (−7 retired false gaps 5,6,8,9,10,16,17; −1 gap 14;
-−1 gap 7 proved; the polygon tower's other sorries in those files went with them).
+Engine sorry declarations: **25 → 15** (−7 retired false gaps 5,6,8,9,10,16,17; −1 gap 14;
+−1 gap 7 proved). *(Corrected: the commit message of 3492fa3 says 14; the build says 15.)*
+
+---
+
+## 2026-10-27 — goal (e): degree fallback lemma; comparator; `genus` axiom-clean
+
+### What changed
+
+1. **`ContMDiff.exists_branchedCoverData`** (`Solution.lean`): for nonconstant `f` a
+   ramification-compatible `BranchedCoverData` exists (built from `f` itself, all inputs
+   derived from `ContMDiff`). **`ContMDiff.degree_eq_branchedDegree`**: for nonconstant `f`,
+   `degree = branchedDegree hbc` for *any* compatible datum. Docstring states exactly when
+   each branch of `degree` fires: constant ↦ `0` (intended), nonconstant ↦ weighted fibre
+   count; the two inner `else 0` branches are unreachable (`Y` connected; this lemma).
+   Both `#print axioms` → `[propext, Classical.choice, Quot.sound]`. **Gap 22 closed.**
+2. **`genus`** is now `Module.finrank ℂ (HolomorphicOneForm ℂ X)` directly (definitionally
+   `analyticGenus ℂ X`), so its value no longer depends on the finiteness proof:
+   `#print axioms genus` → clean (was `sorryAx`). Comparator statements unaffected.
+3. **Comparator.** Built the official comparator. HEAD now targets Lean v4.35 and its
+   `lean4export` rejects v4.31 oleans (`incompatible header`) — CI would hit this too.
+   Pinned to `leanprover/comparator@3afea23` (last commit on `v4.31.0-rc1`), also in
+   `.github/workflows/comparator-smoketest.yml`. Results:
+   * `scripts/mini-comparator.sh`: ALL MATCH (11/11).
+   * `comparator/jacobian-smoketest.json`: **pass** — "Lean default kernel accepts the
+     solution. Your solution is okay!"
+   * `comparator/jacobian.json` (strict): **fail** — `Illegal axiom detected: 'sorryAx'`
+     (expected: classical inputs and gaps remain).
+4. Classical inputs relabelled in code with references (C1–C5); `ref/axiom-audit.md` §0 added
+   (classical inputs table, labelled gaps table, retirements).
+
+### `#print axioms` on the public API
+
+`genus`, `ContMDiff.degree`: **clean**. All other public declarations: `sorryAx` (through
+C1–C5 and the labelled gaps).
 
 ---
 

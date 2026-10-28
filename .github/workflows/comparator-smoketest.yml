@@ -47,8 +47,12 @@ jobs:
 
       - name: Build comparator
         run: |
-          git clone --depth 1 https://github.com/leanprover/comparator.git /tmp/comparator
+          # Pinned: comparator HEAD tracks newer Lean (v4.35 as of 2026-10) and its
+          # lean4export cannot read this project's v4.31.0-rc1 oleans ("incompatible
+          # header"). 3afea23 is the last comparator commit on v4.31.0-rc1.
+          git clone https://github.com/leanprover/comparator.git /tmp/comparator
           cd /tmp/comparator
+          git checkout 3afea23
           lake build lean4export comparator
 
       - name: Install fake landrun shim

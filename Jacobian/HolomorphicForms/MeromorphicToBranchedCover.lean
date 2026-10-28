@@ -2799,6 +2799,9 @@ The intended function `F` is the standard simple-pole coordinate on
 `OnePoint ℂ` with pole at `e P`, pulled back along the biholomorphism `e`.
 The theorem packages exactly the complex principal-part facts needed by
 `SimplePoleToSphereData.of_complexPrincipalPart`.
+
+GAP (`sorry`): true and elementary (pull back the standard coordinate along the
+biholomorphism), not yet formalized (gap 19).
 -/
 theorem complexSimplePolePrincipalPart_of_biholomorph_onePoint
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
@@ -2851,6 +2854,11 @@ prescribed-pole meromorphic-map route.
 This is separate from `singlePoleAnalyticData_of_biholomorph_onePoint`: it
 constructs the biholomorphism from the analytic-genus-zero hypothesis, while
 the bridge below consumes explicit biholomorphic data.
+
+**CLASSICAL INPUT — genus zero ⇒ Riemann sphere** (by Riemann–Roch a genus-0 surface
+carries a meromorphic function with a single simple pole, which is a biholomorphism to
+`ℂ̂`). Reference: O. Forster, *Lectures on Riemann Surfaces*, §16 (Riemann–Roch and its
+consequences). Named classical input (`sorry`); see `ref/axiom-audit.md` §0.1.
 -/
 theorem exists_biholomorph_onePoint_of_analyticGenus_zero
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]

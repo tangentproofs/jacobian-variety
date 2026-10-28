@@ -40,10 +40,13 @@ noncomputable instance (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpac
     JacobianChallenge.HolomorphicForms.FiniteDimensionalHolomorphicOneForms ℂ X :=
   JacobianChallenge.HolomorphicForms.compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier X
 
-/-- The genus of a compact Riemann surface. -/
+/-- The genus of a compact Riemann surface: the complex dimension of its space of
+holomorphic 1-forms. Stated directly as `Module.finrank` (definitionally
+`analyticGenus ℂ X`) so that the *value* does not depend on the finiteness proof; the
+finiteness theorem is a named classical input, used only where a basis is needed. -/
 noncomputable def genus (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X] : ℕ :=
-  JacobianChallenge.HolomorphicForms.analyticGenus ℂ X
+  Module.finrank ℂ (JacobianChallenge.HolomorphicForms.HolomorphicOneForm ℂ X)
 
 lemma genus_eq_zero_with_routeData_homeo {X : Type*} [TopologicalSpace X] [T2Space X]
     [CompactSpace X] [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X]
@@ -250,6 +253,46 @@ theorem _root_.ContMDiff.degree_eq_analyticDegreeU (hf : ContMDiff 𝓘(ℂ) �
   unfold ContMDiff.degree JacobianChallenge.TraceDegree.analyticDegreeU
   have hne : Nonempty Y := inferInstance
   simp only [hne, dif_pos]
+
+/--
+**The `else 0` fallback of `ContMDiff.degree` never fires** (named existence lemma). For a
+nonconstant holomorphic map of compact Riemann surfaces there is a ramification-compatible
+branched-cover datum, built from `f` itself: ramification index = local analytic order
+(`branchedCoverData_of_nonconstant_holomorphic`), with the local `k`-fold ramification
+and weighted-fibre conservation packages derived from smoothness.
+
+So the three branches of `ContMDiff.degree` are exactly: `f` constant ↦ `0` (the intended
+value, not a fallback); `f` nonconstant ↦ the weighted fibre count `branchedDegree`
+(`ContMDiff.degree_eq_branchedDegree`); and the two inner `else 0` branches are
+unreachable — the `Nonempty Y` one because `Y` is connected, the `∃ hbc` one by this lemma.
+-/
+theorem _root_.ContMDiff.exists_branchedCoverData (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f)
+    (hnonconst : ¬ ∃ y₀, ∀ x, f x = y₀) :
+    ∃ hbc : JacobianChallenge.HolomorphicForms.BranchedCoverData X Y f,
+      hbc.RamificationIndexCompatible :=
+  have hHol := JacobianChallenge.HolomorphicForms.isHolomorphic_of_contMDiff hf
+    (JacobianChallenge.HolomorphicForms.hasLocalKfoldRamification_of_contMDiff hf)
+  have hw := JacobianChallenge.HolomorphicForms.hasWeightedFiberConservation_of_contMDiff hf
+  ⟨JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic hHol hw hnonconst,
+    JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic_compatible
+      hHol hw hnonconst⟩
+
+/--
+For a nonconstant `f`, `ContMDiff.degree` is the weighted fibre count `branchedDegree` of
+**any** ramification-compatible branched-cover datum (the value does not depend on the
+datum: `branchedDegree_eq_of_compatibleU`). No existence hypothesis is needed for the
+degree to take this branch: see `ContMDiff.exists_branchedCoverData`.
+-/
+theorem _root_.ContMDiff.degree_eq_branchedDegree (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f)
+    (hnonconst : ¬ ∃ y₀, ∀ x, f x = y₀)
+    (hbc : JacobianChallenge.HolomorphicForms.BranchedCoverData X Y f)
+    (hcompat : hbc.RamificationIndexCompatible) :
+    ContMDiff.degree f hf = JacobianChallenge.HolomorphicForms.branchedDegree hbc := by
+  rw [ContMDiff.degree_eq_analyticDegreeU f hf]
+  exact JacobianChallenge.TraceDegree.analyticDegree_eq_canonical_branchedDegreeU f hf
+    (JacobianChallenge.HolomorphicForms.isHolomorphic_of_contMDiff hf
+      (JacobianChallenge.HolomorphicForms.hasLocalKfoldRamification_of_contMDiff hf))
+    hbc hcompat hnonconst
 
 lemma pushforward_pullback (P : Jacobian Y) :
   pushforward f hf (pullback f hf P) = (ContMDiff.degree f hf) • P := by
