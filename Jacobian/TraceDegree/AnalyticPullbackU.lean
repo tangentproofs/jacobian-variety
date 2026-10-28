@@ -1,6 +1,5 @@
 import Jacobian.TraceDegree.PullbackTraceLiftU
 import Jacobian.AbelJacobi.AnalyticOfCurveU
-import Jacobian.Periods.PeriodSubgroupZLatticeU
 import Jacobian.ComplexTorus.OfClm
 
 /-!
@@ -20,15 +19,12 @@ universe-`u` quotient `BasisAnalyticJacobianU Y →ₜ+ BasisAnalyticJacobianU X
 (Milestone C). It is built on the E2a dual-pullback trace-lift CLM
 `traceDualPullbackLiftCLMU`.
 
-## A sorry-free simplification (the `⊥` shortcut, as in E1-core)
+## Lattice preservation
 
-The Type-0 lattice-preservation proof `traceDualPullbackLift_preserves_lattice_raw`
-is deep. But the universe-`u` period subgroup is the trivial subgroup `⊥`
-(`basisAlignedPeriodSubgroupConcreteU_eq_bot`, because the period pairing is
-currently the `0` placeholder). Hence `traceDualPullbackLift_preserves_latticeU`
-collapses to "`v ∈ ⊥ → CLMU v ∈ ⊥`", i.e. `v = 0 ⇒ map_zero` — proved in three
-lines, no naturality chain. Same `⊥`-shortcut that made the pushforward E1-core
-preserves-lattice sorry-free.
+Descending the ambient map needs `traceDualPullbackLift_preserves_latticeU`: periods of
+`Y` go to periods of `X` under the transpose of the trace. This used to be "proved" by a
+`⊥` shortcut (old period subgroup `⊥`). With the genuine period lattice it is a real
+statement, currently a labelled gap (lifting closed curves through the branched cover).
 
 The continuous-smoothness lemma `analyticPullback_contMDiffU` and the
 functoriality laws are deferred to E2b / E2c.
@@ -52,21 +48,22 @@ variable {Y : Type v} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 
 /--
-The universe-`u` dual-pullback trace lift preserves the period lattice.
-Universe-polymorphic companion to `traceDualPullbackLift_preserves_lattice_raw`,
-proved sorry-free via the `⊥` shortcut (the universe-`u` period subgroup is
-trivial; see the module docstring): `v ∈ ⊥ ⇒ v = 0 ⇒ CLMU v = 0 ∈ ⊥`. Note the
-contravariant `Y → X` direction.
+**The pullback maps periods to periods.** The ambient pullback
+`traceDualPullbackLiftCLMU f hf` — the transpose of the trace of forms in basis
+coordinates — sends the period lattice of `Y` into that of `X` (contravariant).
+
+GAP (`sorry`), true classically: for a closed curve `c` in `Y`, `∫_c tr(ω) = ∫_{f^*c} ω`
+where `f^*c` is the lift of `c` through the branched cover `f` (a sum of closed curves in
+`X` once `c` avoids the finitely many branch values, which it can after a homotopy).
+
+History: previously proved by the "`⊥` shortcut" (old period subgroup `⊥`).
 -/
 theorem traceDualPullbackLift_preserves_latticeU
     (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
     ∀ v ∈ (periodFullComplexLatticeU Y).subgroup,
       traceDualPullbackLiftCLMU f hf v ∈ (periodFullComplexLatticeU X).subgroup := by
-  intro v hv
-  have hvbot : v ∈ basisAlignedPeriodSubgroupConcreteU Y := hv
-  rw [basisAlignedPeriodSubgroupConcreteU_eq_bot Y, AddSubgroup.mem_bot] at hvbot
-  show traceDualPullbackLiftCLMU f hf v ∈ basisAlignedPeriodSubgroupConcreteU X
-  rw [basisAlignedPeriodSubgroupConcreteU_eq_bot X, AddSubgroup.mem_bot, hvbot, map_zero]
+  -- GAP: see docstring.
+  sorry
 
 /--
 The universe-`u` analytic pullback induced by a holomorphic map of compact

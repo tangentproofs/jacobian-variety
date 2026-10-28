@@ -1,29 +1,33 @@
-import Jacobian.HolomorphicForms.CompactRiemannSurface
-import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
-import Mathlib.Geometry.Manifold.MFDeriv.Atlas
-import Mathlib.Geometry.Manifold.ContMDiff.Defs
+import Jacobian.Periods.GenuinePeriodLattice
 
 /-!
-# Universe-polymorphic path-integral functional
+# Universe-polymorphic path-integral functional (the Abel–Jacobi integral)
 
-`Jacobian/AbelJacobi/AnalyticOfCurveBasis.lean` bundles the basis-coordinate
-path-integral functional `(P, Q) ↦ (∫_P^Q ω₁, …, ∫_P^Q ωₘ)` of a compact
-Riemann surface into `opaque pathIntegralFunctionalBundle (X : Type)` and
-extracts `pathIntegralFunctional X P Q : Fin (analyticGenus ℂ X) → ℂ`. The whole
-analytic Abel-Jacobi map `analyticOfCurve` is built on this functional.
+The Abel–Jacobi map of a compact Riemann surface sends `Q` to
+`(∫_P^Q ω₁, …, ∫_P^Q ω_g)` modulo periods. This file defines the integral
+`pathIntegralFunctionalU X P Q : Fin (analyticGenus ℂ X) → ℂ` as the period vector
+(`Periods.periodVector`, built on the genuine multi-chart line integral
+`pathIntegralViaCover`) of a chosen `C¹` path from `P` to `Q`.
 
-This file provides the universe-polymorphic companion `pathIntegralFunctionalU`
-(D0 of the Abel-Jacobi "D-chain" — the universe-`u` generalization of the
-Abel-Jacobi layer, mirroring the C0–C3 period-lattice chain). It is the
-foundation on which `analyticOfCurveU` (D1) — and hence the public
-`ofCurve : X → Jacobian X` for `X : Type u` — will be built.
+The vector depends on the chosen path; its class modulo the period lattice does not:
+any two `C¹` paths with the same endpoints have period vectors differing by a period,
+**by the definition of the period lattice** (`Periods.periodVector_sub_mem`). That is
+`pathIntegralFunctionalU_sub_mem` below.
 
-The functional's codomain `Fin (analyticGenus ℂ X) → ℂ` is `Type 0` for any
-`X : Type u`, so only the binder `(X : Type)` needs widening to `(X : Type u)`.
-As on the Type-0 side, the bundle is an `opaque` (the genuine multi-chart path
-integration is deferred infrastructure); `opaque` introduces no axiom and no
-sorry — it is the universe-`u` analogue of the existing Type-0
-`opaque pathIntegralFunctionalBundle`.
+**History.** This file used to declare `opaque pathIntegralFunctionalBundleU` over a
+structure whose only fields were `val`, `val P P = 0` and smoothness of `val P`, with an
+`Inhabited` witness `fun _ _ => 0`: a spec satisfied by the zero functional, standing in
+for the integral. (Its smoothness field was in fact unsatisfiable by a genuine path
+integral for `g ≥ 1`: a single-valued holomorphic map `X → ℂ^g` on a compact surface is
+constant.) The `opaque` is gone; the functional is now a definition.
+
+## The one remaining choice
+
+`C¹` paths between two points of a connected manifold always exist; that fact
+(`exists_isC1Path`) is a labelled gap here (standard, provable from chart-ball chains;
+not a classical theorem, just not yet formalized). The definition does not depend on
+it: it uses `if h : ∃ γ, IsC1Path γ then … else 0`, and the `else` branch is never
+taken once `exists_isC1Path` is proved (`pathIntegralFunctionalU_eq_periodVector`).
 -/
 
 namespace JacobianChallenge.AbelJacobi
@@ -33,69 +37,62 @@ open JacobianChallenge.HolomorphicForms JacobianChallenge.Periods
 
 universe u
 
-/--
-Universe-polymorphic companion to `PathIntegralFunctionalBundle`: bundles the
-basis-coordinate path-integral functional with its constant-loop specification
-and endpoint-smoothness, for `X : Type u`.
--/
-structure PathIntegralFunctionalBundleU
-    (X : Type u) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X] where
-  /-- The path-integral coordinates `(P, Q) ↦ (∫_P^Q ω₁, …, ∫_P^Q ωₘ)`. -/
-  val : X → X → Fin (analyticGenus ℂ X) → ℂ
-  /-- Integrating over a constant loop yields zero. -/
-  self_spec : ∀ P : X, val P P = 0
-  /-- The path integral depends smoothly on the endpoint, for each fixed base point. -/
-  contMDiff_endpoint : ∀ P : X,
-    ContMDiff 𝓘(ℂ) (modelWithCornersSelf ℂ (Fin (analyticGenus ℂ X) → ℂ))
-      (⊤ : WithTop ℕ∞) (val P)
-
-variable (X : Type u) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-  [ConnectedSpace X] [ChartedSpace ℂ X]
+variable {X : Type u} [TopologicalSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [FiniteDimensionalHolomorphicOneForms ℂ X]
-
-instance : Inhabited (PathIntegralFunctionalBundleU X) :=
-  ⟨⟨fun _ _ => 0, fun _ => rfl, fun _ => contMDiff_const⟩⟩
 
 /--
-The bundled universe-`u` path-integral functional, as an `opaque` value.
-Universe-polymorphic companion to `pathIntegralFunctionalBundle`; the genuine
-multi-chart path integration is deferred infrastructure, as on the Type-0 side.
+**`C¹` path-connectedness of a connected Riemann surface.** Any two points are joined by
+a path that is `C¹` in every chart.
+
+GAP (`sorry`): true and elementary (the set of points reachable from `P` by a `C¹` path
+is open — extend by a straight segment in a chart ball — and closed, so it is everything
+by connectedness; junctions are smoothed by a reparametrization flat at the endpoints),
+but not yet formalized.
 -/
-opaque pathIntegralFunctionalBundleU : PathIntegralFunctionalBundleU X
+theorem exists_isC1Path [ConnectedSpace X] (P Q : X) : ∃ γ : Path P Q, IsC1Path γ := by
+  -- GAP: C¹ path-connectedness of a connected manifold; see docstring.
+  sorry
+
+variable (X) [FiniteDimensionalHolomorphicOneForms ℂ X]
 
 /--
-The universe-`u` path-integral functional from a base point `P` to an endpoint
-`Q`, in basis coordinates. Universe-polymorphic companion to
-`pathIntegralFunctional`; extracted from `pathIntegralFunctionalBundleU`.
+The path-integral coordinates `(∫_P^Q ω₁, …, ∫_P^Q ω_g)` along a chosen `C¹` path from
+`P` to `Q` (`0` if there is none; see `exists_isC1Path` — that branch never occurs on a
+connected surface). Well defined modulo periods: `pathIntegralFunctionalU_sub_mem`.
 -/
 noncomputable def pathIntegralFunctionalU (P Q : X) : Fin (analyticGenus ℂ X) → ℂ :=
-  (pathIntegralFunctionalBundleU X).val P Q
+  open Classical in
+  if h : ∃ γ : Path P Q, IsC1Path γ then periodVector X h.choose else 0
 
-/-- Specification: the universe-`u` path integral over a constant loop at a point is zero. -/
-theorem pathIntegralFunctionalU_self_spec (P : X) :
-    pathIntegralFunctionalU X P P = 0 :=
-  (pathIntegralFunctionalBundleU X).self_spec P
+variable {X}
 
-/--
-The universe-`u` base-point self path integral vanishes. Universe-polymorphic
-companion to `pathIntegralFunctional_self`.
--/
-theorem pathIntegralFunctionalU_self (P : X) :
-    pathIntegralFunctionalU X P P = 0 :=
-  pathIntegralFunctionalU_self_spec X P
+/-- On a connected surface the functional is the period vector of the chosen path. -/
+theorem pathIntegralFunctionalU_eq_periodVector [ConnectedSpace X] (P Q : X) :
+    ∃ γ : Path P Q, IsC1Path γ ∧ pathIntegralFunctionalU X P Q = periodVector X γ := by
+  have h := exists_isC1Path P Q
+  refine ⟨h.choose, h.choose_spec, ?_⟩
+  unfold pathIntegralFunctionalU
+  rw [dif_pos h]
 
 /--
-The universe-`u` path integral depends smoothly on the endpoint, for each fixed
-base point. Universe-polymorphic companion (the `contMDiff_endpoint` field of the
-bundle), needed to build `analyticOfCurveU_contMDiff` (D1).
+**Independence of the path, modulo periods.** If a `C¹` path from `P` to `Q` exists (which
+is always the case on a connected surface), then for *every* `C¹` path `γ` from `P` to
+`Q`, the functional differs from `periodVector γ` by a period.
 -/
-theorem pathIntegralFunctionalU_contMDiff (P : X) :
-    ContMDiff 𝓘(ℂ) (modelWithCornersSelf ℂ (Fin (analyticGenus ℂ X) → ℂ))
-      (⊤ : WithTop ℕ∞) (pathIntegralFunctionalU X P) :=
-  (pathIntegralFunctionalBundleU X).contMDiff_endpoint P
+theorem pathIntegralFunctionalU_sub_mem {P Q : X} {γ : Path P Q} (hγ : IsC1Path γ) :
+    pathIntegralFunctionalU X P Q - periodVector X γ ∈ genuinePeriodSubgroup X := by
+  have h : ∃ γ : Path P Q, IsC1Path γ := ⟨γ, hγ⟩
+  unfold pathIntegralFunctionalU
+  rw [dif_pos h]
+  exact periodVector_sub_mem h.choose_spec hγ
+
+/--
+At the base point the functional is a period (the integral over a closed `C¹` curve),
+so its class in the Jacobian is zero.
+-/
+theorem pathIntegralFunctionalU_self_mem (P : X) :
+    pathIntegralFunctionalU X P P ∈ genuinePeriodSubgroup X := by
+  have h := pathIntegralFunctionalU_sub_mem (X := X) (isC1Path_refl P)
+  rwa [periodVector_refl, sub_zero] at h
 
 end JacobianChallenge.AbelJacobi
