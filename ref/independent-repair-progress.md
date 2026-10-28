@@ -252,6 +252,41 @@ All **unreachable** from the public API (decl-level graph), so ledgered rather t
 
 ---
 
+## 2026-10-27 — goal (d): false gaps retired, gap 7 proved
+
+### What changed
+
+1. **Retired** (dependency closure, verbatim, to `Attic/FalseGaps/`, unbuilt): gaps 5, 6, 8
+   (`TietzeReduction`), 9 (`HandleSwapHomeo`), 10 (`DualGraphCut`), 16
+   (`DeRhamComparisonMap`), 17 (`HodgeProjection`), and — same class, root-cause rule —
+   gap 14 (`PeriodFunctional`, false because the Type-0 pairing is `0`). 227 constants left
+   18 source files with them (the Type-0 de Rham/Hodge rank chain, the Type-0
+   `periodFullComplexLattice`, the Type-0 analytic Jacobian push/pull in
+   `PullbackBasis`/`PushforwardBasis`/`AnalyticDegree`, the polygon classification
+   assembly in `SurfaceClassification`/`CellularHomologyRS`). **None was reachable** from
+   the public API (checked on the fixed graph before moving). Counterexamples recorded in
+   `Attic/FalseGaps/README.md`.
+2. **Gap 7 proved**: `handleSwap_index_ordering` (`Periods/TietzeReduction.lean`), via two new
+   lemmas `handleBlock_moveToEnd` (swap + rotate carries a block past any word) and
+   `flatMap_handleBlock_perm` (any permutation of blocks). `#print axioms` →
+   `[propext, Classical.choice, Quot.sound]`.
+3. **Blueprint**: 22 `\lean{}` pointers went dangling with the retirements (and 3 were already
+   dangling before this branch). All 25 fixed — re-pointed where a genuine successor exists
+   (`thm:period-lattice` → `genuinePeriodLattice`; `lem:aj-path-independence` →
+   `pathIntegralFunctionalU_sub_mem`, now actually proved; injectivity → `…injectiveU`;
+   trace identity → `…U`), otherwise one honest sentence added and `\lean`/`\leanok` removed.
+   Checked: every `\lean{}` name in `tex/` resolves in the compiled `Jacobian` environment.
+   All 19 block edits logged in `ref/plain-english-changes.md` §3–21.
+4. Kept, true, unreachable, still open: gaps 11, 12, 13 (`Periods/Hurewicz.lean`).
+
+### Builds and counts
+
+`lake build Jacobian` and `lake build Jacobian.Solution`: **green**.
+Engine sorry declarations: **25 → 14** (−7 retired false gaps 5,6,8,9,10,16,17; −1 gap 14;
+−1 gap 7 proved; the polygon tower's other sorries in those files went with them).
+
+---
+
 ## Commit hashes
 
 | time (EDT) | hash | summary |

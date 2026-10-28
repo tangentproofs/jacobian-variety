@@ -129,17 +129,6 @@ theorem nonTree_edge_count_formula
   exact ⟨()⟩
 
 
-theorem cut_along_nonTree_yields_unfoldedDisk
-    {M : Type} [TopologicalSpace M] [CompactSpace M] [T2Space M]
-    [ConnectedSpace M]
-    [ChartedSpace (EuclideanSpace ℝ (Fin 2)) M]
-    [IsManifold (modelWithCornersSelf ℝ (EuclideanSpace ℝ (Fin 2)))
-      (⊤ : WithTop ℕ∞) M]
-    {T : Triangulation M} {G : DualGraph M T}
-    (_ST : DualSpanningTree M G) :
-    Nonempty (UnfoldedDisk M T) :=
-  -- The construction follows the classical cut-and-paste topology of surfaces.
-  sorry
 
 
 theorem unfoldedDisk_boundary_word_data
@@ -171,17 +160,5 @@ theorem unfoldedDisk_to_edgeWordPresentation
   exact unfoldedDisk_boundary_satisfies_edgeWordPresentation_axioms D
 
 
-theorem Triangulation.toEdgeWordPresentation_via_cut
-    {M : Type} [TopologicalSpace M] [CompactSpace M] [T2Space M]
-    [ConnectedSpace M]
-    [ChartedSpace (EuclideanSpace ℝ (Fin 2)) M]
-    [IsManifold (modelWithCornersSelf ℝ (EuclideanSpace ℝ (Fin 2)))
-      (⊤ : WithTop ℕ∞) M]
-    (T : Triangulation M) :
-    Nonempty (EdgeWordPresentation M) := by
-  obtain ⟨G⟩ := T.toDualGraph
-  obtain ⟨ST⟩ := G.spanningTree
-  obtain ⟨D⟩ := cut_along_nonTree_yields_unfoldedDisk ST
-  exact unfoldedDisk_to_edgeWordPresentation D
 
 end JacobianChallenge.Periods

@@ -63,7 +63,7 @@ Pullback gives a complex-linear map
 \[
   f^{*}:\HY\to\HX.
 \]
-\lean{JacobianChallenge.TraceDegree.pullbackFormsLinearMap,periodPairing_pullbackFormsBundledLM}
+\lean{JacobianChallenge.TraceDegree.pullbackFormsLinearMap}
 \leanok
 \end{lemma}
 
@@ -98,7 +98,7 @@ For nonconstant \(f\), there is a complex-linear trace map
 \[
   \tr_f:\HX\to\HY.
 \]
-\lean{JacobianChallenge.TraceDegree.analyticPushforward,JacobianChallenge.HolomorphicForms.trace_pullback_at_regular_value,JacobianChallenge.HolomorphicForms.traceFormsBundled_eq_zero_of_constant}
+\lean{JacobianChallenge.HolomorphicForms.traceFormsBundledLM,JacobianChallenge.HolomorphicForms.trace_pullback_at_regular_value,JacobianChallenge.HolomorphicForms.traceFormsBundled_eq_zero_of_constant}
 \leanok
 \end{lemma}
 
@@ -218,7 +218,7 @@ For every \(\eta\in\HY\),
 \[
   \tr_f(f^{*}\eta)=\deg(f)\,\eta.
 \]
-\lean{JacobianChallenge.TraceDegree.analyticPushforward_analyticPullback}
+\lean{JacobianChallenge.TraceDegree.analyticPushforward_analyticPullbackU}
 \leanok
 \proofplan
 Use the fundamental identity \(\tr_f \circ f^* = \deg(f)\) on holomorphic 1-forms
