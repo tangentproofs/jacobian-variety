@@ -230,72 +230,80 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
 private theorem identityChart_coe (z : ℂ) : (identityChart : OnePoint ℂ → ℂ) ↑z = z :=
   OnePoint.isOpenEmbedding_coe.toOpenPartialHomeomorph_left_inv
 
-private theorem inv_sub_eq (a b : ℂ) (ha : a ≠ 0) : (a⁻¹ - b)⁻¹ = a / (1 - a * b) := by
-  rw [show a⁻¹ - b = (1 - a * b) / a by field_simp, inv_div]
+/-- `f : X → ℂ` is holomorphic off `P` and has a simple pole at `P`: in the chart at `P`,
+`f = g/(w - z₀)` near `z₀` with `g` holomorphic and `g(z₀) ≠ 0`. -/
+structure SimplePole (f : X → ℂ) (P : X) : Prop where
+  analytic_off : ∀ x, x ≠ P → AnalyticAt ℂ (rd f x) (chartAt ℂ x x)
+  exists_unit : ∃ g : ℂ → ℂ, AnalyticAt ℂ g (chartAt ℂ P P) ∧ g (chartAt ℂ P P) ≠ 0 ∧
+    ∀ᶠ w in 𝓝[≠] (chartAt ℂ P P), rd f P w = (w - chartAt ℂ P P)⁻¹ * g w
 
-namespace PoleData
+/-- The extension of `f` to a map to the Riemann sphere, `∞` at `P`. -/
+noncomputable def toSphere (f : X → ℂ) (P : X) : X → OnePoint ℂ := onePointExtend f P
 
-variable {P : X} (d : PoleData P)
+theorem toSphere_at (f : X → ℂ) (P : X) : toSphere f P P = OnePoint.infty := onePointExtend_at _ _
 
-/-- The extension of `fn` to a map to the Riemann sphere, `∞` at `P`. -/
-noncomputable def toSphere : X → OnePoint ℂ := onePointExtend d.fn P
+theorem toSphere_off {f : X → ℂ} {P x : X} (hx : x ≠ P) : toSphere f P x = ↑(f x) :=
+  onePointExtend_off hx
 
-theorem toSphere_at : d.toSphere P = OnePoint.infty := onePointExtend_at _ _
-
-theorem toSphere_off {x : X} (hx : x ≠ P) : d.toSphere x = ↑(d.fn x) := onePointExtend_off hx
-
-theorem toSphere_eq_infty_iff {x : X} : d.toSphere x = OnePoint.infty ↔ x = P := by
-  refine ⟨fun h => ?_, fun h => h ▸ d.toSphere_at⟩
+theorem toSphere_eq_infty_iff {f : X → ℂ} {P x : X} : toSphere f P x = OnePoint.infty ↔ x = P := by
+  refine ⟨fun h => ?_, fun h => h ▸ toSphere_at f P⟩
   by_contra hx
-  rw [d.toSphere_off hx] at h
+  rw [toSphere_off hx] at h
   exact OnePoint.coe_ne_infty _ h
 
-/-- The reading of `toSphere` in the inversion chart at `∞`:
-`k(v) = (v - z₀)/(1 - (v - z₀) u(v))`. -/
-noncomputable def kfun : ℂ → ℂ := fun v =>
-  (v - chartAt ℂ P P) / (1 - (v - chartAt ℂ P P) * rd d.u P v)
+namespace SimplePole
 
-theorem analyticAt_den :
-    AnalyticAt ℂ (fun v => 1 - (v - chartAt ℂ P P) * rd d.u P v) (chartAt ℂ P P) :=
-  analyticAt_const.sub ((analyticAt_id.sub analyticAt_const).mul d.analyticAt_rd_u)
+variable {f : X → ℂ} {P : X} (hf : SimplePole f P)
+include hf
 
-theorem analyticAt_kfun : AnalyticAt ℂ d.kfun (chartAt ℂ P P) :=
-  (analyticAt_id.sub analyticAt_const).div d.analyticAt_den
-    (show (1 : ℂ) - (chartAt ℂ P P - chartAt ℂ P P) * rd d.u P (chartAt ℂ P P) ≠ 0 by simp)
+/-- The holomorphic unit `g` with `f = g/(w - z₀)` near `P`. -/
+noncomputable def g : ℂ → ℂ := hf.exists_unit.choose
 
-theorem kfun_center : d.kfun (chartAt ℂ P P) = 0 := by simp [kfun]
+theorem analyticAt_g : AnalyticAt ℂ hf.g (chartAt ℂ P P) := hf.exists_unit.choose_spec.1
 
-theorem kfun_ne_zero : ∀ᶠ v in 𝓝 (chartAt ℂ P P), v ≠ chartAt ℂ P P → d.kfun v ≠ 0 := by
-  filter_upwards [d.analyticAt_den.continuousAt.eventually_ne
-    (show (1 : ℂ) - (chartAt ℂ P P - chartAt ℂ P P) * rd d.u P (chartAt ℂ P P) ≠ 0 by simp)]
-    with v hv hv0
+theorem g_ne : hf.g (chartAt ℂ P P) ≠ 0 := hf.exists_unit.choose_spec.2.1
+
+theorem rd_eq : ∀ᶠ w in 𝓝[≠] (chartAt ℂ P P), rd f P w = (w - chartAt ℂ P P)⁻¹ * hf.g w :=
+  hf.exists_unit.choose_spec.2.2
+
+/-- The reading of `toSphere` in the inversion chart at `∞`: `k(v) = (v - z₀)/g(v)`. -/
+noncomputable def kfun : ℂ → ℂ := fun v => (v - chartAt ℂ P P) / hf.g v
+
+theorem analyticAt_kfun : AnalyticAt ℂ hf.kfun (chartAt ℂ P P) :=
+  (analyticAt_id.sub analyticAt_const).div hf.analyticAt_g hf.g_ne
+
+theorem kfun_center : hf.kfun (chartAt ℂ P P) = 0 := by simp [kfun]
+
+theorem kfun_ne_zero : ∀ᶠ v in 𝓝 (chartAt ℂ P P), v ≠ chartAt ℂ P P → hf.kfun v ≠ 0 := by
+  filter_upwards [hf.analyticAt_g.continuousAt.eventually_ne hf.g_ne] with v hv hv0
   exact div_ne_zero (sub_ne_zero.mpr hv0) hv
 
 /-- In the inversion chart at `∞`, `toSphere` reads `kfun` near `P`. -/
 theorem invFwd_toSphere_eq :
-    (fun v => invFwd (d.toSphere ((chartAt ℂ P).symm v))) =ᶠ[𝓝 (chartAt ℂ P P)] d.kfun := by
+    (fun v => invFwd (toSphere f P ((chartAt ℂ P).symm v))) =ᶠ[𝓝 (chartAt ℂ P P)] hf.kfun := by
   have hT := (chartAt ℂ P).open_target.mem_nhds (mem_chart_target ℂ P)
-  filter_upwards [d.rd_fn_eq_near, hT] with v hv hvT
+  filter_upwards [eventually_nhdsWithin_iff.mp hf.rd_eq, hT] with v hv hvT
   by_cases hv0 : v = chartAt ℂ P P
-  · rw [hv0, (chartAt ℂ P).left_inv (mem_chart_source ℂ P), d.toSphere_at, invFwd_infty,
-      d.kfun_center]
+  · rw [hv0, (chartAt ℂ P).left_inv (mem_chart_source ℂ P), toSphere_at, invFwd_infty,
+      hf.kfun_center]
   · have hne : (chartAt ℂ P).symm v ≠ P := fun h => by
       have := (chartAt ℂ P).right_inv hvT
       rw [h] at this
       exact hv0 this.symm
-    rw [d.toSphere_off hne, invFwd_coe]
-    change (rd d.fn P v)⁻¹ = _
-    rw [hv, kfun, inv_sub_eq _ _ (sub_ne_zero.mpr hv0)]
+    rw [toSphere_off hne, invFwd_coe]
+    change (rd f P v)⁻¹ = _
+    rw [hv hv0, kfun, mul_inv, inv_inv, div_eq_mul_inv]
 
-theorem isHolomorphicAt_toSphere_pole : IsHolomorphicAt d.toSphere P := by
+theorem isHolomorphicAt_toSphere_pole : IsHolomorphicAt (toSphere f P) P := by
   unfold IsHolomorphicAt chartLocalAt
-  rw [d.toSphere_at]
-  exact d.analyticAt_kfun.congr d.invFwd_toSphere_eq.symm
+  rw [toSphere_at]
+  exact hf.analyticAt_kfun.congr hf.invFwd_toSphere_eq.symm
 
-theorem isHolomorphicAt_toSphere_off {x : X} (hx : x ≠ P) : IsHolomorphicAt d.toSphere x := by
+theorem isHolomorphicAt_toSphere_off {x : X} (hx : x ≠ P) :
+    IsHolomorphicAt (toSphere f P) x := by
   unfold IsHolomorphicAt chartLocalAt
-  rw [d.toSphere_off hx]
-  refine (d.analyticAt_rd_fn hx).congr ?_
+  rw [toSphere_off hx]
+  refine (hf.analytic_off x hx).congr ?_
   have hW : IsOpen ((chartAt ℂ x).target ∩ (chartAt ℂ x).symm ⁻¹' {P}ᶜ) :=
     (chartAt ℂ x).continuousOn_symm.isOpen_inter_preimage
       (chartAt ℂ x).open_target isOpen_compl_singleton
@@ -305,103 +313,119 @@ theorem isHolomorphicAt_toSphere_off {x : X} (hx : x ≠ P) : IsHolomorphicAt d.
       rw [(chartAt ℂ x).left_inv (mem_chart_source ℂ x)]; exact hx⟩
   filter_upwards [hW.mem_nhds hxW] with v hv
   have hv2 : (chartAt ℂ x).symm v ≠ P := hv.2
-  simp only [Function.comp_apply, d.toSphere_off hv2]
+  simp only [Function.comp_apply, toSphere_off hv2]
   exact (identityChart_coe _).symm
 
-theorem isHolomorphicAt_toSphere (x : X) : IsHolomorphicAt d.toSphere x := by
+theorem isHolomorphicAt_toSphere (x : X) : IsHolomorphicAt (toSphere f P) x := by
   by_cases hx : x = P
-  · exact hx ▸ d.isHolomorphicAt_toSphere_pole
-  · exact d.isHolomorphicAt_toSphere_off hx
+  · exact hx ▸ hf.isHolomorphicAt_toSphere_pole
+  · exact hf.isHolomorphicAt_toSphere_off hx
 
-theorem continuousAt_fn {x : X} (hx : x ≠ P) : ContinuousAt d.fn x := by
-  refine ((d.analyticAt_rd_fn hx).continuousAt.comp
+theorem continuousAt_fn {x : X} (hx : x ≠ P) : ContinuousAt f x := by
+  refine ((hf.analytic_off x hx).continuousAt.comp
     ((chartAt ℂ x).continuousAt (mem_chart_source ℂ x))).congr ?_
   filter_upwards [(chartAt ℂ x).open_source.mem_nhds (mem_chart_source ℂ x)] with y hy
   simp only [Function.comp_apply, rd_apply, (chartAt ℂ x).left_inv hy]
 
-theorem continuous_toSphere : Continuous d.toSphere := by
+theorem continuous_toSphere : Continuous (toSphere f P) := by
   rw [continuous_iff_continuousAt]
   intro x
   by_cases hx : x = P
   · subst hx
     have hc : ContinuousAt (chartAt ℂ x) x := (chartAt ℂ x).continuousAt (mem_chart_source ℂ x)
-    have h1 := hc.eventually d.invFwd_toSphere_eq
-    have h2 := hc.eventually d.kfun_ne_zero
+    have h1 := hc.eventually hf.invFwd_toSphere_eq
+    have h2 := hc.eventually hf.kfun_ne_zero
     refine ((continuousOn_univ.mp continuousOn_invBwd).continuousAt.comp
-      (d.analyticAt_kfun.continuousAt.comp hc)).congr ?_
+      (hf.analyticAt_kfun.continuousAt.comp hc)).congr ?_
     filter_upwards [h1, h2, (chartAt ℂ x).open_source.mem_nhds (mem_chart_source ℂ x)]
       with y hy1 hy2 hys
     simp only [Function.comp_apply, (chartAt ℂ x).left_inv hys] at hy1 ⊢
     by_cases hyx : y = x
-    · rw [hyx, d.toSphere_at, (d.invFwd_toSphere_eq.self_of_nhds).symm.trans rfl]
-      simp [(chartAt ℂ x).left_inv (mem_chart_source ℂ x), d.toSphere_at]
+    · rw [hyx, toSphere_at, (hf.invFwd_toSphere_eq.self_of_nhds).symm.trans rfl]
+      simp [(chartAt ℂ x).left_inv (mem_chart_source ℂ x), toSphere_at]
     · have hcy : chartAt ℂ x y ≠ chartAt ℂ x x := fun h =>
         hyx ((chartAt ℂ x).injOn hys (mem_chart_source ℂ x) h)
       have hk := hy2 hcy
       rw [← hy1]
-      have hsrc : d.toSphere y ∈ ({(↑(0 : ℂ))}ᶜ : Set (OnePoint ℂ)) := by
+      have hsrc : toSphere f x y ∈ ({(↑(0 : ℂ))}ᶜ : Set (OnePoint ℂ)) := by
         intro h0
         apply hk
-        rw [← hy1, show d.toSphere y = ↑(0 : ℂ) from h0, invFwd_coe, inv_zero]
+        rw [← hy1, show toSphere f x y = ↑(0 : ℂ) from h0, invFwd_coe, inv_zero]
       exact invBwd_invFwd hsrc
-  · refine (OnePoint.continuous_coe.continuousAt.comp (d.continuousAt_fn hx)).congr ?_
+  · refine (OnePoint.continuous_coe.continuousAt.comp (hf.continuousAt_fn hx)).congr ?_
     filter_upwards [isOpen_compl_singleton.mem_nhds hx] with y hy
-    exact (d.toSphere_off hy).symm
+    exact (toSphere_off hy).symm
 
 theorem contMDiff_toSphere :
-    ContMDiff 𝓘(ℂ) 𝓘(ℂ) (⊤ : WithTop ℕ∞) d.toSphere :=
-  ContMDiff.of_isHolomorphic_and_continuous d.isHolomorphicAt_toSphere d.continuous_toSphere
+    ContMDiff 𝓘(ℂ) 𝓘(ℂ) (⊤ : WithTop ℕ∞) (toSphere f P) :=
+  ContMDiff.of_isHolomorphic_and_continuous hf.isHolomorphicAt_toSphere hf.continuous_toSphere
 
-theorem mapAnalyticOrderAt_toSphere : mapAnalyticOrderAt d.toSphere P = 1 := by
+theorem mapAnalyticOrderAt_toSphere : mapAnalyticOrderAt (toSphere f P) P = 1 := by
   unfold mapAnalyticOrderAt chartLocalAt
-  rw [d.toSphere_at]
-  have hev : (fun t => (chartAt ℂ (OnePoint.infty : OnePoint ℂ) ∘ d.toSphere ∘
-      (chartAt ℂ P).symm) t - (chartAt ℂ (OnePoint.infty : OnePoint ℂ) ∘ d.toSphere ∘
-      (chartAt ℂ P).symm) (chartAt ℂ P P)) =ᶠ[𝓝 (chartAt ℂ P P)] d.kfun := by
-    have h0 : invFwd (d.toSphere ((chartAt ℂ P).symm (chartAt ℂ P P))) =
-        d.kfun (chartAt ℂ P P) := d.invFwd_toSphere_eq.self_of_nhds
-    filter_upwards [d.invFwd_toSphere_eq] with t ht
-    change invFwd (d.toSphere ((chartAt ℂ P).symm t)) -
-      invFwd (d.toSphere ((chartAt ℂ P).symm (chartAt ℂ P P))) = _
-    rw [ht, h0, d.kfun_center, sub_zero]
+  rw [toSphere_at]
+  have hev : (fun t => (chartAt ℂ (OnePoint.infty : OnePoint ℂ) ∘ toSphere f P ∘
+      (chartAt ℂ P).symm) t - (chartAt ℂ (OnePoint.infty : OnePoint ℂ) ∘ toSphere f P ∘
+      (chartAt ℂ P).symm) (chartAt ℂ P P)) =ᶠ[𝓝 (chartAt ℂ P P)] hf.kfun := by
+    have h0 : invFwd (toSphere f P ((chartAt ℂ P).symm (chartAt ℂ P P))) =
+        hf.kfun (chartAt ℂ P P) := hf.invFwd_toSphere_eq.self_of_nhds
+    filter_upwards [hf.invFwd_toSphere_eq] with t ht
+    change invFwd (toSphere f P ((chartAt ℂ P).symm t)) -
+      invFwd (toSphere f P ((chartAt ℂ P).symm (chartAt ℂ P P))) = _
+    rw [ht, h0, hf.kfun_center, sub_zero]
   unfold analyticOrderNatAt
   rw [analyticOrderAt_congr hev]
-  have : analyticOrderAt d.kfun (chartAt ℂ P P) = (1 : ℕ) := by
-    rw [d.analyticAt_kfun.analyticOrderAt_eq_natCast]
-    refine ⟨fun v => (1 - (v - chartAt ℂ P P) * rd d.u P v)⁻¹,
-      d.analyticAt_den.inv (by simp), by simp, Eventually.of_forall fun v => ?_⟩
+  have : analyticOrderAt hf.kfun (chartAt ℂ P P) = (1 : ℕ) := by
+    rw [hf.analyticAt_kfun.analyticOrderAt_eq_natCast]
+    refine ⟨fun v => (hf.g v)⁻¹, hf.analyticAt_g.inv hf.g_ne, inv_ne_zero hf.g_ne,
+      Eventually.of_forall fun v => ?_⟩
     simp [kfun, div_eq_mul_inv]
   rw [this]
   rfl
 
-theorem nonconst_toSphere : ¬ ∃ y₀ : OnePoint ℂ, ∀ x, d.toSphere x = y₀ := by
+theorem nonconst_toSphere : ¬ ∃ y₀ : OnePoint ℂ, ∀ x, toSphere f P x = y₀ := by
   rintro ⟨y₀, hy₀⟩
   haveI : Nonempty X := ⟨P⟩
   obtain ⟨a, b, hab⟩ := exists_two_distinct_points_of_chartedSpaceComplex (X := X)
-  have h : ∀ x, x = P := fun x => d.toSphere_eq_infty_iff.mp ((hy₀ x).trans
-    ((hy₀ P).symm.trans d.toSphere_at))
+  have h : ∀ x, x = P := fun x => toSphere_eq_infty_iff.mp ((hy₀ x).trans
+    ((hy₀ P).symm.trans (toSphere_at f P)))
   exact hab ((h a).trans (h b).symm)
 
 /-- **Degree one.** `toSphere` is a bijection `X → ℂ̂`. -/
 theorem bijective_toSphere [CompactSpace X] [ConnectedSpace X] :
-    Function.Bijective d.toSphere := by
-  have hf := d.contMDiff_toSphere
-  have hHol := isHolomorphic_of_contMDiff hf (hasLocalKfoldRamification_of_contMDiff hf)
-  have hw := hasWeightedFiberConservation_of_contMDiff hf
+    Function.Bijective (toSphere f P) := by
+  have hc := hf.contMDiff_toSphere
+  have hHol := isHolomorphic_of_contMDiff hc (hasLocalKfoldRamification_of_contMDiff hc)
+  have hw := hasWeightedFiberConservation_of_contMDiff hc
   let B := JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic hHol hw
-    d.nonconst_toSphere
+    hf.nonconst_toSphere
   refine degree_one_bijective B ?_
   rw [branchedDegree_eq_weightedFiberCard B OnePoint.infty]
   have hfib : (B.finite_fiber OnePoint.infty).toFinset = {P} := by
     ext x
     simp only [Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_singleton_iff,
       Finset.mem_singleton]
-    exact d.toSphere_eq_infty_iff
+    exact toSphere_eq_infty_iff
   show ((B.finite_fiber OnePoint.infty).toFinset).sum B.ramificationIndex = 1
   rw [hfib, Finset.sum_singleton]
-  exact d.mapAnalyticOrderAt_toSphere
+  exact hf.mapAnalyticOrderAt_toSphere
 
-end PoleData
+/-- **A function with a single simple pole makes `X` a sphere.** -/
+theorem homeomorph [CompactSpace X] [ConnectedSpace X] : Nonempty (X ≃ₜ OnePoint ℂ) := by
+  let e : X ≃ OnePoint ℂ := Equiv.ofBijective (toSphere f P) hf.bijective_toSphere
+  have he : Continuous e := hf.continuous_toSphere
+  exact ⟨he.homeoOfEquivCompactToT2⟩
+
+end SimplePole
+
+theorem PoleData.simplePole {P : X} (d : PoleData P) : SimplePole d.fn P := by
+  refine ⟨fun x hx => d.analyticAt_rd_fn hx, ⟨fun w => 1 - (w - chartAt ℂ P P) * rd d.u P w,
+    analyticAt_const.sub ((analyticAt_id.sub analyticAt_const).mul d.analyticAt_rd_u),
+    by simp, ?_⟩⟩
+  rw [eventually_nhdsWithin_iff]
+  filter_upwards [d.rd_fn_eq_near] with w hw hne
+  rw [hw]
+  have : w - chartAt ℂ P P ≠ 0 := sub_ne_zero.mpr hne
+  field_simp
 
 /-- **Genus zero ⇒ Riemann sphere.** A compact connected Riemann surface on which every
 holomorphic 1-form vanishes is homeomorphic to `ℂ̂`. -/
@@ -411,10 +435,7 @@ theorem homeomorph_onePoint_of_forall_eq_zero [CompactSpace X] [ConnectedSpace X
   obtain ⟨χ, hχ⟩ := exists_bump P
   obtain ⟨u, hu, hdbar⟩ := dbar_solvable_of_forall_eq_zero h0 (ext01_is01 P (ppartDbar χ))
     (smoothFam_ext01 (contDiff_ppartDbar χ) (isCompact_closedBall _ _) hχ (tsupport_ppartDbar χ))
-  let d : PoleData P := ⟨χ, hχ, u, hu, hdbar⟩
-  let e : X ≃ OnePoint ℂ := Equiv.ofBijective d.toSphere d.bijective_toSphere
-  have he : Continuous e := d.continuous_toSphere
-  exact ⟨he.homeoOfEquivCompactToT2⟩
+  exact (PoleData.simplePole ⟨χ, hχ, u, hu, hdbar⟩).homeomorph
 
 end Sphere
 
