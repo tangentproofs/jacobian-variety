@@ -24,7 +24,7 @@ says "CLASSICAL INPUT" and gives the reference.
 
 | # | declaration | file | statement | reference |
 |---|---|---|---|---|
-| C1 | `compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier` | `HolomorphicForms/CompactRiemannSurface.lean` | `H⁰(X, Ω¹)` is finite-dimensional | Forster, *Lectures on Riemann Surfaces*, §14 (finiteness theorem); Cartan–Serre |
+| ~~C1~~ | `compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier` | `HolomorphicForms/CompactRiemannSurface.lean` | `H⁰(X, Ω¹)` is finite-dimensional — **proved 2026-10-28** (`HolomorphicForms/Finiteness.lean`, Montel–Riesz) | Forster §14 |
 | C2 | `periodLattice_discrete_and_span` | `Periods/GenuinePeriodLattice.lean` | the period subgroup is discrete and spans `ℂ^g` over `ℝ` | Riemann bilinear relations; Forster §21; Griffiths–Harris Ch. 2 §2 |
 | C3 | `pathIntegralFunctional_separates_pointsU` | `AbelJacobi/AnalyticOfCurveInjectiveU.lean` | Abel's theorem, two-point form: for `g > 0`, Abel–Jacobi integrals congruent mod periods ⇒ equal endpoints | Forster §20 (Abel's theorem) and §21 |
 | C4 | `exists_biholomorph_onePoint_of_genus_zero` | `HolomorphicForms/GenusZeroClassification.lean` | genus-0 uniformization (a compact surface homeomorphic to `S²` is biholomorphic to `ℂ̂`) | Forster §27 (uniformization of simply connected surfaces) |
