@@ -1,5 +1,4 @@
-import Jacobian.Periods.PathIntegralViaCoverPick
-import Jacobian.Periods.PathIntegralViaCoverPickRefl
+import Jacobian.Periods.ChartChain
 import Jacobian.HolomorphicForms.BasisAlignedDualEquiv
 import Jacobian.ComplexTorus.Defs
 import Mathlib.Algebra.Module.ZLattice.Basic
@@ -14,29 +13,26 @@ of `ℂ^g`).
 
 ## The line integral
 
-The integral of a holomorphic 1-form `ω` along a path `γ : Path P Q` is the existing
-multi-chart integral `pathIntegralViaCover ω γ`
-(`Jacobian/Periods/PathIntegralViaCoverPick.lean`): `γ` is cut into finitely many
-segments, each inside one chart, and on each segment one integrates the genuine chart
-pullback `ω(c⁻¹ e) ∘ D(c⁻¹)(e)` (`chartedFormPullback`) along the chart image of the
-segment, i.e. `∫ ω(γ t)(γ' t) dt` written in coordinates. For a path that is `C¹` in
-every chart (`IsC1Path` below) this value does not depend on the subdivision or the
-charts (`pathIntegralViaCoverWith_refinement_invariant'`,
-`pathIntegralViaChartCorrect_chart_change`).
+The integral of a holomorphic 1-form `ω` along a **chart chain** — a finite list of
+straight segments, each inside a ball in one chart target, glued end to end
+(`Jacobian/Periods/ChartChain.lean`) — is the sum over the segments of the curve integral
+of the chart reading `ω(c⁻¹ e) ∘ D(c⁻¹)(e)`, i.e. the classical `∫ ω(γ t)(γ' t) dt` along
+the piecewise-smooth curve, written in charts. Chains concatenate by list append and any
+two points of a connected surface are joined by one (`exists_chain`).
 
 ## The period lattice
 
 Fix the basis `ω₁, …, ω_g` of `HolomorphicOneForm ℂ X` used throughout the project
 (`holomorphicOneFormFinBasis`), so that `Fin g → ℂ` is the basis-aligned model of the
-dual `H⁰(X, Ω¹)^*`. The **period vector** of a path is `(∫_γ ω₁, …, ∫_γ ω_g)`.
+dual `H⁰(X, Ω¹)^*`. The **period vector** of a chain is `(∫ ω₁, …, ∫ ω_g)`.
 
-A *period* is the period vector of a closed `C¹` curve. We generate the lattice by the
-differences `periodVector γ₁ - periodVector γ₂` of two `C¹` paths `γ₁ γ₂ : Path P Q`
-with the same endpoints — the integral around the closed curve `γ₁ · γ₂⁻¹`. Closed
-`C¹` loops are the special case `γ₂ = refl` (`periodVector_mem_of_loop`). Generating by
-differences makes "the Abel–Jacobi integral is well defined modulo periods" hold by
-definition, which is exactly how the classical construction is phrased. Classically this
-subgroup is the image of `H₁(X, ℤ)` under integration.
+A *period* is the period vector of a closed chain. We generate the lattice by the
+differences `periodVector l₁ - periodVector l₂` of two chains with the same endpoints —
+the integral around the closed curve `l₁ · l₂⁻¹`. Closed chains are the special case
+`l₂ = []` (`periodVector_mem_of_loop`). Generating by differences makes "the Abel–Jacobi
+integral is well defined modulo periods" hold by definition, which is exactly how the
+classical construction is phrased. Classically this subgroup is the image of `H₁(X, ℤ)`
+under integration (every class is represented by a closed chain of chart segments).
 
 ## Classical input
 
@@ -54,66 +50,37 @@ open JacobianChallenge.HolomorphicForms
 
 universe u
 
-section Paths
-
-variable {X : Type u} [TopologicalSpace X] [ChartedSpace ℂ X]
-  [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-
-/--
-A path is `C¹` if it is continuously differentiable (over `ℝ`) in every chart, on the
-part of `[0, 1]` that the chart sees. This is the regularity under which the multi-chart
-line integral is independent of the chosen subdivision
-(`pathIntegralViaCoverWith_refinement_invariant'`).
--/
-def IsC1Path {P Q : X} (γ : Path P Q) : Prop :=
-  ∀ p : X, ContDiffOn ℝ 1 ((chartAt ℂ p) ∘ γ.extend)
-    (γ.extend ⁻¹' (chartAt ℂ p).source ∩ Set.Icc 0 1)
-
-/-- The constant path is `C¹`. -/
-theorem isC1Path_refl (P : X) : IsC1Path (Path.refl P) := by
-  intro p
-  have : ((chartAt ℂ p) ∘ (Path.refl P).extend) = fun _ => (chartAt ℂ p) P := by
-    funext t
-    simp [Path.extend, Set.IccExtend]
-  rw [this]
-  exact contDiffOn_const
-
-/-- The line integral `∫_γ ω` of a holomorphic 1-form along a path. -/
-noncomputable def lineIntegral (ω : HolomorphicOneForm ℂ X) {P Q : X} (γ : Path P Q) : ℂ :=
-  pathIntegralViaCover ω γ
-
-@[simp] theorem lineIntegral_refl (ω : HolomorphicOneForm ℂ X) (P : X) :
-    lineIntegral ω (Path.refl P) = 0 :=
-  pathIntegralViaCover_refl ω P
-
-end Paths
-
 variable (X : Type u) [TopologicalSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 
 /--
-The period vector of a path: its line integrals against the chosen basis
-`ω₁, …, ω_g` of holomorphic 1-forms, `(∫_γ ω₁, …, ∫_γ ω_g) ∈ ℂ^g`.
+The period vector of a chart chain: its line integrals against the chosen basis
+`ω₁, …, ω_g` of holomorphic 1-forms, `(∫_l ω₁, …, ∫_l ω_g) ∈ ℂ^g`.
 -/
-noncomputable def periodVector {P Q : X} (γ : Path P Q) : Fin (analyticGenus ℂ X) → ℂ :=
-  fun i => lineIntegral (holomorphicOneFormFinBasis ℂ X i) γ
+noncomputable def periodVector (l : List (ChartSegment X)) : Fin (analyticGenus ℂ X) → ℂ :=
+  fun i => chainIntegral (holomorphicOneFormFinBasis ℂ X i) l
 
-@[simp] theorem periodVector_refl (P : X) : periodVector X (Path.refl P) = 0 := by
+@[simp] theorem periodVector_nil : periodVector X [] = 0 := by
   funext i
   simp [periodVector]
 
+theorem periodVector_append (l₁ l₂ : List (ChartSegment X)) :
+    periodVector X (l₁ ++ l₂) = periodVector X l₁ + periodVector X l₂ := by
+  funext i
+  simp only [periodVector, chainIntegral_append, Pi.add_apply]
+
 /--
-The generators of the period lattice: differences of the period vectors of two `C¹`
-paths with the same endpoints, i.e. integrals over the closed curve `γ₁ · γ₂⁻¹`.
+The generators of the period lattice: differences of the period vectors of two chart
+chains with the same endpoints, i.e. integrals over the closed curve `l₁ · l₂⁻¹`.
 -/
 def periodGenerators : Set (Fin (analyticGenus ℂ X) → ℂ) :=
-  {v | ∃ (P Q : X) (γ₁ γ₂ : Path P Q), IsC1Path γ₁ ∧ IsC1Path γ₂ ∧
-    v = periodVector X γ₁ - periodVector X γ₂}
+  {v | ∃ (P Q : X) (l₁ l₂ : List (ChartSegment X)), IsChain l₁ P Q ∧ IsChain l₂ P Q ∧
+    v = periodVector X l₁ - periodVector X l₂}
 
 /--
 **The period lattice** `Λ ⊆ ℂ^g`: the subgroup generated by the integrals of the basis
-forms over closed `C¹` curves (presented as differences of two paths with common
+forms over closed chart chains (presented as differences of two chains with common
 endpoints). Classically, the image of `H₁(X, ℤ)` under integration.
 -/
 noncomputable def genuinePeriodSubgroup : AddSubgroup (Fin (analyticGenus ℂ X) → ℂ) :=
@@ -121,17 +88,17 @@ noncomputable def genuinePeriodSubgroup : AddSubgroup (Fin (analyticGenus ℂ X)
 
 variable {X}
 
-/-- Two `C¹` paths with the same endpoints have period vectors differing by a period. -/
-theorem periodVector_sub_mem {P Q : X} {γ₁ γ₂ : Path P Q}
-    (h₁ : IsC1Path γ₁) (h₂ : IsC1Path γ₂) :
-    periodVector X γ₁ - periodVector X γ₂ ∈ genuinePeriodSubgroup X :=
-  AddSubgroup.subset_closure ⟨P, Q, γ₁, γ₂, h₁, h₂, rfl⟩
+/-- Two chains with the same endpoints have period vectors differing by a period. -/
+theorem periodVector_sub_mem {P Q : X} {l₁ l₂ : List (ChartSegment X)}
+    (h₁ : IsChain l₁ P Q) (h₂ : IsChain l₂ P Q) :
+    periodVector X l₁ - periodVector X l₂ ∈ genuinePeriodSubgroup X :=
+  AddSubgroup.subset_closure ⟨P, Q, l₁, l₂, h₁, h₂, rfl⟩
 
-/-- The period vector of a closed `C¹` loop is a period. -/
-theorem periodVector_mem_of_loop {P : X} {γ : Path P P} (h : IsC1Path γ) :
-    periodVector X γ ∈ genuinePeriodSubgroup X := by
-  have h' := periodVector_sub_mem h (isC1Path_refl P)
-  rwa [periodVector_refl, sub_zero] at h'
+/-- The period vector of a closed chain is a period. -/
+theorem periodVector_mem_of_loop {P : X} {l : List (ChartSegment X)} (h : IsChain l P P) :
+    periodVector X l ∈ genuinePeriodSubgroup X := by
+  have h' := periodVector_sub_mem h (show IsChain [] P P from rfl)
+  rwa [periodVector_nil, sub_zero] at h'
 
 variable (X) [T2Space X] [CompactSpace X] [ConnectedSpace X]
 
