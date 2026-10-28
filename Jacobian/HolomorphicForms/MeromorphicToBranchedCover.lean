@@ -1,5 +1,4 @@
 import Jacobian.HolomorphicForms.MeromorphicDegree
-import Jacobian.HolomorphicForms.MeromorphicToCp1
 import Jacobian.HolomorphicForms.OnePointCxIsManifold
 import Jacobian.HolomorphicForms.HolomorphicCompactConstant
 import Jacobian.HolomorphicForms.CompactRiemannSurface
@@ -75,64 +74,6 @@ theorem MeromorphicMapToSphere.mapAnalyticOrderAt_toMap_eq_one_of_analyticData
 
 /-! ### Packaging a `MeromorphicMapToSphere` with analytic data as a `MeromorphicFunctionType` -/
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
-/--
-Package a `MeromorphicMapToSphere` plus explicit `AnalyticData` as a
-`MeromorphicFunctionType`, so that the `liftToCp1_*` infrastructure of
-`MeromorphicToCp1.lean` can be applied to its underlying map.
-
-The packaging is purely structural: the `AnalyticData` fields exactly
-match the `MeromorphicFunctionType` fields.
--/
-noncomputable def MeromorphicMapToSphere.toMeromorphicFunctionType
-    (f : MeromorphicMapToSphere X) (han : f.AnalyticData) :
-    MeromorphicFunctionType X where
-  toFun := f.toMap
-  toFun_continuous := han.continuous_toMap
-  isMeromorphic := han.meromorphic_getD
-
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
- in
-@[simp] theorem MeromorphicMapToSphere.toMeromorphicFunctionType_toFun
-    (f : MeromorphicMapToSphere X) (han : f.AnalyticData) :
-    (f.toMeromorphicFunctionType han).toFun = f.toMap := rfl
-
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
-@[simp] theorem MeromorphicMapToSphere.meromorphicToCp1_toMeromorphicFunctionType
-    (f : MeromorphicMapToSphere X) (han : f.AnalyticData) :
-    meromorphicToCp1 X (f.toMeromorphicFunctionType han) = f.toMap := rfl
-
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
-/-- The CP¹ lift of `f.toMap` is complex-smooth in the manifold sense. -/
-theorem MeromorphicMapToSphere.contMDiff_toMap_of_analyticData
-    (f : MeromorphicMapToSphere X) (han : f.AnalyticData) :
-    ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-      (⊤ : WithTop ℕ∞) f.toMap := by
-  have h := liftToCp1_contMDiff X (f.toMeromorphicFunctionType han)
-  simpa using h
-
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
-/--
-The underlying map of a `MeromorphicMapToSphere` is `IsHolomorphic`
-in the project-local sense, given explicit `AnalyticData`.
--/
-theorem MeromorphicMapToSphere.isHolomorphic_toMap_of_analyticData
-    (f : MeromorphicMapToSphere X) (han : f.AnalyticData) :
-    JacobianChallenge.HolomorphicForms.IsHolomorphic f.toMap := by
-  have h := liftToCp1_isHolomorphic X (f.toMeromorphicFunctionType han) True.intro
-  simpa using h
-
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
-/--
-Weighted-fiber conservation for `f.toMap`, given explicit
-`AnalyticData`.
--/
-theorem MeromorphicMapToSphere.hasWeightedFiberConservation_toMap_of_analyticData
-    (f : MeromorphicMapToSphere X) (han : f.AnalyticData) :
-    JacobianChallenge.HolomorphicForms.HasWeightedFiberConservation f.toMap := by
-  have h := liftToCp1_hasWeightedFiberConservation X
-    (f.toMeromorphicFunctionType han) True.intro
-  simpa using h
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
  in
@@ -715,87 +656,6 @@ theorem MeromorphicMapToSphere.outside_constants_of_poleDivisor_point
     linarith
   exact hcontra.exists.elim (fun _ hf => hf)
 
-/--
-Given a `MeromorphicMapToSphere f` on a compact connected complex
-1-manifold which is nonconstant, has a simple pole at `P`, and carries
-explicit `AnalyticData`, the map `f.toMap` packages as a
-`BranchedCoverData X (OnePoint ℂ) f.toMap` whose branched degree is
-`f.poleDivisor.degree.toNat = 1`.
-
-* `isHolomorphic_toMap_of_analyticData` (above; uses the analytic
-  adapter projection from `AnalyticData`).
-* `hasWeightedFiberConservation_toMap_of_analyticData` (above; same).
-* `branchedCoverData_of_nonconstant_holomorphic` (in
-  `Sec02/BranchedDegreeFromHolomorphic.lean`).
-* `branchedDegree_eq_weightedFiberCard` over `∞` (in
-  `BranchedCover.lean`).
-* `preimage_infty_eq_singleton_of_poleDivisor_point` (above).
-* `AnalyticData.simple_pole_order_one` (projection; supplies the
-  simple-pole order-one content).
--/
-theorem MeromorphicMapToSphere.branchedCoverDataOfPoleDegree_of_simple_pole
-    (f : MeromorphicMapToSphere X) (P : X)
-    (hnc : f.Nonconstant)
-    (hpole : f.poles = Divisor.point P)
-    (han : f.AnalyticData) :
-    f.BranchedCoverDataOfPoleDegree := by
-  classical
-  refine ⟨?_⟩
-  intro _hcont
-  -- Step A. Holomorphicity and weighted-fiber conservation for f.toMap.
-  have hfHol : JacobianChallenge.HolomorphicForms.IsHolomorphic f.toMap :=
-    f.isHolomorphic_toMap_of_analyticData han
-  have hWeighted :
-      JacobianChallenge.HolomorphicForms.HasWeightedFiberConservation f.toMap :=
-    f.hasWeightedFiberConservation_toMap_of_analyticData han
-  -- Step B. Unfold the nonconstancy hypothesis.
-  have hnc' : ¬ ∃ y₀ : OnePoint ℂ, ∀ x : X, f.toMap x = y₀ := by
-    intro h; exact hnc h
-  -- Step C. Build the BranchedCoverData via the analytic constructor.
-  set hbc :
-      JacobianChallenge.HolomorphicForms.BranchedCoverData X (OnePoint ℂ) f.toMap :=
-    JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic
-      hfHol hWeighted hnc' with hbc_def
-  refine ⟨hbc, ?_⟩
-  -- Step D. Compute branchedDegree.
-  rw [JacobianChallenge.HolomorphicForms.branchedDegree_eq_weightedFiberCard hbc
-      (OnePoint.infty : OnePoint ℂ)]
-  -- Identify the fiber over ∞ with {P}.
-  have hfib_eq : f.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)} = ({P} : Set X) :=
-    f.preimage_infty_eq_singleton_of_poleDivisor_point P hpole
-  have hfib_finite :
-      hbc.finite_fiber (OnePoint.infty : OnePoint ℂ) =
-        (by exact hfib_eq ▸ Set.finite_singleton P :
-          (f.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)}).Finite) := by
-    apply Subsingleton.elim
-  show ((hbc.finite_fiber (OnePoint.infty : OnePoint ℂ)).toFinset).sum
-        hbc.ramificationIndex = f.poleDivisor.degree.toNat
-  have hto : (hbc.finite_fiber (OnePoint.infty : OnePoint ℂ)).toFinset = {P} := by
-    rw [hfib_finite]
-    rw [show (hfib_eq ▸ Set.finite_singleton P :
-                (f.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)}).Finite).toFinset =
-              (Set.finite_singleton P).toFinset from by
-      ext x
-      simp [hfib_eq]]
-    ext x
-    simp
-  rw [hto]
-  rw [Finset.sum_singleton]
-  -- ramificationIndex of the analytic constructor is mapAnalyticOrderAt.
-  have hcompat :
-      hbc.RamificationIndexCompatible :=
-    JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic_compatible
-      hfHol hWeighted hnc'
-  have hrami :
-      hbc.ramificationIndex P =
-        JacobianChallenge.HolomorphicForms.mapAnalyticOrderAt f.toMap P :=
-    hcompat P (hfHol.holomorphicAt P)
-  rw [hrami, han.simple_pole_order_one P hpole]
-  -- f.poleDivisor.degree.toNat = (Divisor.point P).degree.toNat = 1.
-  have h1 : Divisor.degree f.poleDivisor = 1 := by
-    change Divisor.degree f.poles = 1
-    rw [hpole]; exact Divisor.degree_point P
-  rw [h1]; rfl
 
 /-!
 ### Concrete simple-pole-to-sphere data and constructor
@@ -1027,24 +887,6 @@ theorem meromorphicAt_getD_of_simplePoleToSphereData
     filter_upwards [h_nhd] with t htne
     exact (d.getD_toMap_off_pole htne).symm
 
-omit [ConnectedSpace X] in
-/--
-Package a `SimplePoleToSphereData` as a `MeromorphicFunctionType`, so
-that `liftToCp1_*` infrastructure of `MeromorphicToCp1.lean` can be
-applied to its underlying `toMap` without needing a surrounding
-`MeromorphicMapToSphere` shell.
--/
-noncomputable def SimplePoleToSphereData.toMeromorphicFunctionType
-    (P : X) (d : SimplePoleToSphereData X P) :
-    MeromorphicFunctionType X where
-  toFun := d.toMap
-  toFun_continuous := d.continuous_toMap
-  isMeromorphic := meromorphicAt_getD_of_simplePoleToSphereData P d
-
-omit [CompactSpace X] [ConnectedSpace X] in
-@[simp] theorem SimplePoleToSphereData.toMeromorphicFunctionType_toFun
-    (P : X) (d : SimplePoleToSphereData X P) :
-    (d.toMeromorphicFunctionType P).toFun = d.toMap := rfl
 
 omit [CompactSpace X] [ConnectedSpace X] in
 /--
@@ -1093,78 +935,6 @@ theorem preimage_infty_eq_singleton_of_simplePoleToSphereData
     subst hx
     exact d.toMap_at_pole
 
-/--
-**`d`-keyed branched-cover data for a `SimplePoleToSphereData`.**
-
-Given a `SimplePoleToSphereData X P`, the map `d.toMap : X → OnePoint ℂ`
-admits `BranchedCoverData` whose branched degree over `∞` is `1` (the
-degree of the simple pole at `P`).
-
-This is the chicken-and-egg-free analogue of
-`MeromorphicMapToSphere.branchedCoverDataOfPoleDegree_of_simple_pole`,
-used to fill the structural `hasBranchedCoverDataOfPoleDegree` field of
-the inline `MeromorphicMapToSphere` being constructed in
-`singlePoleAnalyticData_of_simplePoleToSphereData` and
-`toGenusZeroFixedPoleAnalyticRRWitness`.
--/
-theorem branchedCoverData_of_simplePoleToSphereData
-    (P : X) (d : SimplePoleToSphereData X P) :
-    ∃ (h : JacobianChallenge.HolomorphicForms.BranchedCoverData X (OnePoint ℂ) d.toMap),
-      JacobianChallenge.HolomorphicForms.branchedDegree h = 1 := by
-  classical
-  -- Step A. Package `d` as a `MeromorphicFunctionType` and obtain
-  -- holomorphicity + weighted-fiber conservation of `d.toMap`.
-  set mft : MeromorphicFunctionType X :=
-    d.toMeromorphicFunctionType P with hmft
-  have hfHol : JacobianChallenge.HolomorphicForms.IsHolomorphic d.toMap := by
-    have := liftToCp1_isHolomorphic X mft True.intro
-    simpa [hmft, meromorphicToCp1] using this
-  have hWeighted :
-      JacobianChallenge.HolomorphicForms.HasWeightedFiberConservation d.toMap := by
-    have := liftToCp1_hasWeightedFiberConservation X mft True.intro
-    simpa [hmft, meromorphicToCp1] using this
-  -- Step B. Nonconstancy of `d.toMap`.
-  have hnc' : ¬ ∃ y₀ : OnePoint ℂ, ∀ x : X, d.toMap x = y₀ :=
-    nonconstant_toMap_of_simplePoleToSphereData P d
-  -- Step C. Build the branched-cover datum via the analytic constructor.
-  set hbc :
-      JacobianChallenge.HolomorphicForms.BranchedCoverData X (OnePoint ℂ) d.toMap :=
-    JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic
-      hfHol hWeighted hnc' with hbc_def
-  refine ⟨hbc, ?_⟩
-  -- Step D. Compute the branched degree over ∞.
-  rw [JacobianChallenge.HolomorphicForms.branchedDegree_eq_weightedFiberCard hbc
-      (OnePoint.infty : OnePoint ℂ)]
-  have hfib_eq : d.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)} = ({P} : Set X) :=
-    preimage_infty_eq_singleton_of_simplePoleToSphereData P d
-  have hfib_finite :
-      hbc.finite_fiber (OnePoint.infty : OnePoint ℂ) =
-        (by exact hfib_eq ▸ Set.finite_singleton P :
-          (d.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)}).Finite) := by
-    apply Subsingleton.elim
-  show ((hbc.finite_fiber (OnePoint.infty : OnePoint ℂ)).toFinset).sum
-        hbc.ramificationIndex = 1
-  have hto : (hbc.finite_fiber (OnePoint.infty : OnePoint ℂ)).toFinset = {P} := by
-    rw [hfib_finite]
-    rw [show (hfib_eq ▸ Set.finite_singleton P :
-                (d.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)}).Finite).toFinset =
-              (Set.finite_singleton P).toFinset from by
-      ext x
-      simp [hfib_eq]]
-    ext x
-    simp
-  rw [hto]
-  rw [Finset.sum_singleton]
-  -- Step E. Identify the ramification index with `mapAnalyticOrderAt`, then with `1`.
-  have hcompat :
-      hbc.RamificationIndexCompatible :=
-    JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic_compatible
-      hfHol hWeighted hnc'
-  have hrami :
-      hbc.ramificationIndex P =
-        JacobianChallenge.HolomorphicForms.mapAnalyticOrderAt d.toMap P :=
-    hcompat P (hfHol.holomorphicAt P)
-  rw [hrami, d.simple_pole_order]
 
 omit [CompactSpace X] [ConnectedSpace X] in
 theorem singlePoleAnalyticData_of_simplePoleToSphereData
@@ -1345,38 +1115,6 @@ theorem singlePoleAnalyticData_of_simplePoleToSphereData
       subst hP'P
       exact d.simple_pole_order
 
-/-! ### Genus-zero fixed-pole route-data assemblies -/
-
-/--
-For a given `MeromorphicMapToSphere f` with prescribed simple pole at
-`P`, nonconstancy, and **explicit `AnalyticData`**, the
-branched-cover-data structure follows from
-`branchedCoverDataOfPoleDegree_of_simple_pole`.
-
-This is the per-`f` theorem with concrete hypotheses: the analytic
-content comes in as `han : f.AnalyticData`, not as the impossible
-"derive analyticity from `PoleModulusData`" claim previously held
-here.
-
-Note: `_h` (analytic-genus-zero) and `_hmem` (Riemann-Roch membership)
-are accepted but unused; they are kept in the signature so callers
-that came through the genus-zero pipeline can pass them without
-reshaping. The branched-cover content depends only on `(hnc, hpole,
-han)`.
--/
-theorem genusZero_fixedPole_branchedCoverDataOfPoleDegree
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (_h : analyticGenus ℂ X = 0)
-    (f : MeromorphicMapToSphere X)
-    (hnc : f.Nonconstant)
-    (_hmem : f.MemRiemannRochSpace (Divisor.point P))
-    (hpole : f.poles = Divisor.point P)
-    (han : f.AnalyticData) :
-    f.BranchedCoverDataOfPoleDegree :=
-  f.branchedCoverDataOfPoleDegree_of_simple_pole P hnc hpole han
 
 /-! ### Riemann-Roch analytic-route conditional bridge -/
 
@@ -1587,7 +1325,6 @@ variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 
-omit [ConnectedSpace X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
 
 theorem toSinglePoleMeromorphicAnalyticData
     {P : X} (s : SimplePoleRRSection X P) :
@@ -2900,7 +2637,6 @@ noncomputable def of_meromorphicMap_analyticData_simple_pole
 end PointRiemannRochSection
 
 
-
 /--
 Intended proof: genus-zero Riemann-Roch gives `dim L(P) = 2`. The
 constants embed into `L(P)` with dimension `1`. Choose any element
@@ -3297,45 +3033,5 @@ theorem genusZero_fixedPole_analyticRouteData_nonempty
   obtain ⟨d⟩ := genusZero_fixedPole_simplePoleToSphereData_nonempty X P h
   exact singlePoleAnalyticData_of_simplePoleToSphereData (X := X) P d
 
-
-theorem genusZero_fixedPole_singlePoleRouteData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (SinglePoleMeromorphicMapData (X := X) P) := by
-  obtain ⟨route⟩ := genusZero_fixedPole_analyticRouteData_nonempty X P h
-  have hbranch : route.map.BranchedCoverDataOfPoleDegree :=
-    route.map.branchedCoverDataOfPoleDegree_of_simple_pole P
-      route.nonconstant route.poleDivisor_eq route.analyticData
-  exact ⟨{
-    map := route.map
-    poleDivisor_eq := route.poleDivisor_eq
-    nonconstant := route.nonconstant
-    poleModulusData := route.poleModulusData
-    analyticData := route.analyticData
-    branchedCoverDataOfPoleDegree := hbranch }⟩
-
-/--
-**Fixed-pole route-data assembly wrapper.**
-
-This is the entry point used by `GenusZeroClassification.lean`.
--/
-theorem genusZero_fixedPole_meromorphicData_with_routeData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty
-      { data : GenusZeroFixedPoleMeromorphicData X P h //
-        data.meromorphicMap.PoleModulusData ∧
-        data.meromorphicMap.BranchedCoverDataOfPoleDegree } := by
-  obtain ⟨route⟩ := genusZero_fixedPole_singlePoleRouteData_nonempty X P h
-  let data : GenusZeroFixedPoleMeromorphicData X P h :=
-    { meromorphicMap := route.map
-      poleDivisor_eq_point := route.poleDivisor_eq }
-  exact ⟨⟨data, route.poleModulusData, route.branchedCoverDataOfPoleDegree⟩⟩
 
 end JacobianChallenge.HolomorphicForms

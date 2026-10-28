@@ -1,10 +1,8 @@
 import Jacobian.HolomorphicForms.Defs
 import Jacobian.HolomorphicForms.ChartedSpaceComplexPoints
 import Jacobian.HolomorphicForms.CompactRiemannSurface
-import Jacobian.HolomorphicForms.SectionFiberNorm
 import Jacobian.HolomorphicForms.HolomorphicMap
 import Jacobian.HolomorphicForms.BranchedCover
-import Jacobian.HolomorphicForms.ToFunApplyVec
 import Jacobian.HolomorphicForms.PullbackBundled
 import Jacobian.HolomorphicForms.TangentSpaceComplexBridge
 import Jacobian.TraceDegree.TraceDefinition
@@ -44,7 +42,6 @@ set_option backward.isDefEq.respectTransparency false
 
 open scoped Manifold ContDiff Topology Classical NNReal ENNReal
 open JacobianChallenge.HolomorphicForms
-open JacobianChallenge.HolomorphicForms.SectionFiberNorm
 open JacobianChallenge.Periods
 
 variable {X Y : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]

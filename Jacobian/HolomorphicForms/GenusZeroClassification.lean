@@ -8,7 +8,6 @@ import Jacobian.HolomorphicForms.EntireZero
 import Jacobian.HolomorphicForms.InversionChartContinuity
 import Jacobian.HolomorphicForms.ChartSectionContDiff
 import Jacobian.HolomorphicForms.PullbackBundled
-import Jacobian.HolomorphicForms.UniformizationLocal
 import Jacobian.TraceDegree.TraceDefinition
 import Mathlib.Analysis.InnerProductSpace.EuclideanDist
 import Mathlib.Topology.Compactification.OnePoint.Sphere
@@ -44,85 +43,6 @@ noncomputable def onePointCx_homeomorph_sphere :
     OnePoint ℂ ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1 :=
   onePointEquivSphereOfFinrankEq (by simp [Complex.finrank_real_complex])
 
-/-!
-#### Proof sketch
-
-#### Lemmas searched in Mathlib (all absent)
-
-- `ComplexProjectiveLine` / `RiemannSphere` — not defined.
-- `Diffeomorph.ofHomeomorphSphere` — no smooth classification of surfaces.
-- `cotangentSpace_finrank` — no dimension computation for cotangent spaces.
-- `Module.finrank_holomorphicOneForms_sphere` — not available.
-- `IsManifold.sphere` (for `Metric.sphere` in `ℝ³` with `ℂ`-charts) — absent.
-
-```
-analyticGenus_eq_zero_of_homeomorphic_sphere
-  │
-  ├─► [MISSING] smooth_structure_unique_on_S2
-  │     └─► [MISSING] IsManifold instance for Metric.sphere in ℝ³
-  │
-  ├─► [MISSING] complex_structure_unique_on_S2
-  │     └─► [MISSING] uniformization_theorem
-  │           └─► [MISSING] ℂℙ¹ as complex manifold
-  │
-  └─► [MISSING] holomorphicOneForms_CP1_subsingleton
-        ├─► [MISSING] ℂℙ¹ definition + ChartedSpace instance
-        ├─► [MISSING] canonical_sheaf_degree_CP1 = -2
-        └─► [MISSING] negative_degree_line_bundle_no_sections
-```
-
-#### 3-step Mathlib-API plan for a future job
-
-**Step 1 — Define `ℂℙ¹` as a complex manifold.**
-Define `ℂℙ¹` (e.g. as `Projectivization ℂ (Fin 2 → ℂ)` or as the
-one-point compactification `AlexandrovCompactification ℂ`). Equip it
-with `ChartedSpace ℂ` and `IsManifold` instances using the standard
-two-chart atlas (`z ↦ z`, `z ↦ 1/z`). Prove it is compact, connected,
-T2, and homeomorphic to `Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1`.
-
-**Step 2 — Compute `H⁰(ℂℙ¹, Ω¹) = 0` directly.**
-Bypass the general Riemann–Roch machinery: show that any holomorphic
-1-form on `ℂℙ¹` restricts to `f(z) dz` on the standard chart `U₀ ≅ ℂ`,
-and the transition to the chart `U₁` forces `f(z) = 0` (by Liouville's
-theorem applied to the resulting entire function with growth constraint).
-Conclude `Subsingleton (HolomorphicOneForm ℂ ℂℙ¹)`.
-
-**Step 3 — Transport along homeomorphism.**
-For compact Riemann surfaces `X ≃ₜ ℂℙ¹`, the homeomorphism lifts to a
-biholomorphism (by uniqueness of complex structure on `S²`), giving an
-isomorphism of 1-form spaces. Transport the subsingleton result from
-Step 2 to `X` and apply `analyticGenus_eq_zero_of_subsingleton`.
-
-An alternative shortcut for **Step 3** (avoiding uniformization): if
-we only need genus 0, prove directly that `Module.finrank` of sections
-of a bundle is invariant under biholomorphism, and show the
-homeomorphism `X ≃ₜ S²` lifts to a biholomorphism `X ≃ₕ ℂℙ¹` using
-the fact that every orientation-preserving homeomorphism between
-Riemann surfaces is homotopic to a biholomorphism (Earle–Eells).
--/
-
-/-!
-### Refined decomposition of the easy direction
-
-The easy direction `analyticGenus_eq_zero_of_homeomorphic_sphere` is now
-assembled from three smaller named obligations, each Aristotle-shaped:
-
-* `holomorphicOneForm_onePointCx_subsingleton` — the space of holomorphic
-  1-forms on `ℂℙ¹ = OnePoint ℂ` is a subsingleton (i.e. only the zero
-  form exists).  This is the substantive analytic content
-  (Liouville-style argument on the inversion chart).
-* `analyticGenus_onePointCx_eq_zero` — pure corollary of the subsingleton
-  fact via `analyticGenus_eq_zero_of_subsingleton`.
-* `analyticGenus_eq_of_homeomorphic_sphere_of_onePointCx` — the
-  uniformization-lite transport step: a compact Riemann surface
-  homeomorphic to `S²` has the same analytic genus as `OnePoint ℂ`.
-  This bundles the deep "every complex structure on `S²` is biholomorphic
-  to `ℂℙ¹`" content into a single named obligation.
-
-The original `analyticGenus_eq_zero_of_homeomorphic_sphere` becomes pure
-assembly of these three pieces. The hard direction
-`homeomorphic_sphere_of_analyticGenus_eq_zero` below is unchanged.
--/
 
 /-!
 #### Proof plan for `holomorphicOneForm_onePointCx_subsingleton`
@@ -143,12 +63,6 @@ theorem entire_tendsto_zero_eq_zero (f : ℂ → ℂ) (hf : Differentiable ℂ f
     f = 0 :=
   hf.eq_zero_of_tendsto_zero_cocompact h
 
-/-!
-#### Refined chart-extraction split
-
-Splitting them lets two separate Aristotle/sub-agent jobs target each
-leaf with disjoint reasoning patterns.
--/
 
 /-!
 ### TOPDOWN decomposition for `holomorphicOneForm_onePointCx_toFun_finite_eq_zero`
@@ -912,252 +826,6 @@ theorem exists_biholomorph_onePoint_of_genus_zero
   -- Classical uniformization of a genus-zero compact Riemann surface.
   sorry
 
-/--
-One local normalized Montel chart used to build the global two-chart selector.
-
-The analytic part is the chart-ball power-series limit together with its
-inverse-function-theorem local homeomorphism.  The target-chart part records
-which public `OnePoint ℂ` chart this local coordinate is assigned to.
--/
-structure GenusZeroLocalMontelChartPatch where
-  chartBall : ChartBallPowerSeries
-  localChart : chartBall.LocalNormalizedChartHomeomorphData
-  targetChart : OpenPartialHomeomorph (OnePoint ℂ) ℂ
-  targetChart_standard : targetChart = identityChart ∨ targetChart = inversionChart
-
-/--
-A packaged normalized chart-ball limit with a standard `OnePoint ℂ` target
-chart gives the local Montel chart patch data used by the selector frontier.
--/
-noncomputable def GenusZeroLocalMontelChartPatch.ofChartBallLimit
-    (chartBall : ChartBallPowerSeries)
-    (localChart : chartBall.LocalNormalizedChartHomeomorphData)
-    (targetChart : OpenPartialHomeomorph (OnePoint ℂ) ℂ)
-    (targetChart_standard : targetChart = identityChart ∨ targetChart = inversionChart) :
-    GenusZeroLocalMontelChartPatch where
-  chartBall := chartBall
-  localChart := localChart
-  targetChart := targetChart
-  targetChart_standard := targetChart_standard
-
-/--
-Global selector data backed by local normalized Montel chart patches.
-
-This is a stricter provider than `GenusZeroNormalizedMontelPatchSelector`: it
-keeps the already assembled global selector, and additionally records one
-local chart-ball/homeomorphism package for each selected source patch.
--/
-structure GenusZeroLocalMontelChartSelector
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
-  selector : GenusZeroNormalizedMontelPatchSelector X
-  localPatch : selector.family.PatchIndex → GenusZeroLocalMontelChartPatch
-  localPatch_targetChart_eq :
-    ∀ i, (localPatch i).targetChart = (selector.family.patch i).targetChart
-
-/--
-Realization of one selected global patch by a normalized local Montel chart.
-
-The source chart identifies points of the source patch with points in the
-chart ball, while the patch coordinate is the Montel-limit chart-ball map in
-that source coordinate.  The inverse branch is also required to be compatible
-with the local inverse supplied by the inverse-function-theorem chart package.
--/
-structure GenusZeroLocalMontelPatchRealization
-    {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (patch : GenusZeroGlobalGluingPatch X)
-    (localPatch : GenusZeroLocalMontelChartPatch) where
-  sourceChart : X → ℂ
-  sourceChart_contMDiffOn :
-    ContMDiffOn (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-      (⊤ : WithTop ℕ∞) sourceChart patch.source
-  sourceChart_mem_chartBall :
-    ∀ x, x ∈ patch.source →
-      sourceChart x ∈
-        Metric.ball localPatch.chartBall.center (localPatch.chartBall.radius : ℝ)
-  coord_eq_chartBall :
-    ∀ x, x ∈ patch.source →
-      patch.coord x = localPatch.chartBall.toFun (sourceChart x)
-  invCoord_sourceChart_eq_localInverse :
-    ∀ z, z ∈ patch.targetChart.target →
-      sourceChart (patch.invCoord z) = localPatch.localChart.localOpen.symm z
-
-/--
-Global selector data whose selected patches are all realized by their local
-normalized Montel chart packages.
-
-This is stricter than `GenusZeroLocalMontelChartSelector`: it does not merely
-attach local packages to patches, but records that each patch coordinate and
-inverse branch are the ones induced by the attached local chart-ball limit.
--/
-structure GenusZeroCoherentLocalMontelChartSelector
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
-  localSelector : GenusZeroLocalMontelChartSelector X
-  realization :
-    ∀ i, GenusZeroLocalMontelPatchRealization
-      (localSelector.selector.family.patch i) (localSelector.localPatch i)
-
-/--
-Coherent local Montel chart selector with explicit overlap compatibility.
-
-The compatibility is stated at the local chart-ball level: on overlaps, the
-two selected local Montel coordinates determine the same point of `OnePoint ℂ`
-after applying their assigned public target charts.  This is the analytic
-transition payload that sits below the already projected global selector
-overlap lemma.
--/
-structure GenusZeroTransitionCoherentLocalMontelChartSelector
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
-  coherentSelector : GenusZeroCoherentLocalMontelChartSelector X
-  local_transition_compatible :
-    ∀ i j x,
-      x ∈ (coherentSelector.localSelector.selector.family.patch i).source →
-      x ∈ (coherentSelector.localSelector.selector.family.patch j).source →
-        (coherentSelector.localSelector.selector.family.patch i).targetChart.symm
-            ((coherentSelector.localSelector.localPatch i).chartBall.toFun
-              ((coherentSelector.realization i).sourceChart x)) =
-          (coherentSelector.localSelector.selector.family.patch j).targetChart.symm
-            ((coherentSelector.localSelector.localPatch j).chartBall.toFun
-              ((coherentSelector.realization j).sourceChart x))
-
-/--
-Transition-compatible local Montel selector whose source patches are exactly
-the chart-ball domains of the attached local Montel coordinates.
-
-This removes one remaining opaque part of the selector frontier: the selected
-source cover is no longer just a family of open sets, but is identified with
-the domains on which the local normal-family limits are defined.
--/
-structure GenusZeroChartBallDomainLocalMontelSelector
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
-  transitionSelector : GenusZeroTransitionCoherentLocalMontelChartSelector X
-  source_eq_chartBall_domain :
-    ∀ i x,
-      x ∈ (transitionSelector.coherentSelector.localSelector.selector.family.patch i).source ↔
-        (transitionSelector.coherentSelector.realization i).sourceChart x ∈
-          Metric.ball
-            (transitionSelector.coherentSelector.localSelector.localPatch i).chartBall.center
-            ((transitionSelector.coherentSelector.localSelector.localPatch i).chartBall.radius : ℝ)
-
-/--
-Chart-ball-domain local Montel selector with exactly the two public target
-charts of `OnePoint ℂ`.
-
-This is stricter than an arbitrary finite chart-ball-domain cover: it records
-the identity-chart and inversion-chart source patches explicitly and proves
-that every selected patch is one of those two patches.
--/
-structure GenusZeroTwoChartMontelAtlasSelector
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
-  chartBallSelector : GenusZeroChartBallDomainLocalMontelSelector X
-  identityIndex :
-    chartBallSelector.transitionSelector.coherentSelector.localSelector.selector.family.PatchIndex
-  inversionIndex :
-    chartBallSelector.transitionSelector.coherentSelector.localSelector.selector.family.PatchIndex
-  targetChart_identity :
-    (chartBallSelector.transitionSelector.coherentSelector.localSelector.selector.family.patch
-      identityIndex).targetChart = identityChart
-  targetChart_inversion :
-    (chartBallSelector.transitionSelector.coherentSelector.localSelector.selector.family.patch
-      inversionIndex).targetChart = inversionChart
-  patch_index_exhausted :
-    ∀ i,
-      i = identityIndex ∨ i = inversionIndex
-
-/--
-Two-chart Montel atlas selector with the cover obligations stated at the
-public identity/inversion charts.
-
-This is stricter than merely proving that every selected patch has one of the
-two target charts: it records directly that the two selected source domains
-cover `X`, and that the two public target charts cover `OnePoint ℂ`.
--/
-structure GenusZeroTwoChartMontelCoverSelector
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
-  atlasSelector : GenusZeroTwoChartMontelAtlasSelector X
-  identityLocalPatch : GenusZeroLocalMontelChartPatch
-  identityLocalPatch_eq :
-    identityLocalPatch =
-      (atlasSelector.chartBallSelector.transitionSelector.coherentSelector).localSelector.localPatch
-        atlasSelector.identityIndex
-  inversionLocalPatch : GenusZeroLocalMontelChartPatch
-  inversionLocalPatch_eq :
-    inversionLocalPatch =
-      (atlasSelector.chartBallSelector.transitionSelector.coherentSelector).localSelector.localPatch
-        atlasSelector.inversionIndex
-  source_cover_two_chart :
-    ∀ x : X,
-      x ∈ (atlasSelector.chartBallSelector.transitionSelector.coherentSelector.localSelector.selector.family.patch
-        atlasSelector.identityIndex).source ∨
-      x ∈ (atlasSelector.chartBallSelector.transitionSelector.coherentSelector.localSelector.selector.family.patch
-        atlasSelector.inversionIndex).source
-  target_cover_two_chart :
-    ∀ y : OnePoint ℂ,
-      y ∈ identityChart.source ∨ y ∈ inversionChart.source
-
-/--
-Two-chart Montel cover selector with the local normalizations exposed.
-
-The identity and inversion chart-ball maps are required to be normalized at
-their centers with value `0` and derivative `1`.  This is the local
-normal-family normalization used to remove the remaining projective ambiguity
-before gluing the two public `OnePoint ℂ` charts.
--/
-structure GenusZeroNormalizedTwoChartMontelCoverSelector
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
-  coverSelector : GenusZeroTwoChartMontelCoverSelector X
-  identity_value_at_center :
-    coverSelector.identityLocalPatch.chartBall.toFun
-        coverSelector.identityLocalPatch.chartBall.center = 0
-  identity_deriv_at_center :
-    deriv coverSelector.identityLocalPatch.chartBall.toFun
-      coverSelector.identityLocalPatch.chartBall.center = 1
-  inversion_value_at_center :
-    coverSelector.inversionLocalPatch.chartBall.toFun
-        coverSelector.inversionLocalPatch.chartBall.center = 0
-  inversion_deriv_at_center :
-    deriv coverSelector.inversionLocalPatch.chartBall.toFun
-      coverSelector.inversionLocalPatch.chartBall.center = 1
-
-/--
-Two-chart Montel cover selector with packaged normalized chart-ball limits.
-
-Instead of carrying only the projected value and derivative equations, this
-records the local Montel/Weierstrass normalized-limit package for each public
-target chart.
--/
-structure GenusZeroNormalizedLimitTwoChartMontelCoverSelector
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
-  coverSelector : GenusZeroTwoChartMontelCoverSelector X
-  identity_normalizedLimit :
-    ChartBallPowerSeries.NormalizedChartBallLimit
-      coverSelector.identityLocalPatch.chartBall.center
-      0 1
-      coverSelector.identityLocalPatch.chartBall.radius
-      coverSelector.identityLocalPatch.chartBall.toFun
-  inversion_normalizedLimit :
-    ChartBallPowerSeries.NormalizedChartBallLimit
-      coverSelector.inversionLocalPatch.chartBall.center
-      0 1
-      coverSelector.inversionLocalPatch.chartBall.radius
-      coverSelector.inversionLocalPatch.chartBall.toFun
 
 /--
 Degree-one meromorphic route data strong enough to give the smooth
@@ -1266,25 +934,6 @@ theorem localInverse_is_inverse
   route.branchedCoverData.localInverse_is_inverse
     (route.ramificationIndex_eq_one x)
 
-/--
-The branch-cover local inverse of a degree-one route is holomorphic at the
-target point corresponding to its source point.
--/
-theorem localInverseAt_holomorphic
-    {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (route : GenusZeroDegreeOneBiholomorphicRoute X) (x : X) :
-    IsHolomorphicAt
-      (route.branchedCoverData.localInverseAt x
-        (route.ramificationIndex_eq_one x))
-      (route.meromorphicMap.toMap x) :=
-  JacobianChallenge.HolomorphicForms.localInverseAt_holomorphic
-    route.branchedCoverData
-    route.ramificationIndex_compatible
-    (route.meromorphicMap.isHolomorphic_toMap_of_analyticData route.analyticData)
-    x
-    (route.ramificationIndex_eq_one x)
 
 /--
 The inverse of the degree-one bijection agrees near every target point with
@@ -1312,27 +961,6 @@ theorem eventuallyEq_symm_localInverseAt
   apply e.injective
   simp [e, hright y' hy'V]
 
-/-- The inverse of the degree-one bijection is holomorphic at every point. -/
-theorem isHolomorphicAt_symm
-    {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (route : GenusZeroDegreeOneBiholomorphicRoute X) (y : OnePoint ℂ) :
-    let e : X ≃ OnePoint ℂ :=
-      Equiv.ofBijective route.meromorphicMap.toMap
-        (degree_one_bijective route.branchedCoverData route.branchedDegree_one)
-    IsHolomorphicAt (e.symm : OnePoint ℂ → X) y := by
-  classical
-  intro e
-  have hlocal := route.localInverseAt_holomorphic (e.symm y)
-  have hey : route.meromorphicMap.toMap (e.symm y) = y := e.apply_symm_apply y
-  have hlocal' :
-      IsHolomorphicAt
-        (route.branchedCoverData.localInverseAt (e.symm y)
-          (route.ramificationIndex_eq_one (e.symm y))) y := by
-    simpa [hey] using hlocal
-  exact hlocal'.congr_of_eventuallyEq
-    (route.eventuallyEq_symm_localInverseAt y).symm
 
 /--
 The inverse of the degree-one bijection is continuous, derived from the
@@ -1355,91 +983,9 @@ theorem continuous_invMap
     simpa [e] using route.analyticData.continuous_toMap
   simpa [e] using he.continuous_symm_of_equiv_compact_to_t2
 
-/--
-The inverse of the degree-one bijection is complex-smooth, derived from
-compact-to-T2 inverse continuity plus pointwise branch-cover inverse
-holomorphicity.
--/
-theorem contMDiff_invMap
-    {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (route : GenusZeroDegreeOneBiholomorphicRoute X) :
-    ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-      (⊤ : WithTop ℕ∞)
-        ((Equiv.ofBijective route.meromorphicMap.toMap
-          (degree_one_bijective route.branchedCoverData route.branchedDegree_one)).symm :
-            OnePoint ℂ → X) := by
-  classical
-  exact ContMDiff.of_isHolomorphic_and_continuous
-    (fun y => route.isHolomorphicAt_symm y)
-    route.continuous_invMap
 
 end GenusZeroDegreeOneBiholomorphicRoute
 
-/--
-A single-pole meromorphic route canonically supplies the degree-one
-branched-cover route data.
--/
-noncomputable def GenusZeroSinglePoleMeromorphicRoute.toDegreeOneBiholomorphicRoute
-    {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (route : GenusZeroSinglePoleMeromorphicRoute X) :
-    GenusZeroDegreeOneBiholomorphicRoute X := by
-  classical
-  let f : MeromorphicMapToSphere X := route.meromorphicMap
-  have hfHol : JacobianChallenge.HolomorphicForms.IsHolomorphic f.toMap :=
-    f.isHolomorphic_toMap_of_analyticData route.analyticData
-  have hWeighted :
-      JacobianChallenge.HolomorphicForms.HasWeightedFiberConservation f.toMap :=
-    f.hasWeightedFiberConservation_toMap_of_analyticData route.analyticData
-  have hnc : ¬ ∃ y₀ : OnePoint ℂ, ∀ x : X, f.toMap x = y₀ := by
-    intro h
-    exact route.nonconstant h
-  let hbc :
-      JacobianChallenge.HolomorphicForms.BranchedCoverData X (OnePoint ℂ) f.toMap :=
-    JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic
-      hfHol hWeighted hnc
-  have hcompat : hbc.RamificationIndexCompatible :=
-    JacobianChallenge.Blueprint.branchedCoverData_of_nonconstant_holomorphic_compatible
-      hfHol hWeighted hnc
-  have hdegree : branchedDegree hbc = 1 := by
-    rw [JacobianChallenge.HolomorphicForms.branchedDegree_eq_weightedFiberCard hbc
-      (OnePoint.infty : OnePoint ℂ)]
-    have hfib_eq : f.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)} =
-        ({route.pole} : Set X) :=
-      f.preimage_infty_eq_singleton_of_poleDivisor_point route.pole
-        route.poleDivisor_eq
-    have hfib_finite :
-        hbc.finite_fiber (OnePoint.infty : OnePoint ℂ) =
-          (by exact hfib_eq ▸ Set.finite_singleton route.pole :
-            (f.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)}).Finite) := by
-      apply Subsingleton.elim
-    show ((hbc.finite_fiber (OnePoint.infty : OnePoint ℂ)).toFinset).sum
-          hbc.ramificationIndex = 1
-    have hto : (hbc.finite_fiber (OnePoint.infty : OnePoint ℂ)).toFinset =
-        {route.pole} := by
-      rw [hfib_finite]
-      rw [show (hfib_eq ▸ Set.finite_singleton route.pole :
-                  (f.toMap ⁻¹' {(OnePoint.infty : OnePoint ℂ)}).Finite).toFinset =
-                (Set.finite_singleton route.pole).toFinset from by
-        ext x
-        simp [hfib_eq]]
-      ext x
-      simp
-    rw [hto, Finset.sum_singleton]
-    have hrami :
-        hbc.ramificationIndex route.pole =
-          JacobianChallenge.HolomorphicForms.mapAnalyticOrderAt f.toMap route.pole :=
-      hcompat route.pole (hfHol.holomorphicAt route.pole)
-    rw [hrami, route.analyticData.simple_pole_order_one route.pole route.poleDivisor_eq]
-  exact
-    { meromorphicMap := route.meromorphicMap
-      analyticData := route.analyticData
-      branchedCoverData := hbc
-      ramificationIndex_compatible := hcompat
-      branchedDegree_one := hdegree }
 
 namespace GenusZeroGlobalGluingData
 
@@ -1658,51 +1204,6 @@ theorem genusZero_complexStructureUnique_singlePoleMeromorphicRoute_nonempty
   obtain ⟨data⟩ := hdata
   exact ⟨data.toGenusZeroSinglePoleMeromorphicRoute⟩
 
-/--
-Degree-one meromorphic route assembly for the Riemann sphere: a single-pole
-meromorphic route canonically supplies the degree-one biholomorphic route.
--/
-theorem genusZero_complexStructureUnique_degreeOneBiholomorphicRoute_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    Nonempty (GenusZeroDegreeOneBiholomorphicRoute X) := by
-  obtain ⟨route⟩ :=
-    genusZero_complexStructureUnique_singlePoleMeromorphicRoute_nonempty X _e
-  exact ⟨route.toDegreeOneBiholomorphicRoute⟩
-
-/--
-Smooth uniformization assembly for the Riemann sphere: degree-one meromorphic
-route data induces the smooth homeomorphism required by the one-form transport
-step.
--/
-theorem genusZero_complexStructureUnique_smoothUniformization_provider_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    Nonempty (GenusZeroSmoothUniformization X) := by
-  classical
-  obtain ⟨route⟩ :=
-    genusZero_complexStructureUnique_degreeOneBiholomorphicRoute_nonempty X _e
-  have hbij : Function.Bijective route.meromorphicMap.toMap :=
-    degree_one_bijective route.branchedCoverData route.branchedDegree_one
-  let e : X ≃ OnePoint ℂ :=
-    Equiv.ofBijective route.meromorphicMap.toMap hbij
-  have he : Continuous e := by
-    simpa [e] using route.analyticData.continuous_toMap
-  let uniformization : X ≃ₜ OnePoint ℂ :=
-    { e with
-      continuous_toFun := he
-      continuous_invFun := he.continuous_symm_of_equiv_compact_to_t2 }
-  refine ⟨
-    { uniformization := uniformization
-      contMDiff_uniformization := ?_
-      contMDiff_symm := ?_ }⟩
-  · simpa [uniformization, e] using
-      route.meromorphicMap.contMDiff_toMap_of_analyticData route.analyticData
-  · simpa [uniformization, e, hbij] using route.contMDiff_invMap
 
 /--
 Target-membership frontier for local gluing coordinates: every normalized
@@ -2617,50 +2118,6 @@ theorem homeomorphic_sphere_of_analyticGenus_eq_zero_with_routeData
   let ⟨e⟩ := genus_zero_homeomorph_onePointCx_with_routeData X _h hmod hbranch
   ⟨e.trans onePointCx_homeomorph_sphere⟩
 
-/--
-This is the exact remaining Riemann-Roch-to-route-data obligation for
-the genus-zero classification: for a compact connected Riemann surface
-of analytic genus zero, there exists a `GenusZeroSimplePoleMeromorphicMap`
-whose underlying `MeromorphicMapToSphere` carries both honest
-`PoleModulusData` and honest `BranchedCoverDataOfPoleDegree`.
-
-**Status.** The bundled-record style makes the missing analytical
-content precise: it lives in this single subtype-inhabitation
-obligation. The remaining mathematical work is to replace the
-scaffold-backed `singlePoleMeromorphicMap` route in
-`riemannRochSpace_dim_ge_two_implies_nonconstant_meromorphic` /
-`genusZero_pointRiemannRochSpace_witness_exists` with an honest
-meromorphic function produced by Riemann-Roch.
-
-**What is already in place.** Weighted-fiber conservation for ContMDiff
-maps between compact preconnected complex 1-manifolds is now proved
-(`weightedFiberConservation_of_contMDiff` in
-`Jacobian/HolomorphicForms/HolomorphicMap.lean`). So once the meromorphic
-function is produced honestly, building `BranchedCoverDataOfPoleDegree`
-reduces to matching the branched degree with the pole-divisor degree
-(`Divisor.point P`'s degree is `1`). That remaining matching step is
-the only purely-analytic part still open.
--/
-theorem genusZero_fixedPole_routeData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (h : analyticGenus ℂ X = 0) :
-    Nonempty
-      { data : GenusZeroSimplePoleMeromorphicMap X //
-        data.meromorphicMap.PoleModulusData ∧
-        data.meromorphicMap.BranchedCoverDataOfPoleDegree } := by
-  -- `RiemannRoch.lean`, which supplies an honest fixed-pole meromorphic map
-  -- carrying both `PoleModulusData` and `BranchedCoverDataOfPoleDegree`.
-  let P : X := Classical.choice (inferInstance : Nonempty X)
-  obtain ⟨⟨data, hmod, hbranch⟩⟩ :=
-    genusZero_fixedPole_meromorphicData_with_routeData_nonempty X P h
-  let simple : GenusZeroSimplePoleMeromorphicMap X :=
-    { meromorphicMap := data.meromorphicMap
-      pole := P
-      simple_pole_cert := data.poleDivisor_eq_point }
-  exact ⟨⟨simple, hmod, hbranch⟩⟩
 
 /--
 **Uniformization (genus zero):** a compact connected Riemann surface

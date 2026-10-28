@@ -1,11 +1,11 @@
-import Jacobian.TraceDegree.PullbackBasis
-import Jacobian.TraceDegree.PushforwardBasis
 import Jacobian.HolomorphicForms.TraceSpec
-import Jacobian.TraceDegree.PiecewiseC1Instance
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Jacobian.Blueprint.Sec02.BranchedDegreeFromHolomorphic
 import Jacobian.ComplexTorus.Smul
+import Jacobian.AbelJacobi.AnalyticOfCurveBasis
+import Jacobian.ComplexTorus.OfClm
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 set_option linter.unusedSectionVars false
 
@@ -244,130 +244,6 @@ theorem traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smul
   -- pullbackFormsBundledLM is the linear-map shim around pullbackFormsBundled.
   show traceFormsBundled f hf (pullbackFormsBundled f hf η) = _
   exact trace_pullback_provider f hf η
-
-/--
-**Matrix-level trace-pullback identity.** The composition of
-trace-coord and pullback-coord matrices is `analyticDegree` times the
-identity matrix.
--/
-theorem traceFormsCoord_holomorphicTraceCoord_eq_degree_smul
-    (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
-    (traceFormsCoord f hf).comp (holomorphicTraceCoord f hf) =
-      (analyticDegree f hf : ℂ) • LinearMap.id := by
-  apply LinearMap.ext
-  intro v
-  show (traceFormsCoord f hf) (holomorphicTraceCoord f hf v) =
-    (analyticDegree f hf : ℂ) • v
-  -- Unfold the two coord maps:
-  -- holomorphicTraceCoord v = basisX.equivFun (pullbackFormsBundledLM (basisY.equivFun.symm v))
-  -- traceFormsCoord w = basisY.equivFun (traceFormsBundledLM (basisX.equivFun.symm w))
-  -- So the composition applied at v is:
-  -- basisY.equivFun (traceFormsBundledLM (basisX.equivFun.symm (basisX.equivFun (pullbackFormsBundledLM (basisY.equivFun.symm v)))))
-  --   = basisY.equivFun (traceFormsBundledLM (pullbackFormsBundledLM (basisY.equivFun.symm v)))
-  show (holomorphicOneFormFinBasis ℂ Y).equivFun
-      (traceFormsBundledLM f hf
-        ((holomorphicOneFormFinBasis ℂ X).equivFun.symm
-          ((holomorphicOneFormFinBasis ℂ X).equivFun
-            (pullbackFormsBundledLM X Y f hf
-              ((holomorphicOneFormFinBasis ℂ Y).equivFun.symm v))))) =
-    (analyticDegree f hf : ℂ) • v
-  rw [LinearEquiv.symm_apply_apply]
-  -- Now: basisY.equivFun (traceFormsBundledLM (pullbackFormsBundledLM (basisY.equivFun.symm v))) = degree • v
-  have happ := LinearMap.congr_fun
-    (traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smul f hf)
-    ((holomorphicOneFormFinBasis ℂ Y).equivFun.symm v)
-  show (holomorphicOneFormFinBasis ℂ Y).equivFun
-      (traceFormsBundledLM f hf (pullbackFormsBundledLM X Y f hf
-        ((holomorphicOneFormFinBasis ℂ Y).equivFun.symm v))) =
-    (analyticDegree f hf : ℂ) • v
-  rw [show traceFormsBundledLM f hf (pullbackFormsBundledLM X Y f hf
-        ((holomorphicOneFormFinBasis ℂ Y).equivFun.symm v)) =
-      (analyticDegree f hf : ℂ) •
-        ((holomorphicOneFormFinBasis ℂ Y).equivFun.symm v) from by
-    have := happ
-    simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply,
-      LinearMap.id_apply] at this
-    exact this]
-  rw [map_smul, LinearEquiv.apply_symm_apply]
-
-/--
-**Corrected vector-level push-pull identity.** The composition
-`pushforwardTraceLift ∘ traceDualPullbackLift` equals
-`(analyticDegree : ℂ) • LinearMap.id` on the covering vector space
-`Fin g_Y → ℂ`.
-
-This is the **corrected** push-pull at the dual-coordinate level:
-`pushforwardTraceLift = (pullback matrix)^T` and
-`traceDualPullbackLift = (trace matrix)^T`, so their composition is
-`((trace matrix) · (pullback matrix))^T`. By
-`traceFormsCoord_holomorphicTraceCoord_eq_degree_smul`, the inner
-matrix product is `(analyticDegree) · I`, whose transpose is itself.
-
-The existing `analyticPullback` is built from
-`pullbackTraceLiftCLM = holomorphicTraceCoord` (form-pullback matrix),
-which is *not* the correct representative for Jacobian pullback on
-dual coordinates. Once `analyticPullback` is rewired to use
-`traceDualPullbackLift` instead (with a corrected transfer-cycle
-naturality statement for the new lattice preservation), this
-vector-level identity will descend to give
-`analyticPushforward (analyticPullback Q) = analyticDegree • Q`.
--/
-theorem pushforwardTraceLift_traceDualPullbackLift_eq_degree_smul
-    (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
-    (pushforwardTraceLift f hf).comp
-        (traceDualPullbackLift f hf).toAddMonoidHom =
-      ((analyticDegree f hf : ℂ) • LinearMap.id (R := ℂ)
-        (M := Fin (analyticGenus ℂ Y) → ℂ)).toAddMonoidHom := by
-  refine AddMonoidHom.ext fun v => ?_
-  show (Matrix.toLin'
-        ((holomorphicTraceCoord f hf).toMatrix').transpose)
-      ((Matrix.toLin' ((traceFormsCoord f hf).toMatrix').transpose) v) =
-    (analyticDegree f hf : ℂ) • v
-  -- Combine via toLin'_mul.
-  set P := (holomorphicTraceCoord f hf).toMatrix' with hP_def
-  set T := (traceFormsCoord f hf).toMatrix' with hT_def
-  have hstep1 :
-      (Matrix.toLin' P.transpose) ((Matrix.toLin' T.transpose) v) =
-        (Matrix.toLin' (P.transpose * T.transpose)) v := by
-    rw [← LinearMap.comp_apply, ← Matrix.toLin'_mul]
-  rw [hstep1]
-  -- Transpose of a product = reversed product of transposes.
-  rw [show P.transpose * T.transpose = (T * P).transpose from
-    (Matrix.transpose_mul T P).symm]
-  -- T * P = (T ∘ P).toMatrix'
-  have hPmul :
-      T * P = ((traceFormsCoord f hf).comp (holomorphicTraceCoord f hf)).toMatrix' := by
-    rw [hT_def, hP_def]
-    exact (LinearMap.toMatrix'_comp _ _).symm
-  rw [hPmul]
-  -- Apply the matrix-level identity.
-  rw [traceFormsCoord_holomorphicTraceCoord_eq_degree_smul f hf]
-  -- Goal: Matrix.toLin' (((analyticDegree • LinearMap.id).toMatrix').transpose) v = degree • v.
-  -- LinearMap.toMatrix' is a LinearEquiv; the smul commutes through both
-  -- LinearMap.toMatrix' and Matrix.toLin'.
-  rw [show ((analyticDegree f hf : ℂ) • LinearMap.id (R := ℂ)
-        (M := Fin (analyticGenus ℂ Y) → ℂ)).toMatrix' =
-      (analyticDegree f hf : ℂ) •
-        (LinearMap.id (R := ℂ) (M := Fin (analyticGenus ℂ Y) → ℂ)).toMatrix' from by
-    exact map_smul LinearMap.toMatrix' _ _]
-  rw [LinearMap.toMatrix'_id]
-  rw [Matrix.transpose_smul, Matrix.transpose_one]
-  show (Matrix.toLin' ((analyticDegree f hf : ℂ) • (1 : Matrix _ _ ℂ))) v =
-    (analyticDegree f hf : ℂ) • v
-  rw [show Matrix.toLin' ((analyticDegree f hf : ℂ) • (1 : Matrix _ _ ℂ)) =
-      (analyticDegree f hf : ℂ) • Matrix.toLin' (1 : Matrix _ _ ℂ) from by
-    exact map_smul Matrix.toLin' _ _]
-  rw [Matrix.toLin'_one]
-  rfl
-
-
-
-
-
-
-
-
-
 
 
 end JacobianChallenge.TraceDegree

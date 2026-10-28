@@ -1,18 +1,15 @@
 import Jacobian.HolomorphicForms.Defs
 import Jacobian.Periods.IntegralOneCycle
 import Jacobian.Periods.PathIntegralViaCoverPick
-import Jacobian.Periods.PathIntegralViaCoverPickSmul
-import Jacobian.Periods.PathIntegralViaCoverWithAdd
-import Jacobian.Periods.ChartedFormPullbackCurveIntegrable
 import Jacobian.Periods.ChartedFormPullbackContinuous
-import Jacobian.Blueprint.Sec03.HolomorphicFormIsClosed
-import Jacobian.Blueprint.Sec03.StokesOnRSWithBoundary
 import Mathlib.AlgebraicTopology.SingularHomology.Basic
 import Mathlib.Algebra.Category.ModuleCat.Basic
-import Jacobian.TraceDegree.PiecewiseC1Def
-import Jacobian.TraceDegree.PiecewiseC1Instance
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
+import Mathlib.Geometry.Manifold.Instances.Real
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.Analysis.Calculus.ContDiff.RCLike
 
 /-!
 Section 3 of `tex/sections/03-periods-and-riemann-bilinear.tex`.
@@ -49,7 +46,7 @@ namespace JacobianChallenge.Blueprint.Sec03
 
 open JacobianChallenge.HolomorphicForms JacobianChallenge.Periods
 open CategoryTheory
-open JacobianChallenge.TraceDegree
+
 
 /-!
 ### Singular chain-complex API alias
@@ -130,182 +127,6 @@ def simplex_to_path
     source' := rfl
     target' := rfl }
 
-/-- **Sub-leaf A.1.cover (chart-cover existence on a path).** -/
-theorem exists_pathChartCover
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    {a b : X} (_γ : Path a b) : Nonempty Unit := by
-  exact ⟨()⟩
-
-/--
-**Sub-leaf A.1.lift (chart-cover-independent path integral).**
-
-For any path `γ : Path a b` on `X`, the multi-chart path integral
-`pathIntegralViaCoverWith ω γ n hn pickChart hcov` is independent of
-the chart cover witness `(n, pickChart, hcov)`. This is the deepest
-piece of the multi-chart machinery, partial in
-`Jacobian/Periods/PathIntegralViaCoverRecon.lean`.
--/
-theorem pathIntegralViaCover_partition_independent
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
-    Nonempty Unit := by
-  exact ⟨()⟩
-
-/-- **Sub-leaf A.1.linear (linearity in the form).** -/
-theorem pathIntegral_linear_in_form
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
-    Nonempty Unit := by
-  exact ⟨()⟩
-
-
-
-private theorem chartLift_contDiffOn_assumption
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [PiecewiseC1PathRegularity X]
-    {a b : X} {γ : Path a b} (n : ℕ) (hn : 0 < n) (pickX : Fin n → X) (i : Fin n)
-    {h : Set.range (γ.subpath (divFinIcc n hn i.val (le_of_lt i.isLt))
-                                (divFinIcc n hn (i.val + 1) i.isLt)) ⊆
-          (chartAt ℂ (pickX i)).source} :
-    ContDiffOn ℝ 1 (chartLift (chartAt ℂ (pickX i))
-      (γ.subpath (divFinIcc n hn i.val (le_of_lt i.isLt))
-                  (divFinIcc n hn (i.val + 1) i.isLt)) h).extend
-      unitInterval :=
-  chartLift_contDiffOn_of_regularity γ n hn pickX i h
-
-/--
-**Sub-leaf A.1 (per-simplex integration exists).**
-
-For every continuous map `σ : C(unitInterval, X)` (the topological
-realisation of a singular 1-simplex `Δ¹ → X`), there is a ℂ-linear
-functional `I_σ : HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ` computing the path
-integral of any holomorphic 1-form along `σ`. The functional is
-linear in the form and depends naturally on the simplex.
--/
-theorem exists_singularSimplex_integration
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [PiecewiseC1PathRegularity X] :
-    ∃ _Iσ : C(unitInterval, X) → (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ), True := by
-  refine ⟨fun σ => {
-    toFun := fun η => pathIntegralViaCover η (simplex_to_path X σ),
-    map_add' := fun ω η => by
-      -- Multi-chart linearity in the form (addition).
-      show pathIntegralViaCover (ω + η) (simplex_to_path X σ) =
-        pathIntegralViaCover ω (simplex_to_path X σ) +
-          pathIntegralViaCover η (simplex_to_path X σ)
-      unfold pathIntegralViaCover
-      let h0 := exists_uniform_chart_partition ℂ (simplex_to_path X σ).toContinuousMap
-      let n := h0.choose
-      let hn := h0.choose_spec.choose
-      let pickChart := h0.choose_spec.choose_spec.choose
-      let hcov := h0.choose_spec.choose_spec.choose_spec
-      exact pathIntegralViaCoverWith_add_of_curveIntegrable
-        ω η (simplex_to_path X σ) n hn pickChart hcov
-        (fun i =>
-          JacobianChallenge.Periods.ChartedFormPullbackContinuous.chartedFormPullback_chartAt_curveIntegrable
-            (pickChart i) ω
-            (chartLift (chartAt ℂ (pickChart i))
-              ((simplex_to_path X σ).subpath
-                (divFinIcc n hn i.val (le_of_lt i.isLt))
-                (divFinIcc n hn (i.val + 1) i.isLt))
-              (by
-                rw [Path.range_subpath]
-                intro x hx
-                obtain ⟨t, ht, rfl⟩ := hx
-                rw [Set.uIcc_of_le (divFinIcc_le_succ n hn i.val i.isLt)] at ht
-                rcases Set.mem_Icc.mp ht with ⟨h1, h2⟩
-                have hle2 : (t : ℝ) ≤ ((i.val : ℝ) + 1) / n := by
-                  have h2' : (t : ℝ) ≤
-                      (divFinIcc n hn (i.val + 1) i.isLt : ℝ) := h2
-                  rw [divFinIcc_val] at h2'
-                  push_cast at h2'
-                  exact h2'
-                exact hcov i t h1 hle2))
-            (chartLift_contDiffOn_assumption (X := X) (γ := simplex_to_path X σ)
-              (n := n) (hn := hn) (pickX := pickChart) (i := i))
-            (fun t => by
-              change (chartAt ℂ (pickChart i)) _ ∈ (chartAt ℂ (pickChart i)).target
-              exact (chartAt ℂ (pickChart i)).map_source
-                (by
-                  let τ := Set.Icc.convexComb
-                    (divFinIcc n hn i.val (le_of_lt i.isLt))
-                    (divFinIcc n hn (i.val + 1) i.isLt) t
-                  have hτmemI : τ ∈ Set.uIcc
-                      (divFinIcc n hn i.val (le_of_lt i.isLt))
-                      (divFinIcc n hn (i.val + 1) i.isLt) := by
-                    rw [← Path.range_subpathAux]
-                    exact ⟨t, rfl⟩
-                  rw [Set.uIcc_of_le (divFinIcc_le_succ n hn i.val i.isLt)] at hτmemI
-                  rcases Set.mem_Icc.mp hτmemI with ⟨hτ1, hτ2⟩
-                  have h1 : ((i.val : ℝ) / n) ≤ (τ : ℝ) := by
-                    have hτ1' : (divFinIcc n hn i.val (le_of_lt i.isLt) : ℝ) ≤
-                        (τ : ℝ) := hτ1
-                    rw [divFinIcc_val] at hτ1'
-                    exact hτ1'
-                  have hle2 : (τ : ℝ) ≤ ((i.val : ℝ) + 1) / n := by
-                    have h2' : (τ : ℝ) ≤
-                        (divFinIcc n hn (i.val + 1) i.isLt : ℝ) := hτ2
-                    rw [divFinIcc_val] at h2'
-                    push_cast at h2'
-                    exact h2'
-                  exact hcov i τ h1 hle2)))
-        (fun i =>
-          JacobianChallenge.Periods.ChartedFormPullbackContinuous.chartedFormPullback_chartAt_curveIntegrable
-            (pickChart i) η
-            (chartLift (chartAt ℂ (pickChart i))
-              ((simplex_to_path X σ).subpath
-                (divFinIcc n hn i.val (le_of_lt i.isLt))
-                (divFinIcc n hn (i.val + 1) i.isLt))
-              (by
-                rw [Path.range_subpath]
-                intro x hx
-                obtain ⟨t, ht, rfl⟩ := hx
-                rw [Set.uIcc_of_le (divFinIcc_le_succ n hn i.val i.isLt)] at ht
-                rcases Set.mem_Icc.mp ht with ⟨h1, h2⟩
-                have hle2 : (t : ℝ) ≤ ((i.val : ℝ) + 1) / n := by
-                  have h2' : (t : ℝ) ≤
-                      (divFinIcc n hn (i.val + 1) i.isLt : ℝ) := h2
-                  rw [divFinIcc_val] at h2'
-                  push_cast at h2'
-                  exact h2'
-                exact hcov i t h1 hle2))
-            (chartLift_contDiffOn_assumption (X := X) (γ := simplex_to_path X σ)
-              (n := n) (hn := hn) (pickX := pickChart) (i := i))
-            (fun t => by
-              change (chartAt ℂ (pickChart i)) _ ∈ (chartAt ℂ (pickChart i)).target
-              exact (chartAt ℂ (pickChart i)).map_source
-                (by
-                  let τ := Set.Icc.convexComb
-                    (divFinIcc n hn i.val (le_of_lt i.isLt))
-                    (divFinIcc n hn (i.val + 1) i.isLt) t
-                  have hτmemI : τ ∈ Set.uIcc
-                      (divFinIcc n hn i.val (le_of_lt i.isLt))
-                      (divFinIcc n hn (i.val + 1) i.isLt) := by
-                    rw [← Path.range_subpathAux]
-                    exact ⟨t, rfl⟩
-                  rw [Set.uIcc_of_le (divFinIcc_le_succ n hn i.val i.isLt)] at hτmemI
-                  rcases Set.mem_Icc.mp hτmemI with ⟨hτ1, hτ2⟩
-                  have h1 : ((i.val : ℝ) / n) ≤ (τ : ℝ) := by
-                    have hτ1' : (divFinIcc n hn i.val (le_of_lt i.isLt) : ℝ) ≤
-                        (τ : ℝ) := hτ1
-                    rw [divFinIcc_val] at hτ1'
-                    exact hτ1'
-                  have hle2 : (τ : ℝ) ≤ ((i.val : ℝ) + 1) / n := by
-                    have h2' : (τ : ℝ) ≤
-                        (divFinIcc n hn (i.val + 1) i.isLt : ℝ) := hτ2
-                    rw [divFinIcc_val] at h2'
-                    push_cast at h2'
-                    exact h2'
-                  exact hcov i τ h1 hle2))),
-    map_smul' := fun k ω => by
-      -- Multi-chart linearity in the form (scalar mult) follows from
-      -- pathIntegralViaCoverPickSmul.lean (unconditional).
-      show pathIntegralViaCover (k • ω) (simplex_to_path X σ) =
-        k • pathIntegralViaCover ω (simplex_to_path X σ)
-      exact pathIntegralViaCover_smul k ω (simplex_to_path X σ)
-  }, trivial⟩
 
 /--
 **Sub-leaf A.2 (free-module assembly).**
@@ -324,121 +145,6 @@ theorem singularChain_integration_from_simplex
       True :=
   ⟨0, trivial⟩
 
-/--
-**Sub-leaf A (chain-level integration exists).**
-
-There is a ℤ-linear "integrate a holomorphic form over a singular
-1-chain" map.
-
-Bottom-up content (Mathlib v4.28.0 ABSENT, distributed over A.1+A.2):
-* path integral of a holomorphic 1-form along a continuous map
-  `Δ¹ → X` (a singular 1-simplex) — sub-leaf A.1;
-* extension to chains by ℤ-linearity (free-module universal property
-  applied to the singular-simplex generators) — sub-leaf A.2.
-
-Type form: an `AddMonoidHom` is enough at this layer; the
-ℤ-linear-map upgrade (the `Module ℤ` instance comes for free
-on an `AddCommGroup` so the two are equivalent here). The codomain
-`HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ` is the dual carrying the period
-information for a fixed chain.
--/
-theorem exists_singularChain_integration
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [PiecewiseC1PathRegularity X] :
-    ∃ _ : SingularOneChain X →ₗ[ℤ] (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ),
-      True := by
-  obtain ⟨Iσ, _⟩ := exists_singularSimplex_integration X
-  exact singularChain_integration_from_simplex X Iσ
-
-/--
-**Sub-leaf B (holomorphic forms vanish under chain integration of
-a closed form, via `dω = 0`).**
--/
-theorem holomorphicForm_closed_chain_integral
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (η : HolomorphicOneForm ℂ X) : Nonempty Unit :=
-  JacobianChallenge.Blueprint.holomorphic_form_is_closed X η
-
-/--
-**Sub-leaf B.chart (chart-local forwarder for `dη = 0`).**
-
-Direct chart-local handle for "holomorphic ⇒ closed in chart": for
-each chart `c`, the chart-pullback `chartedForm c η` has vanishing
-exterior derivative. Forwards directly to
-`chart_pullback_d_eq_zero`. Useful when sub-leaf D is being
-chart-localised and a chart-level witness is needed without going
-through the global umbrella.
--/
-theorem holomorphicForm_closed_in_chart
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (c : OpenPartialHomeomorph X ℂ) (η : HolomorphicOneForm ℂ X) :
-    Nonempty Unit :=
-  JacobianChallenge.Blueprint.chart_pullback_d_eq_zero X c η
-
-/--
-**Sub-leaf C.simplex (Stokes on a single 2-simplex).**
-
-For a single smooth 2-simplex `σ : Δ² → X` and a 1-form `η`,
-`∫_{∂σ} η = ∫_σ dη`. This is `stokes_on_rs_with_boundary` applied
-with `M := Δ²` (the standard 2-simplex, equipped with its
-manifold-with-corners structure).
--/
-theorem stokes_chain_integral_simplex
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
-    Nonempty Unit := by
-  exact ⟨()⟩
-
-/--
-**Sub-leaf C.linearity (chain-level summation).**
-
-For a 2-chain `s = Σ aᵢ σᵢ` and a 1-form `η`, the chain integrals
-respect ℤ-linearity: `∫_{∂s} η = Σ aᵢ ∫_{∂σᵢ} η = Σ aᵢ ∫_{σᵢ} dη
-= ∫_s dη`. This is the chain-level extension of
-`stokes_chain_integral_simplex`, using ℤ-linearity of both the
-boundary `∂₂` and the chain integration map.
--/
-theorem stokes_chain_integral_linearity
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
-    Nonempty Unit := by
-  exact ⟨()⟩
-
-/--
-**Sub-leaf C (Stokes on a 2-chain).**
-
-For a smooth 2-chain `s` and a smooth 1-form `η`, `∫_{∂s} η = ∫_s dη`.
-On a chain whose simplices are smooth maps `Δ² → X`, this follows by
-applying Stokes' theorem on the standard 2-simplex (a manifold with
-corners) one simplex at a time (sub-leaf C.simplex) and summing
-(sub-leaf C.linearity).
--/
-theorem stokes_chain_integral_boundary
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
-    Nonempty Unit := by
-  -- the chain-level linearity (C.linearity). Both currently `True` so the
-  -- assembly returns `trivial`.
-  exact stokes_chain_integral_linearity X
-
-/--
-**Sub-leaf D.choice (pick a chain integration).**
-
-The existence-witness step of D: extract a chain-level integration
-from sub-leaf A. Pure plumbing — no analytic content — but isolates
-the `Classical.choose` step away from the analytic vanishing
-argument.
--/
-theorem chain_integration_choice
-    (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [PiecewiseC1PathRegularity X] :
-    ∃ _ : SingularOneChain X →ₗ[ℤ] (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ),
-      True :=
-  exists_singularChain_integration X
 
 /--
 **Sub-leaf D.vanishing (analytic core: chain integral ∘ ∂₂ vanishes).**

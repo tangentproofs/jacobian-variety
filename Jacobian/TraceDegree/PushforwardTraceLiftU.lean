@@ -1,4 +1,6 @@
-import Jacobian.TraceDegree.PushforwardBasis
+import Jacobian.AbelJacobi.AnalyticOfCurveBasis
+import Jacobian.ComplexTorus.OfClm
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # Universe-polymorphic trace-lift maps

@@ -1,9 +1,8 @@
-import Jacobian.HolomorphicForms.HodgeDecomposition
 import Jacobian.HolomorphicForms.DeRhamSingular
-import Jacobian.Periods.IntegralOneCycleRank
 import Jacobian.HolomorphicForms.CompactRiemannSurface
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
+import Jacobian.HolomorphicForms.AnalyticGenus
 
 /-!
 # Top-level assembly: `2g = rank ℤ H₁(X, ℤ)` (Hodge / de Rham bridge)

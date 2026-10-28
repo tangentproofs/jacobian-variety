@@ -1,4 +1,7 @@
-import Jacobian.TraceDegree.PullbackBasis
+import Jacobian.AbelJacobi.AnalyticOfCurveBasis
+import Jacobian.ComplexTorus.OfClm
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+import Jacobian.HolomorphicForms.TraceSpec
 
 /-!
 # Universe-polymorphic identity trace-functoriality (route-β, the id case)

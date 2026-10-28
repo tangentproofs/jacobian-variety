@@ -1,5 +1,4 @@
 import Jacobian.TraceDegree.CotangentPushforwardCompU
-import Jacobian.TraceDegree.PullbackBasis
 
 set_option linter.unusedSectionVars false
 set_option backward.isDefEq.respectTransparency false

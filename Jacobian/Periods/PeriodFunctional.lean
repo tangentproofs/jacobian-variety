@@ -4,10 +4,6 @@ import Jacobian.HolomorphicForms.CompactRiemannSurface
 import Jacobian.HolomorphicForms.HodgeDeRhamRank
 import Jacobian.Periods.IntegralOneCycle
 import Jacobian.Periods.PeriodSpanHelpers
-import Jacobian.Periods.SurfaceClassification
-import Jacobian.Periods.SmoothRealStructure
-import Jacobian.Periods.ComplexManifoldOrientable
-import Jacobian.Periods.RiemannBilinearRefinement
 import Jacobian.Blueprint.Sec03.PeriodHomologyInvariance
 import Mathlib.Algebra.Module.ZLattice.Basic
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv

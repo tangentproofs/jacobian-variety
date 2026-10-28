@@ -6,16 +6,12 @@ import Mathlib.Geometry.Manifold.Instances.Real
 import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import Jacobian.HolomorphicForms.CompactRiemannSurface
 import Jacobian.HolomorphicForms.GenusZeroClassification
-import Jacobian.Periods.PeriodLattice
 import Jacobian.Periods.PeriodFullComplexLatticeU
 import Jacobian.ComplexTorus.ULiftTransport
 import Jacobian.AbelJacobi.AnalyticOfCurveBasis
 import Jacobian.AbelJacobi.AnalyticOfCurveU
 import Jacobian.AbelJacobi.AnalyticOfCurveInjectiveU
-import Jacobian.TraceDegree.PullbackBasis
-import Jacobian.TraceDegree.PushforwardBasis
 import Jacobian.TraceDegree.AnalyticDegree
-import Jacobian.TraceDegree.PiecewiseC1Instance
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Jacobian.TraceDegree.AnalyticPushforwardFunctorialU

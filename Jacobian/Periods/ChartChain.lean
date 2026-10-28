@@ -1,6 +1,5 @@
 import Jacobian.Periods.ChartedFormPullbackContinuous
 import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-import Jacobian.Periods.ChartedFormPullbackLinearMap
 
 /-!
 # Chart chains and the local exactness of holomorphic 1-forms

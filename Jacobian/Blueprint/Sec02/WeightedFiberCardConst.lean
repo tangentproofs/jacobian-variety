@@ -1,10 +1,10 @@
-import Jacobian.Blueprint.Sec02.BranchedDegree
 import Jacobian.HolomorphicForms.HolomorphicMap
 import Mathlib.Topology.LocallyConstant.Basic
 import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+import Jacobian.HolomorphicForms.BranchedCover
 
 /-!
 # Blueprint: well-definedness of the branched degree (4-step decomposition)

@@ -187,23 +187,5 @@ theorem singularChainElement_boundary_decomposition
   rfl
 
 
-theorem singularChainElement_linearIndependent
-    (X : Type) [TopologicalSpace X] (_n : ℕ) :
-    True := by
-  trivial
-
-/-!
-## Roadmap
-
-* `edgeChain g i : SingularChainCoproduct (Polygon4g (g+1)) 1` —
-  chain element of `edgeSimplex g i`.
-* `edgeChain_isCycle g i` — follows from
-  `singularChainElement_boundary_decomposition` once it is upgraded
-  to a real equation, plus the fact that
-  `edgeSimplex g i ∘ d_0` and `edgeSimplex g i ∘ d_1` are constant
-  maps to the (single, identified) polygon vertex (vertex
-  identification is the side-pairing closure in `Polygon4g`).
--/
-
 end JacobianChallenge.Periods
 
