@@ -320,7 +320,31 @@ C1–C5 and the labelled gaps).
 
 ---
 
+## 2026-10-27 — final sweep for placeholders of the same classes
+
+Declaration-level check (fixed dependency graph, private/aux included) of every
+placeholder-shaped declaration still in the live tree against the set reachable from the
+public API: **0 reachable**. What remains, all unreachable, all ledgered:
+
+| class | where | count |
+|---|---|---|
+| `opaque` | `AbelJacobi/AnalyticOfCurveBasis.lean` (Type-0 `pathIntegralFunctionalBundle`), `Periods/Polygon4gCellular.lean` (3 group placeholders) | 4 |
+| `… : True := trivial` "theorems" | mostly `HolomorphicForms/CompactRiemannSurface.lean` (19), spread over the Type-0 / polygon layers | 218 |
+| `Unit` / `Nonempty Unit` / `PUnit` fields and statements | `AbelJacobi/AnalyticOfCurveBasis.lean`, `Periods/DualGraphCut.lean`, `Periods/RadoTriangulation.lean`, `Periods/SingularH1Homotopy.lean`, `Periods/Orientable.lean`, `Periods/SurfaceClassificationData.lean` | ~25 |
+| zero placeholders | Type-0 `periodPairing` (`Periods/PeriodFunctional.lean`), `exteriorDerivative := 0` (`HolomorphicForms/SmoothDifferentialForm.lean`), Stokes `0 = 0` (`Blueprint/Sec03/StokesOnRSWithBoundary.lean`) | 3 |
+
+They are dead weight rather than a soundness problem for the public API; a later pass
+could retire the whole Type-0 mirror layer and the polygon tower to `Attic/`.
+
+---
+
 ## Commit hashes
 
 | time (EDT) | hash | summary |
 |---|---|---|
+| 2026-10-27 17:3x | `40f287b` | refutation theorem + classification (previous session) |
+| 2026-10-27 17:34 | `03b303b` | EvalAtOneHelper frame assumption (previous session; did not build) |
+| 2026-10-27 20:4x | `f48acda` | goal (a): `StableChartAt` deleted (author shows "Claude": committed before the identity fix; amending needs a force-push, which was not permitted) |
+| 2026-10-27 | `839601f` | goals (b), (c): genuine period lattice and Abel–Jacobi map |
+| 2026-10-27 | `3492fa3` | goal (d): false gaps retired, gap 7 proved |
+| 2026-10-27 | `cec6833` | goal (e): degree fallback lemma; comparator pinned; `genus` clean |

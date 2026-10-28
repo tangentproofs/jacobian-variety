@@ -2,6 +2,11 @@
 
 **Date:** 2026-10-27 (America/New_York) · **Branch:** `independent-repair` · **Deliverable:** first milestone, item 1 of `ref/independent-repair-brief.md` §6.
 
+> **Status (2026-10-27, cloud session): done.** The class, its instance and all 895 mentions are
+> gone from live Lean code (`f48acda`). How each real use was resolved — two reproved honestly,
+> three cut to labelled gaps, the rest retired to `Attic/StableChartRetired/` — is in
+> `ref/independent-repair-progress.md`. The plan in §6 below is the historical plan.
+
 **Purpose.** Goal (a) of the brief is to delete the class `JacobianChallenge.Periods.StableChartAt`.
 This file is the inventory that makes that deletion plannable: every one of the **895** mentions in
 **120** `.lean` files, classified *real use* / *pass-through binder* / *comment*, with `file:line`.
