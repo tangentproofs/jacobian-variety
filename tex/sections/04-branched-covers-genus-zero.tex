@@ -623,7 +623,7 @@ Theorem~\ref{thm:degree-one-bijective} (Sec02, already \(\leanok\)).
 
 \begin{lemma}[Holomorphic 1-form equivalence under sphere homeomorphism]
 \label{lem:holomorphic-one-form-equiv-of-homeo-sphere}
-\uses{thm:exists-biholomorph-one-point-of-genus-zero, lem:holomorphic-one-form-pullback-via-biholo}
+\uses{lem:holomorphic-one-form-pullback-via-biholo}
 If a compact connected complex 1-manifold \(X\) is homeomorphic
 (as a topological space) to the standard \(2\)-sphere, then there
 is a \(\C\)-linear equivalence
@@ -632,13 +632,13 @@ is a \(\C\)-linear equivalence
 \leanok
 \end{lemma}
 \begin{proof}\leanok
-This is the genus-zero case of the uniformization theorem. Any
-complex structure on the topological 2-sphere is biholomorphic to
-the standard structure on \(\CPone=\code{OnePoint}\,\C\); the resulting
-biholomorphism \(\psi:X\xrightarrow{\sim}\CPone\) pulls back
-holomorphic 1-forms to holomorphic 1-forms, yielding the
-\(\C\)-linear isomorphism
-\(\psi^{*}:H^{0}(\CPone,\Omega^{1}_{\CPone})\to H^{0}(X,\Omega^{1}_{X})\).
+Both spaces are zero, so any linear map between them is an isomorphism. For
+\(X\): given two chart chains with the same endpoints, pick a point \(z\) they
+both miss (Baire); \(X\setminus\{z\}\cong S^2\setminus\{\mathrm{pt}\}\cong\R^2\)
+is simply connected, so \(\omega\) has a primitive there (lift through the
+covering space of local primitives), and the two integrals agree. A form whose
+integrals are path-independent vanishes (maximum principle). This avoids the
+uniformization theorem.
 \end{proof}
 
 \begin{theorem}[Holomorphic 1-forms vanish on the topological sphere]
@@ -908,7 +908,9 @@ A compact connected complex 1-manifold homeomorphic to \(S^2\) admits a
 \(f:X\simeq\code{OnePoint}\,\C\) with both \(f\) and \(f^{-1}\) complex-smooth
 (\code{ContMDiff}).
 Tracking: \ghissue{232}.
-\lean{JacobianChallenge.HolomorphicForms.exists_biholomorph_onePoint_of_genus_zero}
+Not needed by the formal development: the genus statement uses
+Lemma~\ref{lem:holomorphic-one-form-equiv-of-homeo-sphere}, proved without
+uniformization; the former Lean statement (a named classical input) is removed.
 \end{theorem}
 \begin{proof}
 This is the genus-zero uniformization theorem. Classically it follows from the

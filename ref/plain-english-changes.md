@@ -600,3 +600,70 @@ The substantive content is the classical Abel construction
 \begin{proof}
 The substantive content is the classical Abel construction
 ```
+
+---
+
+## C4 removal (2026-10-28)
+
+### 32. `tex/sections/04-branched-covers-genus-zero.tex:626`
+
+**Why.** The lemma no longer rests on genus-zero uniformization; dependency edge removed.
+
+**Old.**
+```latex
+\uses{thm:exists-biholomorph-one-point-of-genus-zero, lem:holomorphic-one-form-pullback-via-biholo}
+```
+**New.**
+```latex
+\uses{lem:holomorphic-one-form-pullback-via-biholo}
+```
+
+### 33. `tex/sections/04-branched-covers-genus-zero.tex:634`
+
+**Why.** Proof paragraph replaced: the Lean proof now avoids uniformization (simple connectivity of the punctured sphere + covering space of primitives).
+
+**Old.**
+```latex
+\begin{proof}\leanok
+This is the genus-zero case of the uniformization theorem. Any
+complex structure on the topological 2-sphere is biholomorphic to
+the standard structure on \(\CPone=\code{OnePoint}\,\C\); the resulting
+biholomorphism \(\psi:X\xrightarrow{\sim}\CPone\) pulls back
+holomorphic 1-forms to holomorphic 1-forms, yielding the
+\(\C\)-linear isomorphism
+\(\psi^{*}:H^{0}(\CPone,\Omega^{1}_{\CPone})\to H^{0}(X,\Omega^{1}_{X})\).
+\end{proof}
+```
+**New.**
+```latex
+\begin{proof}\leanok
+Both spaces are zero, so any linear map between them is an isomorphism. For
+\(X\): given two chart chains with the same endpoints, pick a point \(z\) they
+both miss (Baire); \(X\setminus\{z\}\cong S^2\setminus\{\mathrm{pt}\}\cong\R^2\)
+is simply connected, so \(\omega\) has a primitive there (lift through the
+covering space of local primitives), and the two integrals agree. A form whose
+integrals are path-independent vanishes (maximum principle). This avoids the
+uniformization theorem.
+\end{proof}
+```
+
+### 34. `tex/sections/04-branched-covers-genus-zero.tex:909`
+
+**Why.** Lean decl (classical input C4) removed as unused; \lean dropped, one sentence added.
+
+**Old.**
+```latex
+(\code{ContMDiff}).
+Tracking: \ghissue{232}.
+\lean{JacobianChallenge.HolomorphicForms.exists_biholomorph_onePoint_of_genus_zero}
+\end{theorem}
+```
+**New.**
+```latex
+(\code{ContMDiff}).
+Tracking: \ghissue{232}.
+Not needed by the formal development: the genus statement uses
+Lemma~\ref{lem:holomorphic-one-form-equiv-of-homeo-sphere}, proved without
+uniformization; the former Lean statement (a named classical input) is removed.
+\end{theorem}
+```

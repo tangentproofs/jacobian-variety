@@ -513,6 +513,35 @@ Reachable `sorry`s: **4** (C2–C5).
 
 ---
 
+## 2026-10-28 — "homeomorphic to S² ⇒ genus 0" without uniformization; C4 removed
+
+`Periods/PrimitiveCovering.lean` (new, axiom-clean):
+
+* `IsPrim`, `hasFDerivAt_chartChange`, `exists_isPrim`, `IsPrim.eventually_sub_eq`: local
+  primitives of a holomorphic form, chart-independent, locally unique up to constants.
+* `PrimSpace ω` (`X × ℂ` topologised by graphs of local primitives) and
+  `isCoveringMap_primProj`: the étalé space of primitives is a covering space (explicit
+  trivialisations `trivOfPrim` with discrete fibre `ℂ`).
+* `exists_isPrim_of_simplyConnected`: Mathlib's lifting theorem for covering maps gives a
+  primitive on any simply connected open set.
+* `IsPrim.segment_integral` / `IsPrim.chainIntegral_eq`: chain integrals inside the domain of
+  a primitive are differences of the primitive (convex thickening of the segment).
+* `interior_segment_complex`, `exists_not_mem_segments`: finitely many chart segments miss a
+  point (Baire).
+* `simplyConnectedSpace_compl_of_homeomorph_sphere`: `X ∖ {z} ≅ S² ∖ {pt} ≅ ℝ²`
+  (Mathlib's stereographic projection), hence simply connected.
+* `holomorphicOneForm_eq_zero_of_homeomorph_sphere`: any two chains miss a common point, so
+  their integrals agree, so `ω = 0` by `eq_zero_of_re_chainIntegral_eq`.
+
+`analyticGenus_eq_zero_of_homeomorphic_sphere`, `holomorphicOneForm_linearEquiv_of_homeoSphere_exists`
+and `holomorphicOneForm_linearEquiv_of_biholo_to_OnePointCx` are re-proved from it. The
+classical input C4 (genus-zero uniformization) and the ten declarations that only it
+supported are removed. Blueprint: 3 edits in `04-…` (logged §32–34).
+
+Reachable `sorry`s: **3** — C2 (discreteness), C3 (Abel), C5 (analytic genus 0 ⇒ `ℂ̂`).
+
+---
+
 ## Commit hashes
 
 | time (EDT) | hash | summary |
