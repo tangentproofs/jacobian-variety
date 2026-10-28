@@ -486,6 +486,248 @@ theorem closed_chain_data :
 
 end Closed
 
+/-! ### The bilinear form and discreteness -/
+
+section Lattice
+
+variable [FiniteDimensionalHolomorphicOneForms ℂ X]
+
+theorem integral_const_mul_atlas (A : DiscAtlas X) (c : ℂ) (σ : X → ℂ → ℂ) :
+    A.integral (fun q w => c * σ q w) = c * A.integral σ := by
+  unfold DiscAtlas.integral
+  rw [Finset.mul_sum]
+  exact Finset.sum_congr rfl fun i _ => MeasureTheory.integral_const_mul _ _
+
+/-- The `L²` pairing of holomorphic forms. -/
+noncomputable def gram (A : DiscAtlas X) (ν η : HolomorphicOneForm ℂ X) : ℂ :=
+  A.integral (fun p w => (starRingEnd ℂ) (holoF ν p w) * holoF η p w)
+
+theorem gram_add_right (A : DiscAtlas X) (ν η₁ η₂ : HolomorphicOneForm ℂ X) :
+    gram A ν (η₁ + η₂) = gram A ν η₁ + gram A ν η₂ := by
+  have hc : ∀ η : HolomorphicOneForm ℂ X, ∀ q, ContinuousOn
+      (fun w => (starRingEnd ℂ) (holoF ν q w) * holoF η q w) (chartAt ℂ q).target := fun η q =>
+    (Complex.continuous_conj.comp_continuousOn (smoothFam_holoF ν q).continuousOn).mul
+      (smoothFam_holoF η q).continuousOn
+  unfold gram
+  rw [← A.integral_add' (hc η₁) (hc η₂)]
+  refine A.integral_congr fun i w _ => ?_
+  simp only [holoF, chartCoeff_add]; ring
+
+theorem gram_smul_right (A : DiscAtlas X) (ν η : HolomorphicOneForm ℂ X) (c : ℂ) :
+    gram A ν (c • η) = c * gram A ν η := by
+  unfold gram
+  rw [← integral_const_mul_atlas A]
+  refine A.integral_congr fun i w _ => ?_
+  simp only [holoF, chartCoeff_smul]; ring
+
+theorem gram_add_left (A : DiscAtlas X) (ν₁ ν₂ η : HolomorphicOneForm ℂ X) :
+    gram A (ν₁ + ν₂) η = gram A ν₁ η + gram A ν₂ η := by
+  have hc : ∀ ν : HolomorphicOneForm ℂ X, ∀ q, ContinuousOn
+      (fun w => (starRingEnd ℂ) (holoF ν q w) * holoF η q w) (chartAt ℂ q).target := fun ν q =>
+    (Complex.continuous_conj.comp_continuousOn (smoothFam_holoF ν q).continuousOn).mul
+      (smoothFam_holoF η q).continuousOn
+  unfold gram
+  rw [← A.integral_add' (hc ν₁) (hc ν₂)]
+  refine A.integral_congr fun i w _ => ?_
+  simp only [holoF, chartCoeff_add, map_add]; ring
+
+theorem gram_smul_left (A : DiscAtlas X) (ν η : HolomorphicOneForm ℂ X) (c : ℂ) :
+    gram A (c • ν) η = (starRingEnd ℂ) c * gram A ν η := by
+  unfold gram
+  rw [← integral_const_mul_atlas A]
+  refine A.integral_congr fun i w _ => ?_
+  simp only [holoF, chartCoeff_smul, map_mul]; ring
+
+theorem gram_extend (A : DiscAtlas X) {m : ℕ} (e : Fin m → X) (ν η : HolomorphicOneForm ℂ X) :
+    gram (A.extend e) ν η = gram A ν η := A.integral_extend e _
+
+/-- `gram A ν` as a linear functional. -/
+noncomputable def gramR (A : DiscAtlas X) (ν : HolomorphicOneForm ℂ X) :
+    HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ where
+  toFun := gram A ν
+  map_add' := gram_add_right A ν
+  map_smul' c η := gram_smul_right A ν η c
+
+local notation "bas" => holomorphicOneFormFinBasis ℂ X
+
+/-- `ν ↦ (⟨ν, ω_j⟩)_j`, a real-linear map. -/
+noncomputable def gramT (A : DiscAtlas X) :
+    HolomorphicOneForm ℂ X →ₗ[ℝ] (Fin (analyticGenus ℂ X) → ℂ) where
+  toFun ν := fun j => gram A ν (bas j)
+  map_add' ν₁ ν₂ := funext fun j => gram_add_left A ν₁ ν₂ _
+  map_smul' r ν := funext fun j => by
+    simp only [RingHom.id_apply, Pi.smul_apply]
+    rw [← Complex.coe_smul, gram_smul_left, Complex.conj_ofReal, Complex.real_smul]
+
+theorem gramT_injective (A : DiscAtlas X) : Function.Injective (gramT A) := by
+  rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
+  intro ν hν
+  have hz : gramR A ν = 0 := (bas).ext fun j => congrFun hν j
+  exact eq_zero_of_integral_conj_mul_self A ν (LinearMap.congr_fun hz ν)
+
+theorem gramT_bijective (A : DiscAtlas X) : Function.Bijective (gramT A) := by
+  refine ⟨gramT_injective A, ?_⟩
+  have h : Module.finrank ℝ (HolomorphicOneForm ℂ X) =
+      Module.finrank ℝ (Fin (analyticGenus ℂ X) → ℂ) := by
+    rw [finrank_real_of_complex, finrank_real_of_complex, Module.finrank_fin_fun]
+    rfl
+  exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank h).mp (gramT_injective A)
+
+/-- The real-linear equivalence `ν ↦ (⟨ν, ω_j⟩)_j`. -/
+noncomputable def gramE (A : DiscAtlas X) :
+    HolomorphicOneForm ℂ X ≃ₗ[ℝ] (Fin (analyticGenus ℂ X) → ℂ) :=
+  LinearEquiv.ofBijective (gramT A) (gramT_bijective A)
+
+/-- Evaluation of a period vector on a form: `∑ y_j c_j(ν)`. -/
+noncomputable def ev (y : Fin (analyticGenus ℂ X) → ℂ) : HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ :=
+  ∑ j, y j • (bas).coord j
+
+theorem ev_apply (y : Fin (analyticGenus ℂ X) → ℂ) (ν : HolomorphicOneForm ℂ X) :
+    ev y ν = ∑ j, y j * (bas).repr ν j := by
+  simp only [ev, LinearMap.coe_sum, Finset.sum_apply, LinearMap.smul_apply,
+    Module.Basis.coord_apply, smul_eq_mul]
+
+theorem ev_basis (y : Fin (analyticGenus ℂ X) → ℂ) (k : Fin (analyticGenus ℂ X)) :
+    ev y (bas k) = y k := by
+  rw [ev_apply, Module.Basis.repr_self]
+  simp only [Finsupp.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+    Finset.mem_univ, if_true]
+
+theorem ev_chain (l : List (ChartSegment X)) (ν : HolomorphicOneForm ℂ X) :
+    ev (periodVector X l) ν = chainIntegral ν l := by
+  rw [ev_apply]
+  conv_rhs => rw [← (bas).sum_repr ν, ← chainIntegralLM_apply, map_sum]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  rw [map_smul, chainIntegralLM_apply, smul_eq_mul, mul_comm]
+  rfl
+
+theorem ev_add (y₁ y₂ : Fin (analyticGenus ℂ X) → ℂ) (ν : HolomorphicOneForm ℂ X) :
+    ev (y₁ + y₂) ν = ev y₁ ν + ev y₂ ν := by
+  simp only [ev_apply, Pi.add_apply, add_mul, Finset.sum_add_distrib]
+
+theorem ev_neg (y : Fin (analyticGenus ℂ X) → ℂ) (ν : HolomorphicOneForm ℂ X) :
+    ev (-y) ν = -ev y ν := by
+  simp only [ev_apply, Pi.neg_apply, neg_mul, Finset.sum_neg_distrib]
+
+theorem ev_zero (ν : HolomorphicOneForm ℂ X) : ev 0 ν = 0 := by simp [ev_apply]
+
+theorem continuous_ev (ν : HolomorphicOneForm ℂ X) :
+    Continuous fun y : Fin (analyticGenus ℂ X) → ℂ => ev y ν := by
+  simp only [ev_apply]
+  exact continuous_finsetSum _ fun j _ => (continuous_apply j).mul continuous_const
+
+/-- The real bilinear form `B(x, y) = Im ⟨y, ν_x⟩`. -/
+noncomputable def Bf (A : DiscAtlas X) (x y : Fin (analyticGenus ℂ X) → ℂ) : ℝ :=
+  (ev y ((gramE A).symm (Real.pi • x))).im
+
+/-- `B(·, y)` as a real-linear functional. -/
+noncomputable def BL (A : DiscAtlas X) (y : Fin (analyticGenus ℂ X) → ℂ) :
+    (Fin (analyticGenus ℂ X) → ℂ) →ₗ[ℝ] ℝ :=
+  Complex.imLm ∘ₗ ((ev y).restrictScalars ℝ) ∘ₗ (gramE A).symm.toLinearMap ∘ₗ
+    (Real.pi • LinearMap.id)
+
+theorem BL_apply (A : DiscAtlas X) (x y : Fin (analyticGenus ℂ X) → ℂ) :
+    BL A y x = Bf A x y := rfl
+
+/-- **Integrality.** `B(Λ, Λ) ⊆ π ℤ`. -/
+theorem Bf_mem (A : DiscAtlas X)
+    {x : Fin (analyticGenus ℂ X) → ℂ} (hx : x ∈ genuinePeriodSubgroup X)
+    {y : Fin (analyticGenus ℂ X) → ℂ} (hy : y ∈ genuinePeriodSubgroup X) :
+    ∃ n : ℤ, Bf A x y = Real.pi * n := by
+  obtain ⟨Γ, hΓ, hΓi⟩ := exists_closed_fchain hx
+  obtain ⟨ν, hpair, him⟩ := closed_chain_data hΓ
+  -- `ν` is the form attached to `x`
+  have hA : ∀ c ∈ Γ, ∃ k, (A.extend fun i : Fin Γ.length => (Γ.get i).1.p).p k = c.1.p := by
+    intro c hc
+    obtain ⟨i, rfl⟩ := List.mem_iff_get.mp hc
+    exact ⟨Fin.natAdd A.N i, A.extend_p _ i⟩
+  have hT : gramT A ν = Real.pi • x := funext fun j => by
+    show gram A ν (bas j) = Real.pi • x j
+    rw [← gram_extend A (fun i : Fin Γ.length => (Γ.get i).1.p), gram, hpair _ hA, hΓi,
+      Complex.real_smul]
+  have hν : (gramE A).symm (Real.pi • x) = ν := by
+    rw [← hT]; exact (gramE A).symm_apply_apply ν
+  unfold Bf
+  rw [hν]
+  induction hy using AddSubgroup.closure_induction with
+  | mem y hy =>
+    obtain ⟨P, Q, l₁, l₂, h₁, h₂, rfl⟩ := hy
+    rw [sub_eq_add_neg, ev_add, ev_neg, ev_chain, ev_chain, ← sub_eq_add_neg]
+    exact him P Q l₁ l₂ h₁ h₂
+  | zero => exact ⟨0, by rw [ev_zero]; simp⟩
+  | add y z _ _ hy hz =>
+    obtain ⟨n₁, h1⟩ := hy
+    obtain ⟨n₂, h2⟩ := hz
+    exact ⟨n₁ + n₂, by rw [ev_add, Complex.add_im, h1, h2]; push_cast; ring⟩
+  | neg y _ hy =>
+    obtain ⟨n, h⟩ := hy
+    exact ⟨-n, by rw [ev_neg, Complex.neg_im, h]; push_cast; ring⟩
+
+/-- **Non-degeneracy.** -/
+theorem eq_zero_of_Bf (A : DiscAtlas X) {y : Fin (analyticGenus ℂ X) → ℂ}
+    (h : ∀ x, Bf A x y = 0) : y = 0 := by
+  have him : ∀ ν, (ev y ν).im = 0 := fun ν => by
+    have := h ((Real.pi)⁻¹ • gramE A ν)
+    rw [Bf, smul_smul, mul_inv_cancel₀ Real.pi_ne_zero, one_smul,
+      (gramE A).symm_apply_apply] at this
+    exact this
+  have h0 : ∀ ν, ev y ν = 0 := fun ν => by
+    have h1 := him ν
+    have h2 := him (Complex.I • ν)
+    rw [map_smul, smul_eq_mul, Complex.mul_im, Complex.I_re, Complex.I_im, zero_mul, one_mul,
+      zero_add] at h2
+    exact Complex.ext h2 h1
+  funext k
+  rw [← ev_basis y k, h0]
+  rfl
+
+/-- **The period lattice is discrete.** -/
+theorem periodLattice_discrete' :
+    DiscreteTopology (genuinePeriodSubgroup X) := by
+  obtain ⟨A⟩ := exists_discAtlas (X := X)
+  obtain ⟨t, htΛ, hspan, hli⟩ :=
+    exists_linearIndependent ℝ (genuinePeriodSubgroup X : Set (Fin (analyticGenus ℂ X) → ℂ))
+  have htop : Submodule.span ℝ t = ⊤ := hspan.trans (periodLattice_span X)
+  have hfin : t.Finite := hli.setFinite
+  set U : Set (Fin (analyticGenus ℂ X) → ℂ) := ⋂ x ∈ t, {y | |Bf A x y| < Real.pi}
+  have hU : IsOpen U := hfin.isOpen_biInter fun x _ =>
+    isOpen_lt (continuous_abs.comp (Complex.continuous_im.comp (continuous_ev _)))
+      continuous_const
+  have hU0 : ∀ y ∈ genuinePeriodSubgroup X, y ∈ U → y = 0 := by
+    intro y hy hyU
+    refine eq_zero_of_Bf A fun x => ?_
+    have hvan : ∀ x ∈ t, Bf A x y = 0 := fun x hx => by
+      obtain ⟨n, hn⟩ := Bf_mem A (htΛ hx) hy
+      have hlt := mem_iInter₂.mp hyU x hx
+      simp only [mem_setOf_eq, hn, abs_mul, abs_of_pos Real.pi_pos] at hlt
+      have : |(n : ℝ)| < 1 := by
+        have := Real.pi_pos
+        nlinarith [abs_nonneg (n : ℝ)]
+      have hn0 : n = 0 := by
+        rw [← Int.cast_abs] at this
+        have : |n| < 1 := by exact_mod_cast this
+        have := abs_lt.mp this
+        omega
+      rw [hn, hn0]; simp
+    have hle : t ⊆ LinearMap.ker (BL A y) := fun x hx => hvan x hx
+    have := Submodule.span_le.mpr hle
+    rw [htop] at this
+    exact this (Submodule.mem_top (x := x))
+  have h0U : (0 : Fin (analyticGenus ℂ X) → ℂ) ∈ U := by
+    refine mem_iInter₂.mpr fun x _ => ?_
+    simp only [mem_setOf_eq, Bf, ev_zero, Complex.zero_im, abs_zero, Real.pi_pos]
+  refine discreteTopology_of_isOpen_singleton_zero ?_
+  have : ({0} : Set (genuinePeriodSubgroup X)) = Subtype.val ⁻¹' U := by
+    ext z
+    simp only [mem_singleton_iff, mem_preimage]
+    constructor
+    · rintro rfl; exact h0U
+    · intro hz; exact Subtype.ext (hU0 z z.2 hz)
+  rw [this]
+  exact hU.preimage continuous_subtype_val
+
+end Lattice
+
 end FChain
 
 end JacobianChallenge.Surface

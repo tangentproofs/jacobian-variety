@@ -35,14 +35,12 @@ integral is well defined modulo periods" hold by definition, which is exactly ho
 classical construction is phrased. Classically this subgroup is the image of `H₁(X, ℤ)`
 under integration (every class is represented by a closed chain of chart segments).
 
-## Classical input
+## Lattice
 
-That this subgroup is a full lattice in `ℂ^g` (discrete, and spanning `ℂ^g ≅ ℝ^{2g}`
-over `ℝ`) is the classical theorem on the period lattice (Riemann's bilinear relations;
-O. Forster, *Lectures on Riemann Surfaces*, §21; Griffiths–Harris, *Principles of
-Algebraic Geometry*, Ch. 2 §2). It is recorded as the single named classical
-input `periodLattice_discrete_and_span` (a `sorry`'d theorem, listed in
-`ref/axiom-audit.md`). Everything else in this file is proved.
+That this subgroup spans `ℂ^g ≅ ℝ^{2g}` over `ℝ` is proved here (`periodLattice_span`).
+That it is discrete — hence a full lattice — is proved in
+`Jacobian/Periods/GenuinePeriodLatticeDiscrete.lean` (via the Hodge decomposition), which
+also bundles it as `genuinePeriodLattice`.
 -/
 
 namespace JacobianChallenge.Periods
@@ -153,83 +151,5 @@ theorem periodLattice_span :
   rw [hφ v]
   simp [hc]
   rfl
-
-/--
-**CLASSICAL INPUT — the period lattice is discrete.** For a compact connected Riemann
-surface the period subgroup `Λ ⊆ ℂ^g` is discrete. (That it spans `ℂ^g` over `ℝ` is proved:
-`periodLattice_span`.) Classically: `Λ` is the image of `H₁(X, ℤ) ≅ ℤ^{2g}`, so it is generated
-by `2g` vectors spanning `ℝ^{2g}`, hence a lattice; the rank count `b₁ = 2g` is the
-Hodge/Dolbeault decomposition `H¹(X, ℂ) = H⁰(Ω¹) ⊕ \overline{H⁰(Ω¹)}`.
-
-References: O. Forster, *Lectures on Riemann Surfaces*, §21; P. Griffiths–J. Harris,
-*Principles of Algebraic Geometry*, Ch. 2 §2.
-
-Named classical input (`sorry`); see `ref/axiom-audit.md`, "Classical inputs".
--/
-theorem periodLattice_discrete : DiscreteTopology (genuinePeriodSubgroup X) := by
-  -- CLASSICAL INPUT: discreteness of the period lattice.
-  sorry
-
-/-- The period subgroup is a full lattice: discrete (`periodLattice_discrete`) and spanning
-(`periodLattice_span`). -/
-theorem periodLattice_discrete_and_span :
-    DiscreteTopology (genuinePeriodSubgroup X) ∧
-      Submodule.span ℝ (genuinePeriodSubgroup X : Set (Fin (analyticGenus ℂ X) → ℂ)) = ⊤ :=
-  ⟨periodLattice_discrete X, periodLattice_span X⟩
-
-/-- The period subgroup as a `ℤ`-submodule. -/
-noncomputable def genuinePeriodSubmodule : Submodule ℤ (Fin (analyticGenus ℂ X) → ℂ) :=
-  AddSubgroup.toIntSubmodule (genuinePeriodSubgroup X)
-
-instance genuinePeriodSubgroup_discrete : DiscreteTopology (genuinePeriodSubgroup X) :=
-  (periodLattice_discrete_and_span X).1
-
-instance genuinePeriodSubmodule_discrete : DiscreteTopology (genuinePeriodSubmodule X) :=
-  (periodLattice_discrete_and_span X).1
-
-instance genuinePeriodSubmodule_isZLattice : IsZLattice ℝ (genuinePeriodSubmodule X) where
-  span_top := (periodLattice_discrete_and_span X).2
-
-/--
-A compact fundamental domain for the period lattice: the closure of the parallelepiped
-spanned by a `ℤ`-basis of `Λ` (which exists because `Λ` is a full lattice).
--/
-theorem exists_compact_genuinePeriodFundamentalDomain :
-    ∃ D : Set (Fin (analyticGenus ℂ X) → ℂ),
-      IsCompact D ∧
-      ∀ v : Fin (analyticGenus ℂ X) → ℂ, ∃ g ∈ genuinePeriodSubgroup X, v - g ∈ D := by
-  haveI := ZLattice.module_free ℝ (genuinePeriodSubmodule X)
-  haveI := ZLattice.module_finite ℝ (genuinePeriodSubmodule X)
-  let bℤ : Module.Basis _ ℤ (genuinePeriodSubmodule X) := Module.Free.chooseBasis ℤ _
-  let bR : Module.Basis _ ℝ (Fin (analyticGenus ℂ X) → ℂ) := bℤ.ofZLatticeBasis ℝ _
-  refine ⟨closure (ZSpan.fundamentalDomain bR),
-    (ZSpan.fundamentalDomain_isBounded bR).isCompact_closure, fun v => ?_⟩
-  refine ⟨(ZSpan.floor bR v : Fin _ → ℂ), ?_, ?_⟩
-  · have hmem : (ZSpan.floor bR v : Fin _ → ℂ) ∈ Submodule.span ℤ (Set.range bR) :=
-      (ZSpan.floor bR v).property
-    have hSub : genuinePeriodSubmodule X = Submodule.span ℤ (Set.range bR) :=
-      (Module.Basis.ofZLatticeBasis_span (K := ℝ) (b := bℤ)).symm
-    exact (SetLike.ext_iff.mp hSub _).mpr hmem
-  · rw [show v - (ZSpan.floor bR v : Fin _ → ℂ) = ZSpan.fract bR v from
-      (ZSpan.fract_apply bR v).symm]
-    exact subset_closure (ZSpan.fract_mem_fundamentalDomain bR v)
-
-/--
-**The period lattice of a compact Riemann surface**, bundled as a
-`ComplexTorus.FullComplexLattice` in the basis-aligned model `ℂ^g`. Its carrier is the
-genuine `genuinePeriodSubgroup X`; discreteness and cocompactness come from the classical
-input `periodLattice_discrete_and_span`.
--/
-noncomputable def genuinePeriodLattice :
-    JacobianChallenge.ComplexTorus.FullComplexLattice (Fin (analyticGenus ℂ X) → ℂ) where
-  subgroup := genuinePeriodSubgroup X
-  isClosed := AddSubgroup.isClosed_of_discrete
-  isDiscrete := genuinePeriodSubgroup_discrete X
-  fundamentalDomain := (exists_compact_genuinePeriodFundamentalDomain X).choose
-  fundamentalDomain_isCompact := (exists_compact_genuinePeriodFundamentalDomain X).choose_spec.1
-  fundamentalDomain_covers := (exists_compact_genuinePeriodFundamentalDomain X).choose_spec.2
-
-@[simp] theorem genuinePeriodLattice_subgroup :
-    (genuinePeriodLattice X).subgroup = genuinePeriodSubgroup X := rfl
 
 end JacobianChallenge.Periods
