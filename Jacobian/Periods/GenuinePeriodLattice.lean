@@ -1,4 +1,5 @@
 import Jacobian.Periods.ChartChain
+import Jacobian.Periods.RealPeriods
 import Jacobian.HolomorphicForms.BasisAlignedDualEquiv
 import Jacobian.ComplexTorus.Defs
 import Mathlib.Algebra.Module.ZLattice.Basic
@@ -103,20 +104,78 @@ theorem periodVector_mem_of_loop {P : X} {l : List (ChartSegment X)} (h : IsChai
 variable (X) [T2Space X] [CompactSpace X] [ConnectedSpace X]
 
 /--
-**CLASSICAL INPUT — the period lattice is a full lattice.** For a compact connected
-Riemann surface the period subgroup `Λ ⊆ ℂ^g` is discrete and spans `ℂ^g` over `ℝ`
-(so `Λ ≅ ℤ^{2g}` and `ℂ^g / Λ` is a compact complex torus).
+**The periods span `ℂ^g` over `ℝ`.** If a real functional `φ` killed every period, write
+`φ(v) = Re Σ c_j v_j`; the form `ω = Σ c_j ω_j` then has integrals with path-independent real
+part, so `ω = 0` (`eq_zero_of_re_chainIntegral_eq`, a maximum-principle argument), hence
+`c = 0` and `φ = 0`.
+-/
+theorem periodLattice_span :
+    Submodule.span ℝ (genuinePeriodSubgroup X : Set (Fin (analyticGenus ℂ X) → ℂ)) = ⊤ := by
+  classical
+  by_contra hne
+  obtain ⟨φ, hφ0, hle⟩ := (Submodule.span ℝ (genuinePeriodSubgroup X :
+    Set (Fin (analyticGenus ℂ X) → ℂ))).exists_le_ker_of_lt_top (lt_top_iff_ne_top.mpr hne)
+  set b := holomorphicOneFormFinBasis ℂ X
+  set c : Fin (analyticGenus ℂ X) → ℂ := fun j =>
+    (φ (Pi.single j 1) : ℂ) - Complex.I * (φ (Pi.single j Complex.I) : ℂ)
+  have hφ : ∀ v, φ v = (∑ j, c j * v j).re := by
+    intro v
+    have hv : v = ∑ j, ((v j).re • (Pi.single j (1 : ℂ) : Fin (analyticGenus ℂ X) → ℂ) +
+        (v j).im • (Pi.single j Complex.I : Fin (analyticGenus ℂ X) → ℂ)) := by
+      funext k
+      simp only [Finset.sum_apply, Pi.add_apply, Pi.smul_apply, Pi.single_apply,
+        Finset.sum_add_distrib]
+      simp [Complex.re_add_im]
+    conv_lhs => rw [hv]
+    rw [map_sum, Complex.re_sum]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    rw [map_add, map_smul, map_smul, smul_eq_mul, smul_eq_mul]
+    simp only [c, Complex.mul_re, Complex.sub_re, Complex.sub_im, Complex.ofReal_re,
+      Complex.ofReal_im, Complex.mul_im, Complex.I_re, Complex.I_im]
+    ring
+  set ω : HolomorphicOneForm ℂ X := ∑ j, c j • b j
+  have hint : ∀ l, chainIntegral ω l = ∑ j, c j * periodVector X l j := by
+    intro l
+    rw [← chainIntegralLM_apply, map_sum]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    rw [map_smul, chainIntegralLM_apply, smul_eq_mul]
+    rfl
+  have hzero : ω = 0 := eq_zero_of_re_chainIntegral_eq ω fun P Q l₁ l₂ h₁ h₂ => by
+    have hmem := periodVector_sub_mem h₁ h₂
+    have h0 : φ (periodVector X l₁ - periodVector X l₂) = 0 :=
+      LinearMap.mem_ker.mp (hle (Submodule.subset_span hmem))
+    rw [map_sub, hφ, hφ, sub_eq_zero] at h0
+    rw [hint, hint]
+    exact h0
+  have hc : ∀ j, c j = 0 := (Fintype.linearIndependent_iff.mp b.linearIndependent) c hzero
+  apply hφ0
+  refine LinearMap.ext fun v => ?_
+  rw [hφ v]
+  simp [hc]
+  rfl
 
-References: Riemann's bilinear relations; O. Forster, *Lectures on Riemann Surfaces*,
-§21; P. Griffiths–J. Harris, *Principles of Algebraic Geometry*, Ch. 2 §2.
+/--
+**CLASSICAL INPUT — the period lattice is discrete.** For a compact connected Riemann
+surface the period subgroup `Λ ⊆ ℂ^g` is discrete. (That it spans `ℂ^g` over `ℝ` is proved:
+`periodLattice_span`.) Classically: `Λ` is the image of `H₁(X, ℤ) ≅ ℤ^{2g}`, so it is generated
+by `2g` vectors spanning `ℝ^{2g}`, hence a lattice; the rank count `b₁ = 2g` is the
+Hodge/Dolbeault decomposition `H¹(X, ℂ) = H⁰(Ω¹) ⊕ \overline{H⁰(Ω¹)}`.
+
+References: O. Forster, *Lectures on Riemann Surfaces*, §21; P. Griffiths–J. Harris,
+*Principles of Algebraic Geometry*, Ch. 2 §2.
 
 Named classical input (`sorry`); see `ref/axiom-audit.md`, "Classical inputs".
 -/
+theorem periodLattice_discrete : DiscreteTopology (genuinePeriodSubgroup X) := by
+  -- CLASSICAL INPUT: discreteness of the period lattice.
+  sorry
+
+/-- The period subgroup is a full lattice: discrete (`periodLattice_discrete`) and spanning
+(`periodLattice_span`). -/
 theorem periodLattice_discrete_and_span :
     DiscreteTopology (genuinePeriodSubgroup X) ∧
-      Submodule.span ℝ (genuinePeriodSubgroup X : Set (Fin (analyticGenus ℂ X) → ℂ)) = ⊤ := by
-  -- CLASSICAL INPUT: discreteness and fullness of the period lattice.
-  sorry
+      Submodule.span ℝ (genuinePeriodSubgroup X : Set (Fin (analyticGenus ℂ X) → ℂ)) = ⊤ :=
+  ⟨periodLattice_discrete X, periodLattice_span X⟩
 
 /-- The period subgroup as a `ℤ`-submodule. -/
 noncomputable def genuinePeriodSubmodule : Submodule ℤ (Fin (analyticGenus ℂ X) → ℂ) :=
