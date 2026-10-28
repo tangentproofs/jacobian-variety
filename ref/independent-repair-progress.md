@@ -478,6 +478,26 @@ The public API is untouched (same 911 reachable declarations). The four unreacha
 
 ---
 
+## 2026-10-28 — C1 proved: holomorphic 1-forms are finite-dimensional
+
+`HolomorphicForms/Finiteness.lean` (new, axiom-clean): the Montel–Riesz argument.
+Finitely many chart discs `K_i = closedBall(z_i, r_i)` whose interiors cover `X`, with
+`closedBall(z_i, 3r_i)` inside the chart target; coefficients `a_i(ω) = chartForm p_i ω · 1`.
+
+* `chartForm_transition` / `chartCoeff_transition`: readings in two charts differ by the
+  derivative of the transition map.
+* `exists_discCoeffs_bound`: `sup_{L} |a| ≤ C · sup_{K} |a|` (`L_i` = radius `2r_i`); the
+  transition derivative is bounded on the compact sets `c_i⁻¹(L_i) ∩ c_j⁻¹(K_j)`.
+* `chartCoeff_lipschitz`: Cauchy estimate ⇒ uniformly Lipschitz on `K_i`.
+* `finiteDimensional_holomorphicOneForm`: Arzelà–Ascoli + Tychonoff give a totally bounded
+  ball in the image of `ω ↦ (a_i(ω)|K_i)_i`; Riesz (`of_totallyBounded_nhds_zero`, no
+  completeness needed) makes the image finite-dimensional; the map is injective.
+
+`compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier` now delegates to it.
+Reachable `sorry`s: **4** (C2–C5).
+
+---
+
 ## Commit hashes
 
 | time (EDT) | hash | summary |

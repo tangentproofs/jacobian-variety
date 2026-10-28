@@ -9,6 +9,7 @@ import Mathlib.Topology.UniformSpace.UniformApproximation
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Jacobian.Periods.ChartStabilityRefutation
+import Jacobian.HolomorphicForms.Finiteness
 
 /-!
 # Finite-dimensionality on a compact connected Riemann surface
@@ -775,28 +776,20 @@ class HolomorphicOneFormMontelData
 
 
 /--
-**CLASSICAL INPUT — finiteness of holomorphic 1-forms.** On a compact connected
-Riemann surface the space `HolomorphicOneForm ℂ X` is finite-dimensional.
+**Finiteness of holomorphic 1-forms.** On a compact Riemann surface the space
+`HolomorphicOneForm ℂ X` is finite-dimensional (Forster, *Lectures on Riemann Surfaces*,
+§14). Proved in `HolomorphicForms/Finiteness.lean` by the Montel–Riesz argument on a finite
+cover by chart discs (`finiteDimensional_holomorphicOneForm`).
 
-Reference: O. Forster, *Lectures on Riemann Surfaces*, §14 (the finiteness theorem;
-equivalently Cartan–Serre finiteness of coherent cohomology on a compact complex
-manifold).
-
-GAP / named classical input (`sorry`). History: this was previously "proved" via a
-sup-norm Montel argument built on the eval-at-`1` reading `x ↦ σ x 1`, whose
-continuity needs a global tangent frame. That frame came from the refuted
-`StableChartAt` class (see `Jacobian/Periods/ChartStabilityRefutation.lean`), so the
-proof was vacuous. The retired chain is kept verbatim, unbuilt, in
-`Attic/StableChartRetired/CompactRiemannSurface.lean`; the conditional Riesz step
-`compactRiemannSurface_finiteDimensionalHolomorphicOneForms_of_montel` above is
-still genuine and is the intended route once honest Montel data exists.
+History: this was first "proved" through the refuted `StableChartAt` global frame (retired
+to `Attic/StableChartRetired/CompactRiemannSurface.lean`), then stood as a named classical
+input.
 -/
 theorem compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
-    FiniteDimensionalHolomorphicOneForms ℂ X := by
-  -- GAP: classical input (finiteness theorem); see docstring.
-  sorry
+    FiniteDimensionalHolomorphicOneForms ℂ X :=
+  ⟨finiteDimensional_holomorphicOneForm⟩
 
 end JacobianChallenge.HolomorphicForms
