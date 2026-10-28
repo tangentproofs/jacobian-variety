@@ -732,3 +732,144 @@ Tracking: \ghissue{234}.
 
 **Old.** `..., lem:exists-biholomorph-one-point-of-analytic-genus-zero, lem:complex-simple-pole-principal-part-of-biholomorph-one-point}`
 **New.** `..., lem:exists-biholomorph-one-point-of-analytic-genus-zero}`
+
+### 38. `tex/sections/06-periods-and-riemann-bilinear.tex:815` (thm:period-lattice)
+
+**Why.** Discreteness of the period lattice (C2) is now proved; the block called it a named classical input.
+
+**Old.**
+```latex
+\(C^1\) curves, and its discreteness and fullness are the named classical input
+\code{periodLattice\_discrete\_and\_span}.
+```
+**New.**
+```latex
+\(C^1\) curves; its fullness (\code{periodLattice\_span}) and discreteness
+(\code{periodLattice\_discrete}, via the Hodge decomposition) are proved, giving
+\code{periodLattice\_discrete\_and\_span}.
+```
+
+### 39. `tex/sections/06-periods-and-riemann-bilinear.tex:843` (lem:riemann-classical-real-li-input-u)
+
+**Why.** Same: the referenced declaration is no longer a classical input.
+
+**Old.**
+```latex
+retired, and the content now lives in the classical input
+\code{periodLattice\_discrete\_and\_span}.
+```
+**New.**
+```latex
+retired, and the content now lives in \code{periodLattice\_discrete\_and\_span}
+(proved).
+```
+
+### 40. `tex/sections/08-abel-jacobi-map.tex:251` (thm:abel-existence-two-point (status sentence))
+
+**Why.** Abel's two-point separation (C3) is now proved.
+
+**Old.**
+```latex
+(\code{Unit}-witness) Abel data and has been removed; Abel's theorem
+enters as the classical input \code{pathIntegralFunctional\_separates\_pointsU}.
+```
+**New.**
+```latex
+(\code{Unit}-witness) Abel data and has been removed; Abel's theorem
+enters as \code{pathIntegralFunctional\_separates\_pointsU}, which is proved.
+```
+
+### 41. `tex/sections/08-abel-jacobi-map.tex:482` (lem:analytic-of-curve-injective)
+
+**Why.** C3 proved: the injectivity lemma is now sorry-free.
+
+**Old.**
+```latex
+\begin{lemma}[Abel--Jacobi injectivity for positive genus (open)]
+\label{lem:analytic-of-curve-injective}
+\uses{thm:abel-point-separation}
+For \(g(X)>0\) the Abel--Jacobi map \(\AJ_P\) is injective. Follows from the
+point-separation theorem; matches the frozen public \code{ofCurve\_inj}
+signature. The point-separation theorem stands as the named classical input
+\code{pathIntegralFunctional\_separates\_pointsU} (Abel's theorem, two-point form).
+Consumed by the challenge API (\ref{thm:challenge-api}).
+Tracking: \ghissue{224}.
+\lean{JacobianChallenge.AbelJacobi.analyticOfCurve_injectiveU}
+\end{lemma}
+```
+**New.**
+```latex
+\begin{lemma}[Abel--Jacobi injectivity for positive genus]
+\label{lem:analytic-of-curve-injective}
+\uses{thm:abel-point-separation}
+For \(g(X)>0\) the Abel--Jacobi map \(\AJ_P\) is injective. Follows from the
+point-separation theorem; matches the frozen public \code{ofCurve\_inj}
+signature. The point-separation theorem is
+\code{pathIntegralFunctional\_separates\_pointsU} (Abel's theorem, two-point form), proved.
+Consumed by the challenge API (\ref{thm:challenge-api}).
+Tracking: \ghissue{224}.
+\lean{JacobianChallenge.AbelJacobi.analyticOfCurve_injectiveU}
+\leanok
+\end{lemma}
+```
+
+### 42. `tex/sections/08-abel-jacobi-map.tex:495` (lem:path-integral-functional-separates-points-u)
+
+**Why.** C3 proved (Jacobian/Surface/Abel.lean): status set to proved, proof sketch added.
+
+**Old.**
+```latex
+\begin{lemma}[Universe-polymorphic point separation (open)]
+\label{lem:path-integral-functional-separates-points-u}
+\uses{thm:abel-point-separation}
+Universe-\(u\) companion of the point-separation theorem, needed by the public
+\code{ofCurve\_inj} for \(X:\mathrm{Type}\,u\). Open obligation
+(\code{sorry}). Consumed by the challenge API (\ref{thm:challenge-api}).
+Tracking: \ghissue{225}.
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_pointsU}
+\end{lemma}
+```
+**New.**
+```latex
+\begin{lemma}[Universe-polymorphic point separation]
+\label{lem:path-integral-functional-separates-points-u}
+\uses{thm:abel-point-separation}
+Universe-\(u\) companion of the point-separation theorem, needed by the public
+\code{ofCurve\_inj} for \(X:\mathrm{Type}\,u\). Consumed by the challenge API
+(\ref{thm:challenge-api}).
+Tracking: \ghissue{225}.
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_pointsU}
+\leanok
+\end{lemma}
+\begin{proof}
+\leanok
+If \(Q_1\ne Q_2\), the hypothesis gives a formal chain of chart segments from \(Q_1\) to
+\(Q_2\) whose integral against every holomorphic 1-form vanishes. For a segment from \(a\)
+to \(b\) let \(E=\exp(\chi\,\mathrm{Log}\tfrac{z-b}{z-a})\), with \(\chi\) a cutoff equal
+to \(1\) near the segment; \(\bar\partial E/E\) is a smooth \((0,1)\)-form \(\theta\) with
+\(\int_X\theta\wedge\omega=\pi\int_{[a,b]}\omega\) (Cauchy--Pompeiu along the segment). The
+form \(\theta\) of the whole chain is therefore orthogonal to all holomorphic forms, hence
+\(\theta=\bar\partial u\) by the Hodge decomposition, and \(f=e^{-u}\prod E^{\pm1}\) is a
+meromorphic function with a single simple pole at \(Q_1\). It is a degree-one map
+\(X\to\widehat{\C}\), so \(X\) is a sphere and \(g=0\), a contradiction.
+\end{proof}
+```
+
+### 43. `tex/sections/11-formalization-map.tex:21` (layman, formalization map)
+
+**Why.** The listed gaps are no longer open in the Lean development (Abel's theorem, period lattice and genus-zero uniformization are proved; no public declaration depends on a sorry).
+
+**Old.**
+```latex
+yellow ``not ready'' flags. The largest remaining gaps are the
+classical inputs that Mathlib does not yet contain --- the
+Riemann--Roch theorem, Stokes on manifolds with boundary, Abel's
+theorem, and the surface classification underlying the polygonal
+model.
+```
+**New.**
+```latex
+yellow ``not ready'' flags. The remaining open items are
+off the path of the public API: the surface classification underlying
+the polygonal model.
+```
