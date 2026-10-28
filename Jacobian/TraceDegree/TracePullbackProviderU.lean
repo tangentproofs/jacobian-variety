@@ -41,12 +41,10 @@ universe u v
 variable {X : Type u} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 variable {Y : Type v} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [ConnectedSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [JacobianChallenge.Periods.StableChartAt ℂ Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 
 /-- The regular-value trace provider at `Type u`. Restatement of the Type-0
@@ -63,7 +61,7 @@ noncomputable def traceFormsRegularSpec_providerU (f : X → Y)
     change (traceFormsConstructionData_provider f hf η).traceForm.toFun y = _
     exact (traceFormsConstructionData_provider f hf η).regular_spec hbc hcompat y hy
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [JacobianChallenge.Periods.StableChartAt ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ X] [T2Space Y] [CompactSpace Y] [ConnectedSpace Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] [JacobianChallenge.Periods.StableChartAt ℂ Y] [FiniteDimensionalHolomorphicOneForms ℂ Y] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [FiniteDimensionalHolomorphicOneForms ℂ X] [T2Space Y] [CompactSpace Y] [ConnectedSpace Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] [FiniteDimensionalHolomorphicOneForms ℂ Y] in
 /-- Weighted-fibre conservation at `Type u`. Restatement of the Type-0
 `hasWeightedFiberConservation_provider` (`AnalyticDegree.lean:157`). -/
 theorem hasWeightedFiberConservation_providerU (f : X → Y)

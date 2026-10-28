@@ -1,6 +1,7 @@
 import Jacobian.AnalyticJacobian.MkExt
 import Jacobian.HolomorphicForms.EvalLinearMapVec
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Vec-slot linearity for `evalJacobianClass`
@@ -39,7 +40,6 @@ theorem evalLinearMap_vec_zero (x : X) :
 
 variable [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 @[simp] theorem evalJacobianClass_zero_vec (x : X) :
     evalJacobianClass (E := E) (X := X) x 0 = 0 := by

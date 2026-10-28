@@ -47,17 +47,14 @@ open Classical
 variable {X : Type} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 variable {Y : Type} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [ConnectedSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [StableChartAt ℂ Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 variable {Z : Type} [TopologicalSpace Z] [T2Space Z] [CompactSpace Z]
   [ConnectedSpace Z] [ChartedSpace ℂ Z]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Z]
-  [StableChartAt ℂ Z]
   [FiniteDimensionalHolomorphicOneForms ℂ Z]
 
 
@@ -552,12 +549,10 @@ structure BasisAnalyticPullbackBundle
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (Y : Type) [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
     [ConnectedSpace Y] [ChartedSpace ℂ Y]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-    [StableChartAt ℂ Y]
     [FiniteDimensionalHolomorphicOneForms ℂ Y]
     (_f : X → Y) (_hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω _f) where
   /--
@@ -670,12 +665,10 @@ noncomputable def pullbackFormsMap
     (X' Y' : Type) [TopologicalSpace X'] [T2Space X']
     [CompactSpace X'] [ConnectedSpace X'] [ChartedSpace ℂ X']
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X']
-    [JacobianChallenge.Periods.StableChartAt ℂ X']
     [FiniteDimensionalHolomorphicOneForms ℂ X']
     [TopologicalSpace Y'] [T2Space Y'] [CompactSpace Y']
     [ConnectedSpace Y'] [ChartedSpace ℂ Y']
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y']
-    [JacobianChallenge.Periods.StableChartAt ℂ Y']
     [FiniteDimensionalHolomorphicOneForms ℂ Y']
     (f : X' → Y') (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
     (Fin (analyticGenus ℂ Y') → ℂ) →+ (Fin (analyticGenus ℂ X') → ℂ) :=

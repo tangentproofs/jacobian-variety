@@ -1,5 +1,6 @@
 import Jacobian.AnalyticJacobian.Mk
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Group operation lemmas for `AnalyticJacobianGroup.mk`
@@ -17,7 +18,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 theorem mk_neg (φ : HolomorphicOneForm E X →ₗ[ℂ] ℂ) :
     mk E X (-φ) = - mk E X φ := by
@@ -35,6 +35,6 @@ theorem mk_nsmul (n : ℕ) (φ : HolomorphicOneForm E X →ₗ[ℂ] ℂ) :
 
 theorem mk_zsmul (n : ℤ) (φ : HolomorphicOneForm E X →ₗ[ℂ] ℂ) :
     mk E X (n • φ) = n • mk E X φ :=
-  (QuotientAddGroup.mk' (periodSubgroup E X)).map_zsmul φ n
+  (QuotientAddGroup.mk' (periodSubgroup E X)).map_zsmul n φ
 
 end JacobianChallenge.AnalyticJacobian

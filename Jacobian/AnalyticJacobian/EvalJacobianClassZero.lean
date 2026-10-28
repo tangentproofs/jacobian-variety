@@ -1,6 +1,7 @@
 import Jacobian.AnalyticJacobian.MkExt
 import Jacobian.HolomorphicForms.EvalLinearMap
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Zero-class characterizations for `evalJacobianClass`
@@ -19,7 +20,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 A witness pair `(x, v)` lifts to the zero analytic Jacobian

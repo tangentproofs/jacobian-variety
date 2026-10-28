@@ -26,14 +26,14 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (x : X) (n : ℕ) (v : E) (η : HolomorphicOneForm E X) :
     evalLinearMap x (n • v) η = n • evalLinearMap x v η := by
   induction n with
-  | zero => simp
+  | zero => rw [zero_smul, zero_smul, evalLinearMap_apply]; exact map_zero _
   | succ n ih => rw [succ_nsmul, succ_nsmul, evalLinearMap_add_vec, ih]
 
 @[simp] theorem evalLinearMap_zsmul_vec
     (x : X) (n : ℤ) (v : E) (η : HolomorphicOneForm E X) :
     evalLinearMap x (n • v) η = n • evalLinearMap x v η := by
   rw [evalLinearMap_apply, evalLinearMap_apply]
-  exact (η.toFun x).toLinearMap.toAddMonoidHom.map_zsmul v n
+  exact (η.toFun x).toLinearMap.toAddMonoidHom.map_zsmul n v
 
 /-- Pointwise alias: applying the toFun to a sum vector. -/
 theorem toFun_apply_add_vec

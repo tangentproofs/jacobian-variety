@@ -1,6 +1,7 @@
 import Jacobian.AnalyticJacobian.Defs
 import Jacobian.Periods.PeriodSubgroupApi
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Quotient projection API for `AnalyticJacobianGroup`
@@ -20,7 +21,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 Quotient projection from a linear functional to its analytic
@@ -31,7 +31,6 @@ noncomputable abbrev mk (E : Type) [NormedAddCommGroup E] [NormedSpace ℂ E]
     [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : HolomorphicOneForm E X →ₗ[ℂ] ℂ) : AnalyticJacobianGroup E X :=
   QuotientAddGroup.mk φ
 

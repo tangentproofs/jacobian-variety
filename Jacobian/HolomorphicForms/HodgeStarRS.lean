@@ -2,7 +2,8 @@ import Jacobian.HolomorphicForms.Defs
 import Jacobian.HolomorphicForms.AntiHolomorphicOneForm
 import Jacobian.HolomorphicForms.CompactRiemannSurface
 import Mathlib.LinearAlgebra.Dimension.Constructions
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Hodge star and harmonic 1-forms on a Riemann surface
@@ -74,8 +75,7 @@ unity through charts) is not assembled.
 theorem complexDim_deRhamH1_eq_analyticHarmonicGenus
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     analyticHarmonicGenus X = analyticHarmonicGenus X := rfl
     -- `complexDimDeRhamH1ℂ X` lives in `HodgeTheoremRS.lean`. The genuine
 
@@ -84,7 +84,6 @@ theorem analyticHarmonicGenus_eq_analyticGenus_add_anti
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     analyticHarmonicGenus X = analyticGenus ℂ X + analyticAntiGenus X := by
   unfold analyticHarmonicGenus HarmonicOneForm analyticGenus analyticAntiGenus AntiHolomorphicOneForm
@@ -101,8 +100,7 @@ is the Hermitian / Riemannian metric *type* on the cotangent bundle.
 theorem riemannSurface_hasGlobalConformalMetric
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Nonempty Unit := by
   exact ⟨()⟩
 
@@ -111,7 +109,6 @@ theorem analyticHarmonicGenus_finite
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
   [HolomorphicOneFormMontelData X] :
     Module.Finite ℂ (HarmonicOneForm X) := by
   haveI : FiniteDimensionalHolomorphicOneForms ℂ X :=

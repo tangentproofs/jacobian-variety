@@ -5,8 +5,8 @@
 `blueprint_audit.py` checks whether a \\leanok'd decl's *own body* contains
 the literal token `sorry`. That misses TRANSITIVE sorries: a decl whose body
 is sorry-free but which calls something that bottoms out in a `sorry`
-(e.g. `Jacobian.pushforward_pullback` -> ... -> the open `StableChartAt`
-instance). The blueprint then renders such a node green ("proof formalized")
+(e.g. `Jacobian.pushforward_pullback` -> ... -> an open `sorry`
+declaration). The blueprint then renders such a node green ("proof formalized")
 when it is really blue ("statement stated, proof not yet complete").
 
 This script reuses blueprint_audit's tex/decl extraction, then for every

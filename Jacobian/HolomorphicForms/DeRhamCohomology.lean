@@ -4,7 +4,8 @@ import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.Topology.Connected.TotallyDisconnected
 import Jacobian.HolomorphicForms.SmoothDifferentialForm
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # De Rham cohomology dimensions on a smooth manifold
@@ -29,22 +30,19 @@ Concrete model of `H¹_dR(X, ℂ)` as closed 1-forms modulo exact
 -/
 noncomputable def deRhamH1Cocycle
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Type _ :=
   (ClosedFormSub (Nat.succ 0) X) ⧸ (ExactForm.toClosedSubmodule 0 X)
 
 noncomputable instance deRhamH1Cocycle.instAddCommGroup
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     AddCommGroup (deRhamH1Cocycle X) :=
   inferInstanceAs (AddCommGroup (_ ⧸ (ExactForm.toClosedSubmodule 0 X)))
 
 noncomputable instance deRhamH1Cocycle.instModuleℂ
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Module ℂ (deRhamH1Cocycle X) :=
   inferInstanceAs (Module ℂ (_ ⧸ (ExactForm.toClosedSubmodule 0 X)))
 
@@ -55,8 +53,7 @@ quotient model.
 -/
 noncomputable def complexDimDeRhamH1ℂ
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] : ℕ :=
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] : ℕ :=
   Module.finrank ℂ (deRhamH1Cocycle X)
 
 /--
@@ -67,8 +64,7 @@ the same closed-mod-exact quotient finrank.
 -/
 noncomputable def realDimDeRhamH1
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] : ℕ :=
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] : ℕ :=
   Module.finrank ℂ (deRhamH1Cocycle X)
 
 /--
@@ -108,8 +104,7 @@ adapted to smooth ℂ-valued functions.
 theorem complexDim_deRhamH0ℂ_eq_one_of_compact_connected
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     complexDimDeRhamH0ℂ X = 1 := by
   rw [complexDimDeRhamH0ℂ, Nat.card_eq_one_iff_unique]
   constructor
@@ -128,8 +123,7 @@ theorem complexDim_deRhamH0ℂ_eq_one_of_compact_connected
 theorem realDim_deRhamH0_eq_one_of_compact_connected
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     realDimDeRhamH0 X = 1 := by
   rw [realDimDeRhamH0, Nat.card_eq_one_iff_unique]
   constructor

@@ -1,7 +1,8 @@
 import Jacobian.HolomorphicForms.Defs
 import Jacobian.Periods.IntegralOneCycleU
 import Jacobian.Blueprint.Sec03.SingularChainComplexZU
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Mathlib.Algebra.Category.ModuleCat.Abelian
 
 /-!
@@ -68,8 +69,7 @@ noncomputable def periodPairingU
     (X : Type u) [TopologicalSpace X] [ChartedSpace E X]
     [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
     [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     IntegralOneCycleU X →+ (HolomorphicOneForm E X →ₗ[ℂ] ℂ) :=
   let I_E : JacobianChallenge.Blueprint.Sec03.SingularOneChainU X →ₗ[ℤ]
              (HolomorphicOneForm E X →ₗ[ℂ] ℂ) := 0
@@ -88,8 +88,7 @@ Complex-model period pairing for `X : Type u`. Universe-polymorphic companion to
 -/
 noncomputable def periodPairingComplexU
     (X : Type u) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     IntegralOneCycleU X →+ (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ) :=
   let I : JacobianChallenge.Blueprint.Sec03.SingularOneChainU X →ₗ[ℤ]
             (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ) := 0
@@ -112,8 +111,7 @@ noncomputable def periodSubgroupU
     (X : Type u) [TopologicalSpace X] [ChartedSpace E X]
     [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
     [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     AddSubgroup (HolomorphicOneForm E X →ₗ[ℂ] ℂ) :=
   (periodPairingU E X).range
 

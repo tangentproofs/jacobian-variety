@@ -16,7 +16,8 @@ import Jacobian.TraceDegree.PullbackBasis
 import Jacobian.TraceDegree.PushforwardBasis
 import Jacobian.TraceDegree.AnalyticDegree
 import Jacobian.TraceDegree.PiecewiseC1Instance
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Jacobian.TraceDegree.AnalyticPushforwardFunctorialU
 import Jacobian.TraceDegree.AnalyticPullbackFunctorialU
 import Jacobian.TraceDegree.AnalyticPushPullU
@@ -31,11 +32,9 @@ open scoped Manifold -- for 𝓘 notation
 
 namespace JacobianChallenge.Solution
 
--- Global instance adapters to unlock the top-down signatures without exposing extra binders
-instance (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X] [ConnectedSpace X]
-    [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X] :
-    JacobianChallenge.Periods.StableChartAt ℂ X := sorry
-
+-- Global instance adapter to unlock the top-down signatures without exposing extra binders.
+-- (The former `StableChartAt` adapter instance that stood here was refuted by
+-- `JacobianChallenge.Periods.not_chartStable_of_compactSpace` and has been deleted.)
 noncomputable instance (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X] [ConnectedSpace X]
     [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X] :
     JacobianChallenge.HolomorphicForms.FiniteDimensionalHolomorphicOneForms ℂ X :=

@@ -66,8 +66,7 @@ cellular-homology, and singular-vs-cellular comparison for Mathlib's
 theorem stageA_surface_CW_basisU
     (X : Type u) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Nonempty (Module.Basis (Fin (2 * topologicalGenusU X)) ℤ
       (IntegralOneCycleU X)) := by
   sorry
@@ -83,7 +82,6 @@ theorem stageB_analytic_eq_topologicalGenusU
     (X : Type u) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     analyticGenus ℂ X = topologicalGenusU X := by
   sorry
@@ -103,7 +101,6 @@ theorem h1_basis_of_compact_riemann_surfaceU
     (X : Type u) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     Nonempty (Module.Basis (Fin (2 * analyticGenus ℂ X)) ℤ (IntegralOneCycleU X)) := by
   obtain ⟨b⟩ := stageA_surface_CW_basisU X

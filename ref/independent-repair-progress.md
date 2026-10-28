@@ -1,7 +1,10 @@
 # Independent repair — progress log
 
 Working log for `ref/independent-repair-brief.md`. Branch `independent-repair`, cut from
-`rkirov-comparison` (84c7d95). **Local commits only — nothing pushed, no remote touched.**
+`rkirov-comparison` (84c7d95). Until 03b303b: local commits only. **From the 2026-10-27
+cloud session on, the owner's updated instruction supersedes brief §0 and §4:** push to
+`independent-repair` (only), and run the full build and comparator check here (a cloud
+container, not the shared box).
 
 Times are America/New_York. Nothing is recorded as compiling unless it was actually built here.
 
@@ -90,6 +93,89 @@ the kind-(ii) site that `ref/rkirov-gap-comparison.md:422` calls the most danger
 None. One standing limitation, not a blocker: `Solution.lean:37`'s removal and the
 `HolomorphicForms` bulk binder strip cannot be verified here (they need a whole-tree build, forbidden by
 brief §4) and will be recorded as **pending build machine**.
+
+---
+
+## 2026-10-27 20:40 EDT — cloud session: goal (a) done, `StableChartAt` deleted
+
+Session moved to a Claude Code cloud container (4 cores, 15 GB). Full builds take ~5½ min
+with the Mathlib cache, so whole-tree builds are used freely from here on.
+
+### Found on arrival
+
+* **03b303b did not build.** It removed `contMDiff_tangentSection_one` but three callers
+  (`CompactRiemannSurface.lean:776`, `TraceSpec.lean:2635`, `TraceDefinition.lean:472`) and
+  one argument order (`CompactRiemannSurface.lean:260`) were not updated:
+  `lake build Jacobian.Solution` → 2 failed modules. Baseline below is measured at 40f287b
+  with 03b303b's `EvalAtOneHelper.lean` reverted (green, 4043 jobs, 21 engine sorries).
+* **`lake build Jacobian` had 7 pre-existing failures** outside `Solution`'s closure, all
+  Mathlib-migration drift (`map_zsmul`/`map_nsmul` argument order, a `Path.map'` rewrite, a
+  `Fin.revPerm` HEq, a `simp` zero case): `AnalyticJacobian/MkOps`,
+  `HolomorphicForms/EvalLinearMap{VecExtra,Zsmul}`, `Periods/PathLiftSimp`,
+  `Periods/PathIntegralViaCoverSymm`, `Periods/PeriodFunctionalIntSmul`,
+  `TraceDegree/PullbackFormsLinearMapIntSmul`. Fixed (one-line each).
+* **Dependency tool fix.** `scripts/DepGraph.lean` skips internal names, which drops every
+  `private` declaration and every `_proof_n` auxiliary — and with them the edges through
+  them. With those included (scratch copy), the reachable set from the public API grows from
+  993 to 1272 declarations, and it shows that the *trace map on forms* (`traceFormsBundled`,
+  hence `pullback` and `pushforward_pullback`) also depended on chart stability, through
+  private helpers in `TraceSpec.lean`. (Reachable sorries at baseline: gaps 2, 3, 4, 15, 18,
+  19, 20 and the instance; gaps 1, 14, 16, 17 and the whole polygon tower are **not**
+  reachable — `ref/rkirov-gap-comparison.md`'s claim that 16/17 reach the Jacobian is wrong
+  at the declaration level.)
+
+### What changed (goal (a))
+
+1. Deleted `Jacobian/Periods/TrivializationContinuousLinearMapAt.lean` (the class, its
+   `StableChartAt H H` instance, `achart_eq_of_mem_source` and three unused `mfderiv` lemmas)
+   and the `sorry` instance at `Solution.lean:35-37`.
+2. Stripped 837 mentions mechanically in 115 files: 809 pass-through binders, the `omit`
+   lines, the 4 no-op `haveI _stable… := inferInstance` lines. 95 imports of the deleted file
+   were replaced by its two Mathlib imports.
+3. Real uses, by dependency closure (stopping at true statements):
+   * **Reproved honestly** (no chart stability):
+     `analyticAt_chart_symm_of_isHolomorphicAt_of_mem_ball` (now via analyticity of chart
+     transitions; gains an `[IsManifold 𝓘(ℂ) ⊤ X]` binder, as do its 3 callers) and
+     `holomorphicOneForm_ext_on` (identity principle on a dense set, now read through the
+     bundle trivialization at the point instead of the frame-dependent fibre norm).
+   * **Cut to labelled gaps** (true statements whose only proofs used chart stability):
+     - `compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier` — now a
+       **named classical input** (finiteness, Forster §14);
+     - `traceForm_extension_per_BCD` (TraceSpec) — trace of a form extends over branch values;
+     - `meromorphic_no_poles_holomorphic_representative` (MeromorphicToBranchedCover) —
+       removable singularities.
+   * **Retired** (moved verbatim, unbuilt, to `Attic/StableChartRetired/`): the 70 top-level
+     declarations (83 constants with auxiliaries) whose statements are false without a
+     global frame or vacuous with it — the eval-at-`1` sup-norm Montel chain in
+     `CompactRiemannSurface.lean` (51), the eval-at-`1` trace helpers in `TraceSpec.lean`
+     (16) and `TraceDefinition.lean` (3). None is reachable from the public API once the
+     three cuts are in place; checked with the fixed dependency graph.
+4. Prose: `tex/statements/challenge-statement.tex` `lem:stable-chart-at-instance` rewritten
+   (refuted, not open), `scripts/audit-leanok-axioms.py` example reworded — both logged in
+   `ref/plain-english-changes.md`. Stale `PeriodHomologyInvariance.lean.bak` deleted.
+
+`ChartStable` (the predicate) and `not_chartStable_of_compactSpace` stay, as the permanent
+record; `EvalAtOneHelper.lean`'s explicit-hypothesis lemmas stay (honest, satisfiable).
+
+### Builds
+
+| command | result |
+|---|---|
+| `lake build Jacobian.Solution` | **green**, 4043 jobs |
+| `lake build Jacobian` | **green**, 4351 jobs (first time on this branch) |
+
+### Counts
+
+| metric | before (40f287b) | after |
+|---|---|---|
+| engine `sorry` declarations (`declaration uses sorry`, whole `Jacobian`) | 21 | **23** (−1 refuted instance, +3 labelled gaps) |
+| frozen spec `Jacobian/Challenge.lean` | 24 | 24 (untouched) |
+| custom axioms | 0 | 0 |
+| `StableChartAt` in live Lean code (non-comment) | 895 mentions | **0** |
+
+### Next
+
+Goal (b): real line integral and period lattice.
 
 ---
 

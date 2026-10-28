@@ -7,7 +7,8 @@ import Jacobian.Periods.RealHomologyTensor
 import Mathlib.LinearAlgebra.Isomorphisms
 import Mathlib.CategoryTheory.Sites.Sheafification
 import Mathlib.CategoryTheory.Sites.ConstantSheaf
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # De Rham comparison map
@@ -43,8 +44,7 @@ open scoped Manifold
 noncomputable def deRhamComparisonMap1
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     ClosedForm 1 X →ₗ[ℂ] (IntegralOneCycle X →ₗ[ℤ] ℂ) where
   toFun ω := (ω : SmoothDiffForm 1 X).2
   map_add' := by
@@ -62,7 +62,6 @@ theorem deRhamComparisonMap1_vanishes_on_exact
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (η : ClosedForm 1 X)
     (hη : (η : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     deRhamComparisonMap1 X η = 0 := by
@@ -82,8 +81,7 @@ consumers to depend on the whole de Rham comparison narrative.
 structure DeRhamComparisonMap1Spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   /-- Every cycle functional is represented by a closed 1-form. -/
   exists_form_with_periods :
     ∀ φ : IntegralOneCycle X →ₗ[ℤ] ℂ,
@@ -103,7 +101,6 @@ structure PrescribedPeriodCechData
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_φ : IntegralOneCycle X →ₗ[ℤ] ℂ) where
   ι : Type
   U : ι → TopologicalSpace.Opens (TopCat.of X)
@@ -122,7 +119,6 @@ structure PrescribedPeriodLocalRepresentativeData
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ) where
   ι : Type
@@ -141,7 +137,6 @@ noncomputable def deRhamComparisonMap1_prescribed_period_cech_data_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     PrescribedPeriodCechData X φ := by
   let U : PUnit → TopologicalSpace.Opens (TopCat.of X) := fun _ => ⊤
@@ -159,7 +154,6 @@ noncomputable def deRhamComparisonMap1_prescribed_period_local_representatives_f
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ) :
     PrescribedPeriodLocalRepresentativeData X φ data :=
@@ -174,7 +168,6 @@ noncomputable def deRhamComparisonMap1_smooth_form_from_local_representatives_fr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (_localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -190,8 +183,7 @@ rebased in a later step.
 noncomputable def deRhamComparisonMap1WithPeriods
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     SmoothDiffFormWithPeriods 1 X →ₗ[ℂ] (IntegralOneCycle X →ₗ[ℤ] ℂ) where
   toFun ω := ω.2
   map_add' := by
@@ -210,7 +202,6 @@ noncomputable def deRhamComparisonMap1_smooth_form_with_periods_from_local_repre
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -226,7 +217,6 @@ theorem deRhamComparisonMap1WithPeriods_smooth_local_representatives_period_cycl
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -245,7 +235,6 @@ theorem deRhamComparisonMap1_smooth_form_from_local_representatives_closed_front
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -262,8 +251,7 @@ separately for the next comparison-map migration steps.
 noncomputable abbrev ClosedSmoothDiffFormWithPeriods1
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Type _ :=
   {ω : SmoothDiffFormWithPeriods 1 X // exteriorDerivative 1 X ω = 0}
 
@@ -274,8 +262,7 @@ just the raw period-aware helper restricted to the closed carrier.
 noncomputable def deRhamComparisonMap1ClosedWithPeriods
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     ClosedSmoothDiffFormWithPeriods1 X → (IntegralOneCycle X →ₗ[ℤ] ℂ) :=
   fun ω => deRhamComparisonMap1WithPeriods X ω.1
 
@@ -287,7 +274,6 @@ noncomputable def deRhamComparisonMap1_closed_form_with_periods_from_local_repre
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -305,7 +291,6 @@ theorem deRhamComparisonMap1ClosedWithPeriods_smooth_local_representatives_perio
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -324,7 +309,6 @@ noncomputable def deRhamComparisonMap1_closed_form_from_smooth_local_representat
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -347,7 +331,6 @@ noncomputable def deRhamComparisonMap1_closed_form_from_local_representatives_fr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -364,7 +347,6 @@ noncomputable def deRhamComparisonMap1_closed_form_from_prescribed_period_cech_f
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ) :
     ClosedForm 1 X :=
@@ -380,7 +362,6 @@ noncomputable def deRhamComparisonMap1_prescribed_period_closed_form_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ClosedForm 1 X :=
   deRhamComparisonMap1_closed_form_from_prescribed_period_cech_frontier X φ
@@ -396,7 +377,6 @@ noncomputable def deRhamComparisonMap1_local_representatives_induced_cycle_funct
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (_data : PrescribedPeriodCechData X φ)
     (_localData : PrescribedPeriodLocalRepresentativeData X φ _data) :
@@ -412,7 +392,6 @@ theorem deRhamComparisonMap1_local_representatives_cycle_cocycle_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -429,7 +408,6 @@ theorem deRhamComparisonMap1_local_representatives_induced_cycle_value_eq_phi_fr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -447,7 +425,6 @@ theorem deRhamComparisonMap1_local_representatives_induced_cycle_value_eq_zero_o
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -467,7 +444,6 @@ theorem deRhamComparisonMap1_smooth_local_representatives_closed_form_coeff_eq_z
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -486,7 +462,6 @@ theorem deRhamComparisonMap1_smooth_local_representatives_period_cycle_eq_zero_f
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -512,7 +487,6 @@ theorem deRhamComparisonMap1_smooth_local_representatives_compat_with_periods_fr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -537,7 +511,6 @@ theorem deRhamComparisonMap1_smooth_local_representatives_period_cycle_axiom_fro
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -559,7 +532,6 @@ theorem deRhamComparisonMap1_smooth_local_representatives_period_cycle_of_zero_f
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -588,7 +560,6 @@ theorem deRhamComparisonMap1_smooth_local_representatives_period_cycle_of_phi_ze
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -617,7 +588,6 @@ theorem deRhamComparisonMap1_smooth_local_representatives_period_cycle_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -641,7 +611,6 @@ theorem deRhamComparisonMap1_closed_local_representatives_period_cycle_of_smooth
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -669,7 +638,6 @@ theorem deRhamComparisonMap1_local_representatives_period_to_induced_cycle_front
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -692,7 +660,6 @@ theorem deRhamComparisonMap1_local_representatives_period_to_induced_ext_frontie
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -720,7 +687,6 @@ theorem deRhamComparisonMap1_local_representatives_period_to_induced_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -743,7 +709,6 @@ theorem deRhamComparisonMap1_local_representatives_closed_form_period_of_induced
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -770,7 +735,6 @@ theorem deRhamComparisonMap1_local_representatives_closed_form_period_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -794,7 +758,6 @@ theorem deRhamComparisonMap1_local_representatives_integral_cycle_of_period_fron
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -821,7 +784,6 @@ theorem deRhamComparisonMap1_local_representatives_integral_cycle_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data)
@@ -845,7 +807,6 @@ theorem deRhamComparisonMap1_local_representatives_integral_ext_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -867,7 +828,6 @@ theorem deRhamComparisonMap1_local_representatives_integral_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -888,7 +848,6 @@ theorem deRhamComparisonMap1_local_representatives_period_transport_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -907,7 +866,6 @@ theorem deRhamComparisonMap1_local_representatives_period_correct_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ)
     (localData : PrescribedPeriodLocalRepresentativeData X φ data) :
@@ -926,7 +884,6 @@ theorem deRhamComparisonMap1_prescribed_period_cech_period_correct_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ)
     (data : PrescribedPeriodCechData X φ) :
     deRhamComparisonMap1 X
@@ -945,7 +902,6 @@ theorem deRhamComparisonMap1_prescribed_period_closed_form_period_correct_fronti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     deRhamComparisonMap1 X
         (deRhamComparisonMap1_prescribed_period_closed_form_frontier X φ) = φ := by
@@ -963,7 +919,6 @@ theorem deRhamComparisonMap1_prescribed_period_correct_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     deRhamComparisonMap1 X
         (deRhamComparisonMap1_prescribed_period_closed_form_frontier X φ) = φ := by
@@ -977,7 +932,6 @@ theorem deRhamComparisonMap1_exists_form_with_periods_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ∃ ω : ClosedForm 1 X, deRhamComparisonMap1 X ω = φ :=
   ⟨deRhamComparisonMap1_prescribed_period_closed_form_frontier X φ,
@@ -992,7 +946,6 @@ noncomputable def deRhamComparisonMap1_zero_period_path_integral_primitive_front
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_ω : ClosedForm 1 X)
     (_hω : deRhamComparisonMap1 X _ω = 0) :
     SmoothDiffForm 0 X :=
@@ -1007,7 +960,6 @@ theorem deRhamComparisonMap1_zero_period_mem_kernel_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ω ∈ LinearMap.ker (deRhamComparisonMap1 X) := by
@@ -1022,7 +974,6 @@ theorem deRhamComparisonMap1_comparison_kernel_zero_period_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_kernel : ω ∈ LinearMap.ker (deRhamComparisonMap1 X)) :
     deRhamComparisonMap1 X ω = 0 := by
@@ -1036,7 +987,6 @@ theorem deRhamComparisonMap1_exact_form_vanishes_for_direct_primitive_exactness_
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (η : SmoothDiffForm 1 X)
     (hη_exact : η ∈ ExactForm 0 X) :
     η = 0 := by
@@ -1051,7 +1001,6 @@ theorem deRhamComparisonMap1_exact_form_vanishes_for_direct_primitive_exactness_
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (η : SmoothDiffForm 1 X)
     (hη_exact : η ∈ ExactForm 0 X) :
     η = 0 := by
@@ -1067,7 +1016,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -1105,7 +1053,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishing_provider
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -1132,7 +1079,6 @@ theorem deRhamComparisonMap1_zero_period_primitiveExists_provider
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -1150,7 +1096,6 @@ theorem deRhamComparisonMap1_zero_period_primitiveExists_exact_assembly
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hprim : ∃ θ : SmoothDiffForm 0 X,
       exteriorDerivative 0 X θ = (ω : SmoothDiffForm 1 X)) :
@@ -1171,7 +1116,6 @@ theorem deRhamComparisonMap1_zero_period_exact_axiom_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -1187,7 +1131,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -1207,7 +1150,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -1227,7 +1169,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -1248,7 +1189,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -1269,7 +1209,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -1289,7 +1228,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -1307,7 +1245,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -1326,7 +1263,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -1342,7 +1278,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -1362,7 +1297,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -1382,7 +1316,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -1403,7 +1336,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -1424,7 +1356,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -1444,7 +1375,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -1462,7 +1392,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -1481,7 +1410,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -1497,7 +1425,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -1517,7 +1444,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -1537,7 +1463,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -1558,7 +1483,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -1579,7 +1503,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -1599,7 +1522,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -1617,7 +1539,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -1636,7 +1557,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -1652,7 +1572,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -1671,7 +1590,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -1691,7 +1609,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -1712,7 +1629,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -1733,7 +1649,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -1753,7 +1668,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -1771,7 +1685,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -1790,7 +1703,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -1806,7 +1718,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -1825,7 +1736,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -1845,7 +1755,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -1866,7 +1775,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -1887,7 +1795,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -1907,7 +1814,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -1925,7 +1831,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -1944,7 +1849,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -1960,7 +1864,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -1979,7 +1882,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -1999,7 +1901,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -2020,7 +1921,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -2041,7 +1941,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -2061,7 +1960,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -2079,7 +1977,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_pr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -2098,7 +1995,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -2114,7 +2010,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -2133,7 +2028,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -2153,7 +2047,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -2174,7 +2067,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -2194,7 +2086,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_exactnes
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -2214,7 +2105,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_of
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -2231,7 +2121,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_exactness_fr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -2249,7 +2138,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -2265,7 +2153,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -2284,7 +2171,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -2304,7 +2190,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -2325,7 +2210,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_of_deriv
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -2345,7 +2229,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_for_direct_primitive_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -2364,7 +2247,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_of_primitive
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -2382,7 +2264,6 @@ theorem deRhamComparisonMap1_zero_period_exact_for_direct_primitive_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -2397,7 +2278,6 @@ theorem deRhamComparisonMap1_exact_form_vanishes_for_direct_primitive_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (η : SmoothDiffForm 1 X)
     (hη_exact : η ∈ ExactForm 0 X) :
     η = 0 := by
@@ -2412,7 +2292,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -2428,7 +2307,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_for_direct_primiti
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -2444,7 +2322,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -2464,7 +2341,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_for_direct_pri
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -2484,7 +2360,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_direct_of_derivative_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -2504,7 +2379,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_direct_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -2522,7 +2396,6 @@ theorem deRhamComparisonMap1_zero_period_exact_direct_of_primitive_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -2539,7 +2412,6 @@ theorem deRhamComparisonMap1_zero_period_exact_direct_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -2554,7 +2426,6 @@ theorem deRhamComparisonMap1_exact_form_vanishes_direct_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (η : SmoothDiffForm 1 X)
     (hη_exact : η ∈ ExactForm 0 X) :
     η = 0 := by
@@ -2570,7 +2441,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_direct_of_exact_fr
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -2585,7 +2455,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_vanishes_direct_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -2601,7 +2470,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_direct_of_vani
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -2621,7 +2489,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_direct_frontie
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -2640,7 +2507,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_exists_of_derivative_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_derivative :
@@ -2661,7 +2527,6 @@ theorem deRhamComparisonMap1_zero_period_primitive_exists_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -2680,7 +2545,6 @@ theorem deRhamComparisonMap1_zero_period_mem_exact_of_primitive_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_primitive :
       ∃ θ : SmoothDiffForm 0 X,
@@ -2697,7 +2561,6 @@ theorem deRhamComparisonMap1_zero_period_mem_exact_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X := by
@@ -2712,7 +2575,6 @@ theorem deRhamComparisonMap1_comparison_kernel_mem_exact_of_zero_period_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_kernel : ω ∈ LinearMap.ker (deRhamComparisonMap1 X)) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X :=
@@ -2727,7 +2589,6 @@ theorem deRhamComparisonMap1_comparison_kernel_mem_exact_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_kernel : ω ∈ LinearMap.ker (deRhamComparisonMap1 X)) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X :=
@@ -2743,7 +2604,6 @@ theorem deRhamComparisonMap1_exact_form_vanishes_in_current_substrate_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (η : SmoothDiffForm 1 X)
     (hη_exact : η ∈ ExactForm 0 X) :
     η = 0 := by
@@ -2759,7 +2619,6 @@ theorem deRhamComparisonMap1_comparison_kernel_vanishes_of_exact_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_exact : (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -2775,7 +2634,6 @@ theorem deRhamComparisonMap1_comparison_kernel_vanishes_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_kernel : ω ∈ LinearMap.ker (deRhamComparisonMap1 X)) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -2792,7 +2650,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_eq_zero_of_kernel_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω_kernel : ω ∈ LinearMap.ker (deRhamComparisonMap1 X)) :
     (ω : SmoothDiffForm 1 X) = 0 :=
@@ -2807,7 +2664,6 @@ theorem deRhamComparisonMap1_zero_period_closed_form_eq_zero_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) = 0 := by
@@ -2823,7 +2679,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_of_vanishing_f
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0)
     (hω_zero : (ω : SmoothDiffForm 1 X) = 0) :
@@ -2843,7 +2698,6 @@ theorem deRhamComparisonMap1_zero_period_path_integral_derivative_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X
@@ -2862,7 +2716,6 @@ theorem deRhamComparisonMap1_zero_period_exactness_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -2878,7 +2731,6 @@ theorem deRhamComparisonMap1_primitive_exists_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X,
@@ -2892,8 +2744,7 @@ instead of calling this provider internally.
 def deRhamComparisonMap1Spec_frontier
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     DeRhamComparisonMap1Spec X := {
   exists_form_with_periods := deRhamComparisonMap1_exists_form_with_periods_frontier X
   primitive_exists := deRhamComparisonMap1_primitive_exists_frontier X
@@ -2914,7 +2765,6 @@ theorem deRhamComparisonMap1_exists_form_with_periods
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ∃ ω : ClosedForm 1 X, deRhamComparisonMap1 X ω = φ :=
   (deRhamComparisonMap1Spec_frontier X).exists_form_with_periods φ
@@ -2927,7 +2777,6 @@ theorem cech_cocycle_from_singular_cocycle
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ∃ (ι : Type) (U : ι → TopologicalSpace.Opens (TopCat.of X))
       (_C : CochainComplex AddCommGrpCat.{0} ℕ),
@@ -2957,7 +2806,6 @@ theorem closedForm_pathIntegral_primitive_exists
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X, exteriorDerivative 0 X θ = (ω : SmoothDiffForm 1 X) :=
@@ -2974,7 +2822,6 @@ noncomputable def closed_form_from_cech_cocycle_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ClosedForm 1 X :=
@@ -2985,7 +2832,6 @@ noncomputable def closed_form_from_cech_cocycle
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ClosedForm 1 X :=
   closed_form_from_cech_cocycle_of_spec X (deRhamComparisonMap1Spec_frontier X) φ
@@ -2999,7 +2845,6 @@ theorem integral_closed_form_from_cech_eq_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     deRhamComparisonMap1 X (closed_form_from_cech_cocycle_of_spec X hDR φ) = φ :=
@@ -3010,7 +2855,6 @@ theorem integral_closed_form_from_cech_eq
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     deRhamComparisonMap1 X (closed_form_from_cech_cocycle X φ) = φ :=
   integral_closed_form_from_cech_eq_of_spec X (deRhamComparisonMap1Spec_frontier X) φ
@@ -3024,7 +2868,6 @@ theorem deRhamComparisonMap1_prescribed_period_candidate_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ∃ ω : ClosedForm 1 X, ω = closed_form_from_cech_cocycle_of_spec X hDR φ := by
@@ -3035,7 +2878,6 @@ theorem deRhamComparisonMap1_prescribed_period_candidate
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ∃ ω : ClosedForm 1 X, ω = closed_form_from_cech_cocycle X φ := by
   exact ⟨closed_form_from_cech_cocycle X φ, rfl⟩
@@ -3049,7 +2891,6 @@ theorem deRhamComparisonMap1_prescribed_period_correct_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     deRhamComparisonMap1 X
@@ -3065,7 +2906,6 @@ theorem deRhamComparisonMap1_prescribed_period_correct
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     deRhamComparisonMap1 X
         (Classical.choose (deRhamComparisonMap1_prescribed_period_candidate X φ)) = φ := by
@@ -3078,7 +2918,6 @@ theorem deRhamComparisonMap1_surjective_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ∃ ω : ClosedForm 1 X, deRhamComparisonMap1 X ω = φ := by
@@ -3090,7 +2929,6 @@ theorem deRhamComparisonMap1_surjective
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (φ : IntegralOneCycle X →ₗ[ℤ] ℂ) :
     ∃ ω : ClosedForm 1 X, deRhamComparisonMap1 X ω = φ :=
   deRhamComparisonMap1_surjective_of_spec X (deRhamComparisonMap1Spec_frontier X) φ
@@ -3104,7 +2942,6 @@ noncomputable def closedForm_pathIntegral_primitive_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
@@ -3116,7 +2953,6 @@ noncomputable def closedForm_pathIntegral_primitive
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     SmoothDiffForm 0 X :=
@@ -3131,7 +2967,6 @@ theorem closedForm_pathIntegral_primitive_derivative_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
@@ -3144,7 +2979,6 @@ theorem closedForm_pathIntegral_primitive_derivative
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     exteriorDerivative 0 X (closedForm_pathIntegral_primitive X ω hω) = (ω : SmoothDiffForm 1 X) :=
@@ -3166,7 +3000,6 @@ theorem deRhamComparisonMap1_zero_period_potential_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
@@ -3179,7 +3012,6 @@ theorem deRhamComparisonMap1_zero_period_potential
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     ∃ θ : SmoothDiffForm 0 X, exteriorDerivative 0 X θ = (ω : SmoothDiffForm 1 X) :=
@@ -3193,7 +3025,6 @@ theorem deRhamComparisonMap1_kernel_subset_exact_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X)
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
@@ -3206,7 +3037,6 @@ theorem deRhamComparisonMap1_kernel_subset_exact
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (ω : ClosedForm 1 X)
     (hω : deRhamComparisonMap1 X ω = 0) :
     (ω : SmoothDiffForm 1 X) ∈ ExactForm 0 X :=
@@ -3217,8 +3047,7 @@ theorem deRhamComparisonMap1_kernel_subset_exact
 theorem deRhamComparisonMap1_descends
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     ∃ _ : deRhamH1Cocycle X →ₗ[ℂ] (IntegralOneCycle X →ₗ[ℤ] ℂ), True := by
   refine ⟨(ExactForm.toClosedSubmodule 0 X).liftQ (deRhamComparisonMap1 X) ?_, trivial⟩
   intro η hη
@@ -3236,7 +3065,6 @@ private theorem comparison_ker_eq_exact_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X) :
     LinearMap.ker (deRhamComparisonMap1 X) = ExactForm.toClosedSubmodule 0 X := by
   ext η
@@ -3252,8 +3080,7 @@ private theorem comparison_ker_eq_exact_of_spec
 private theorem comparison_ker_eq_exact
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     LinearMap.ker (deRhamComparisonMap1 X) = ExactForm.toClosedSubmodule 0 X :=
   comparison_ker_eq_exact_of_spec X (deRhamComparisonMap1Spec_frontier X)
 
@@ -3265,7 +3092,6 @@ private theorem comparison_range_eq_top_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X) :
     LinearMap.range (deRhamComparisonMap1 X) = ⊤ := by
   rw [LinearMap.range_eq_top]
@@ -3277,8 +3103,7 @@ private theorem comparison_range_eq_top_of_spec
 private theorem comparison_range_eq_top
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     LinearMap.range (deRhamComparisonMap1 X) = ⊤ :=
   comparison_range_eq_top_of_spec X (deRhamComparisonMap1Spec_frontier X)
 
@@ -3296,7 +3121,6 @@ private noncomputable def deRhamH1_linearEquiv_of_spec
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (hDR : DeRhamComparisonMap1Spec X) :
     deRhamH1Cocycle X ≃ₗ[ℂ] (IntegralOneCycle X →ₗ[ℤ] ℂ) :=
   -- Step 1: deRhamH1Cocycle X ≃ₗ[ℂ] (ClosedFormSub 1 X ⧸ ker)
@@ -3310,8 +3134,7 @@ private noncomputable def deRhamH1_linearEquiv_of_spec
 private noncomputable def deRhamH1_linearEquiv
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     deRhamH1Cocycle X ≃ₗ[ℂ] (IntegralOneCycle X →ₗ[ℤ] ℂ) :=
   deRhamH1_linearEquiv_of_spec X (deRhamComparisonMap1Spec_frontier X)
 
@@ -3336,8 +3159,7 @@ private theorem finrank_homℤℂ_eq_finrank_of_free
 theorem deRhamH1Cocycle_finrank_eq_realDim_singularH1
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Module.finrank ℂ (deRhamH1Cocycle X) = realDimSingularH1 X := by
   rw [(deRhamH1_linearEquiv X).finrank_eq]
   rw [realDim_singularH1_eq_finrank_intH1_via_uct X]
@@ -3349,8 +3171,7 @@ theorem deRhamH1Cocycle_finrank_eq_realDim_singularH1
 theorem realDimDeRhamH1_eq_realDimSingularH1_via_cocycle
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     realDimDeRhamH1 X = realDimSingularH1 X := by
   rw [realDimDeRhamH1_eq_finrank_cocycleℝ X,
       deRhamH1Cocycle_finrank_eq_realDim_singularH1 X]

@@ -1,7 +1,8 @@
 import Jacobian.Periods.ChartedFormPullback
 import Jacobian.HolomorphicForms.PullbackBundled
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Chart-level chain rule for the form-pullback
@@ -34,10 +35,8 @@ open JacobianChallenge.TraceDegree
 
 variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 variable {Y : Type*} [TopologicalSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [JacobianChallenge.Periods.StableChartAt ℂ Y]
 
 set_option linter.unusedSectionVars false in
 /--
@@ -62,8 +61,6 @@ theorem chartedFormPullback_pullbackFormsBundledLM_eq
           ((chartAt ℂ q) (f ((chartAt ℂ p).symm e)))).comp
         (mfderiv 𝓘(ℂ) 𝓘(ℂ)
           (fun e' => (chartAt ℂ q) (f ((chartAt ℂ p).symm e'))) e) := by
-  haveI _stableX : StableChartAt ℂ X := inferInstance
-  haveI _stableY : StableChartAt ℂ Y := inferInstance
   set cX := chartAt ℂ p
   set cY := chartAt ℂ q
   -- Manifold differentiability hypotheses
@@ -145,8 +142,6 @@ theorem chartedFormPullback_pullbackFormsBundledLM_apply
         ((chartAt ℂ q) (f ((chartAt ℂ p).symm e)))
         (mfderiv 𝓘(ℂ) 𝓘(ℂ)
           (fun e' => (chartAt ℂ q) (f ((chartAt ℂ p).symm e'))) e v) := by
-  haveI _stableX : StableChartAt ℂ X := inferInstance
-  haveI _stableY : StableChartAt ℂ Y := inferInstance
   rw [chartedFormPullback_pullbackFormsBundledLM_eq f hf η p q e he_target he_source]
   rfl
 

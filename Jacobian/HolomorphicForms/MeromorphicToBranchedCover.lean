@@ -6,7 +6,8 @@ import Jacobian.HolomorphicForms.CompactRiemannSurface
 import Jacobian.HolomorphicForms.SinglePoleLift
 import Mathlib.Analysis.Meromorphic.NormalForm
 import Jacobian.Blueprint.Sec02.BranchedDegreeFromHolomorphic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Bridging `MeromorphicMapToSphere` to branched-cover data
@@ -45,12 +46,11 @@ open JacobianChallenge.HolomorphicForms
 variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /-! ### Thin projections from `AnalyticData` -/
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 /--
 Projection from `AnalyticData`: the canonical finite lift is
 `MeromorphicAtX` at every point.
@@ -62,7 +62,7 @@ theorem MeromorphicMapToSphere.meromorphicAt_getD_of_analyticData
   han.meromorphic_getD
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 /--
 Projection from `AnalyticData`: at a simple pole, the chart-local
 analytic order is `1`.
@@ -92,7 +92,7 @@ noncomputable def MeromorphicMapToSphere.toMeromorphicFunctionType
   isMeromorphic := han.meromorphic_getD
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 @[simp] theorem MeromorphicMapToSphere.toMeromorphicFunctionType_toFun
     (f : MeromorphicMapToSphere X) (han : f.AnalyticData) :
     (f.toMeromorphicFunctionType han).toFun = f.toMap := rfl
@@ -135,7 +135,7 @@ theorem MeromorphicMapToSphere.hasWeightedFiberConservation_toMap_of_analyticDat
   simpa using h
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 /--
 The fiber `f.toMap ⁻¹' {∞}` of a continuous meromorphic map whose
 pole divisor is `[P]` is exactly the singleton `{P}`.
@@ -168,7 +168,7 @@ theorem MeromorphicMapToSphere.preimage_infty_eq_singleton_of_poleDivisor_point
     decide
 
 omit [CompactSpace X] [ConnectedSpace X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 /--
 **`noPoleOff_P` provider for a `MeromorphicMapToSphere` with a single
 simple pole.**
@@ -332,7 +332,7 @@ theorem MeromorphicMapToSphere.noPoleOff_P_of_poleDivisor_point
   exact hFsymm.mono_left nhdsWithin_le_nhds
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 /--
 **`order_ge_neg_one_at_P` provider (reverse of `8418d4ec`).**
 
@@ -530,7 +530,7 @@ theorem MeromorphicMapToSphere.orderAt_getD_eq_neg_one_of_simple_pole
   exact h_mero_ord_Fc
 
 omit [CompactSpace X] [ConnectedSpace X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 /--
 **`continuous_finiteLift_off` provider for a `MeromorphicMapToSphere`
 with a single simple pole.**
@@ -638,7 +638,7 @@ theorem MeromorphicMapToSphere.continuousOn_getD_off_pole_of_poleDivisor_point
   exact hF_at.continuousWithinAt
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 /--
 **`outside_constants` provider for a `MeromorphicMapToSphere` with a
 single simple pole.**
@@ -837,7 +837,6 @@ We separate the `toMap` description into two equations
 structure SimplePoleToSphereData
     (X : Type*) [TopologicalSpace X] [T2Space X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (P : X) where
   /--
 A global complex-valued lift, defined on all of `X` (the value at
@@ -872,7 +871,6 @@ namespace SimplePoleToSphereData
 /-- Off the pole, `toMap` takes finite values. -/
 theorem toMap_ne_infty_off_pole {X : Type*} [TopologicalSpace X] [T2Space X]
     [ChartedSpace ℂ X] [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     {P : X} (d : SimplePoleToSphereData X P) {x : X}
     (hx : x ≠ P) : d.toMap x ≠ (OnePoint.infty : OnePoint ℂ) := by
   rw [d.toMap_off_pole x hx]
@@ -881,7 +879,6 @@ theorem toMap_ne_infty_off_pole {X : Type*} [TopologicalSpace X] [T2Space X]
 /-- Off the pole, `(d.toMap x).getD 0 = d.finiteLift x`. -/
 theorem getD_toMap_off_pole {X : Type*} [TopologicalSpace X] [T2Space X]
     [ChartedSpace ℂ X] [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     {P : X} (d : SimplePoleToSphereData X P) {x : X}
     (hx : x ≠ P) : (d.toMap x).getD 0 = d.finiteLift x := by
   rw [d.toMap_off_pole x hx]
@@ -1371,7 +1368,6 @@ theorem genusZero_fixedPole_branchedCoverDataOfPoleDegree
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (_h : analyticGenus ℂ X = 0)
     (f : MeromorphicMapToSphere X)
@@ -1426,7 +1422,6 @@ theorem complexPrincipalPart_of_meromorphicMap_analyticData
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (P : X) (f : MeromorphicMapToSphere X)
     (hpole : f.poles = Divisor.point P)
     (han : f.AnalyticData)
@@ -1517,7 +1512,6 @@ structure SimplePoleRRSection
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (P : X) where
   /--
 The complex-valued meromorphic function with a simple pole
@@ -1536,7 +1530,6 @@ namespace SimplePoleRRSection
 variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 Composes `SimplePoleToSphereData.of_complexPrincipalPart` with the
@@ -1567,7 +1560,6 @@ structure GenusZeroFixedPoleAnalyticRRWitness
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) where
   /-- The concrete meromorphic-map-to-sphere with a simple pole at `P`. -/
@@ -1593,7 +1585,6 @@ namespace SimplePoleRRSection
 variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 
 omit [ConnectedSpace X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
@@ -1806,7 +1797,6 @@ structure RiemannRochSectionAtPoint
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (P : X) where
   /-- The Riemann-Roch section as a complex-valued function. -/
   finiteLift : X → ℂ
@@ -1846,7 +1836,6 @@ namespace RiemannRochSectionAtPoint
 variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 Each field of `HasComplexSimplePolePrincipalPart` is supplied by the
@@ -1926,7 +1915,6 @@ structure PointRiemannRochSection
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (P : X) where
   /-- The section as a complex-valued function. -/
   finiteLift : X → ℂ
@@ -2013,12 +2001,18 @@ This is the local removable-singularity step in chart-holomorphic form:
 it supplies a continuous representative with analytic chart-local
 germs, but does not yet package the result as manifold-level
 `ContMDiff`.
+
+GAP (`sorry`). The statement is true (Riemann's removable-singularity theorem,
+read in a chart at each point), but the previous proof identified
+`chartAt ℂ ((chartAt ℂ p).symm z)` with `chartAt ℂ p` on a coordinate ball, i.e.
+used the refuted chart-stability property (`ChartStabilityRefutation.lean`). An
+honest proof must show the chart-local normal-form value is independent of the
+chart, using the analyticity of chart transitions.
 -/
 theorem meromorphic_no_poles_holomorphic_representative
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (F : X → ℂ)
     (hmer : ∀ p : X,
       JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX F p)
@@ -2029,184 +2023,8 @@ theorem meromorphic_no_poles_holomorphic_representative
       Continuous G ∧
       (∀ p : X, JacobianChallenge.HolomorphicForms.IsHolomorphicAt G p) ∧
       ∀ p : X, F =ᶠ[𝓝[≠] p] G := by
-  classical
-  let G : X → ℂ := fun p =>
-    toMeromorphicNFAt (F ∘ (chartAt ℂ p).symm) (chartAt ℂ p p) (chartAt ℂ p p)
-  refine ⟨G, ?_, ?_, ?_⟩
-  · rw [continuous_iff_continuousAt]
-    intro p
-    let fₚ : ℂ → ℂ := F ∘ (chartAt ℂ p).symm
-    let zₚ : ℂ := chartAt ℂ p p
-    have hfₚ : MeromorphicAt fₚ zₚ := by
-      unfold fₚ zₚ
-      have h := hmer p
-      unfold JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX at h
-      simpa [
-        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_symm_eq_chartAt_symm,
-        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_eq_chartAt]
-        using h
-    have horderₚ : (0 : WithTop ℤ) ≤ meromorphicOrderAt fₚ zₚ := by
-      unfold fₚ zₚ
-      simpa [JacobianChallenge.HolomorphicForms.VanishingOrder.orderAt_eq_chartAt]
-        using horders p
-    rcases toMeromorphicNFAt_moving_center_coherent_of_orderAt_nonneg
-      fₚ zₚ hfₚ horderₚ with ⟨U, hU, hcoh⟩
-    rcases exists_chartAt_target_ball p with ⟨r, hr_pos, hball⟩
-    have hball_mem : Metric.ball zₚ r ∈ 𝓝 zₚ := Metric.ball_mem_nhds _ hr_pos
-    have hG_chart :
-        (fun z : ℂ => G ((chartAt ℂ p).symm z)) =ᶠ[𝓝 zₚ]
-          toMeromorphicNFAt fₚ zₚ := by
-      filter_upwards [hU, hball_mem] with z hzU hzball
-      have hchart :
-          chartAt ℂ ((chartAt ℂ p).symm z) = chartAt ℂ p :=
-        chartAt_symm_chartAt_eq_of_mem_ball p hball hzball
-      have hround :
-          (chartAt ℂ p) ((chartAt ℂ p).symm z) = z :=
-        chartAt_apply_symm_of_mem_ball p hball hzball
-      change
-        toMeromorphicNFAt
-            (F ∘ (chartAt ℂ ((chartAt ℂ p).symm z)).symm)
-            (chartAt ℂ ((chartAt ℂ p).symm z) ((chartAt ℂ p).symm z))
-            (chartAt ℂ ((chartAt ℂ p).symm z) ((chartAt ℂ p).symm z)) =
-          toMeromorphicNFAt fₚ zₚ z
-      simpa [hchart, hround, fₚ, zₚ] using hcoh z hzU
-    have hfixed_order :
-        (0 : WithTop ℤ) ≤ meromorphicOrderAt (toMeromorphicNFAt fₚ zₚ) zₚ := by
-      simpa [meromorphicOrderAt_congr (hfₚ.eq_nhdsNE_toMeromorphicNFAt)] using horderₚ
-    have hfixed_an :
-        AnalyticAt ℂ (toMeromorphicNFAt fₚ zₚ) zₚ :=
-      (meromorphicNFAt_toMeromorphicNFAt
-        (f := fₚ) (x := zₚ)).meromorphicOrderAt_nonneg_iff_analyticAt.mp hfixed_order
-    have hcont_comp :
-        ContinuousAt (G ∘ (chartAt ℂ p).symm) zₚ := by
-      exact hfixed_an.continuousAt.congr hG_chart.symm
-    exact ((chartAt ℂ p).symm.continuousAt_iff_continuousAt_comp_right
-      (mem_chart_source ℂ p)).mpr (by
-        simpa [zₚ, Function.comp_def] using hcont_comp)
-  · intro p
-    let fₚ : ℂ → ℂ := F ∘ (chartAt ℂ p).symm
-    let zₚ : ℂ := chartAt ℂ p p
-    have hfₚ : MeromorphicAt fₚ zₚ := by
-      unfold fₚ zₚ
-      have h := hmer p
-      unfold JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX at h
-      simpa [
-        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_symm_eq_chartAt_symm,
-        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_eq_chartAt]
-        using h
-    have horderₚ : (0 : WithTop ℤ) ≤ meromorphicOrderAt fₚ zₚ := by
-      unfold fₚ zₚ
-      simpa [JacobianChallenge.HolomorphicForms.VanishingOrder.orderAt_eq_chartAt]
-        using horders p
-    rcases toMeromorphicNFAt_moving_center_coherent_of_orderAt_nonneg
-      fₚ zₚ hfₚ horderₚ with ⟨U, hU, hcoh⟩
-    rcases exists_chartAt_target_ball p with ⟨r, hr_pos, hball⟩
-    have hball_mem : Metric.ball zₚ r ∈ 𝓝 zₚ := Metric.ball_mem_nhds _ hr_pos
-    have hG_chart :
-        (fun z : ℂ => G ((chartAt ℂ p).symm z)) =ᶠ[𝓝 zₚ]
-          toMeromorphicNFAt fₚ zₚ := by
-      filter_upwards [hU, hball_mem] with z hzU hzball
-      have hchart :
-          chartAt ℂ ((chartAt ℂ p).symm z) = chartAt ℂ p :=
-        chartAt_symm_chartAt_eq_of_mem_ball p hball hzball
-      have hround :
-          (chartAt ℂ p) ((chartAt ℂ p).symm z) = z :=
-        chartAt_apply_symm_of_mem_ball p hball hzball
-      change
-        toMeromorphicNFAt
-            (F ∘ (chartAt ℂ ((chartAt ℂ p).symm z)).symm)
-            (chartAt ℂ ((chartAt ℂ p).symm z) ((chartAt ℂ p).symm z))
-            (chartAt ℂ ((chartAt ℂ p).symm z) ((chartAt ℂ p).symm z)) =
-          toMeromorphicNFAt fₚ zₚ z
-      simpa [hchart, hround, fₚ, zₚ] using hcoh z hzU
-    have hfixed_order :
-        (0 : WithTop ℤ) ≤ meromorphicOrderAt (toMeromorphicNFAt fₚ zₚ) zₚ := by
-      simpa [meromorphicOrderAt_congr (hfₚ.eq_nhdsNE_toMeromorphicNFAt)] using horderₚ
-    have hfixed_an :
-        AnalyticAt ℂ (toMeromorphicNFAt fₚ zₚ) zₚ :=
-      (meromorphicNFAt_toMeromorphicNFAt
-        (f := fₚ) (x := zₚ)).meromorphicOrderAt_nonneg_iff_analyticAt.mp hfixed_order
-    unfold JacobianChallenge.HolomorphicForms.IsHolomorphicAt
-    rw [chartLocalAt_scalar_eq]
-    exact hfixed_an.congr hG_chart.symm
-  · intro p
-    let fₚ : ℂ → ℂ := F ∘ (chartAt ℂ p).symm
-    let zₚ : ℂ := chartAt ℂ p p
-    have hfₚ : MeromorphicAt fₚ zₚ := by
-      unfold fₚ zₚ
-      have h := hmer p
-      unfold JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX at h
-      simpa [
-        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_symm_eq_chartAt_symm,
-        JacobianChallenge.HolomorphicForms.VanishingOrder.extChartAt_eq_chartAt]
-        using h
-    have horderₚ : (0 : WithTop ℤ) ≤ meromorphicOrderAt fₚ zₚ := by
-      unfold fₚ zₚ
-      simpa [JacobianChallenge.HolomorphicForms.VanishingOrder.orderAt_eq_chartAt]
-        using horders p
-    rcases toMeromorphicNFAt_moving_center_coherent_of_orderAt_nonneg
-      fₚ zₚ hfₚ horderₚ with ⟨U, hU, hcoh⟩
-    rcases exists_chartAt_target_ball p with ⟨r, hr_pos, hball⟩
-    have hball_mem : Metric.ball zₚ r ∈ 𝓝 zₚ := Metric.ball_mem_nhds _ hr_pos
-    have hG_chart :
-        (fun z : ℂ => G ((chartAt ℂ p).symm z)) =ᶠ[𝓝 zₚ]
-          toMeromorphicNFAt fₚ zₚ := by
-      filter_upwards [hU, hball_mem] with z hzU hzball
-      have hchart :
-          chartAt ℂ ((chartAt ℂ p).symm z) = chartAt ℂ p :=
-        chartAt_symm_chartAt_eq_of_mem_ball p hball hzball
-      have hround :
-          (chartAt ℂ p) ((chartAt ℂ p).symm z) = z :=
-        chartAt_apply_symm_of_mem_ball p hball hzball
-      change
-        toMeromorphicNFAt
-            (F ∘ (chartAt ℂ ((chartAt ℂ p).symm z)).symm)
-            (chartAt ℂ ((chartAt ℂ p).symm z) ((chartAt ℂ p).symm z))
-            (chartAt ℂ ((chartAt ℂ p).symm z) ((chartAt ℂ p).symm z)) =
-          toMeromorphicNFAt fₚ zₚ z
-      simpa [hchart, hround, fₚ, zₚ] using hcoh z hzU
-    have hsrc_mem : (chartAt ℂ p).source ∈ 𝓝 p :=
-      (chartAt ℂ p).open_source.mem_nhds (mem_chart_source ℂ p)
-    have hchart_tendsto :
-        Filter.Tendsto (chartAt ℂ p) (𝓝 p) (𝓝 zₚ) := by
-      unfold zₚ
-      exact (chartAt ℂ p).continuousAt (mem_chart_source ℂ p)
-    have hsrc_mem_ne : (chartAt ℂ p).source ∈ 𝓝[≠] p :=
-      nhdsWithin_le_nhds hsrc_mem
-    have hcoord_agree :
-        ∀ᶠ y in 𝓝[≠] p,
-          F y = G y := by
-      have hF_fixed : fₚ =ᶠ[𝓝[≠] zₚ] toMeromorphicNFAt fₚ zₚ :=
-        hfₚ.eq_nhdsNE_toMeromorphicNFAt
-      have hchart_ne :
-          Filter.Tendsto (chartAt ℂ p) (𝓝[≠] p) (𝓝[≠] zₚ) := by
-        refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-          (chartAt ℂ p) (tendsto_nhdsWithin_of_tendsto_nhds hchart_tendsto) ?_
-        filter_upwards [hsrc_mem_ne, self_mem_nhdsWithin]
-          with y hy_src hy_ne hcontra
-        exact hy_ne ((chartAt ℂ p).injOn hy_src (mem_chart_source ℂ p) hcontra)
-      have hF_pull : ∀ᶠ y in 𝓝[≠] p,
-          fₚ ((chartAt ℂ p) y) = toMeromorphicNFAt fₚ zₚ ((chartAt ℂ p) y) :=
-        hchart_ne.eventually hF_fixed
-      have hG_pull : ∀ᶠ y in 𝓝[≠] p,
-          G y = toMeromorphicNFAt fₚ zₚ ((chartAt ℂ p) y) := by
-        have hG_comp : ∀ᶠ y in 𝓝 p,
-            G ((chartAt ℂ p).symm ((chartAt ℂ p) y)) =
-              toMeromorphicNFAt fₚ zₚ ((chartAt ℂ p) y) :=
-          hchart_tendsto.eventually hG_chart
-        filter_upwards [hG_comp.filter_mono nhdsWithin_le_nhds,
-            hsrc_mem_ne] with y hyG hy_src
-        simpa [(chartAt ℂ p).left_inv hy_src] using hyG
-      filter_upwards [hF_pull, hG_pull, hsrc_mem_ne]
-        with y hyF hyG hy_src
-      have hFy : fₚ ((chartAt ℂ p) y) = F y := by
-        unfold fₚ
-        simp [(chartAt ℂ p).left_inv hy_src]
-      calc
-        F y = fₚ ((chartAt ℂ p) y) := hFy.symm
-        _ = toMeromorphicNFAt fₚ zₚ ((chartAt ℂ p) y) := hyF
-        _ = G y := hyG.symm
-    exact hcoord_agree
+  -- GAP: honest chart-independent removable-singularity argument pending.
+  sorry
 
 /--
 **Provider (removable no-poles representative, `ContMDiff` form).**
@@ -2222,7 +2040,6 @@ theorem meromorphic_no_poles_contMDiff_representative
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (F : X → ℂ)
     (hmer : ∀ p : X,
       JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX F p)
@@ -2254,7 +2071,6 @@ theorem meromorphic_no_poles_constant
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (F : X → ℂ)
     (hmer : ∀ p : X,
       JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX F p)
@@ -2285,7 +2101,6 @@ theorem mapAnalyticOrderAt_onePointExtend_of_order_neg_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (F : X → ℂ) (P : X)
     (hmer : ∀ p : X,
       JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX F p)
@@ -2420,7 +2235,6 @@ theorem orderAt_getD_eq_neg_one_of_mapAnalyticOrderAt_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P)
     (han : f.AnalyticData) :
@@ -2560,7 +2374,6 @@ theorem tendsto_norm_atTop_of_order_neg_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (F : X → ℂ) (P : X)
     (_hmer : ∀ p : X,
       JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX F p)
@@ -2635,7 +2448,6 @@ theorem continuous_onePointExtend_of_meromorphic_order_neg_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (F : X → ℂ) (P : X)
     (hmer : ∀ p : X,
       JacobianChallenge.HolomorphicForms.VanishingOrder.MeromorphicAtX F p)
@@ -2678,7 +2490,6 @@ namespace PointRiemannRochSection
 variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 Proof: by `order_ge_neg_one_at_P` and `noPoleOff_P`, every chart-local
@@ -2869,7 +2680,6 @@ theorem genusZero_pointRRSection_outside_constants_of_analyticData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (_h : analyticGenus ℂ X = 0)
     (hAnalytic : Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P)) :
@@ -2994,7 +2804,6 @@ theorem complexSimplePolePrincipalPart_of_biholomorph_onePoint
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (P : X) (e : X ≃ₜ OnePoint ℂ)
     (he :
       ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
@@ -3022,7 +2831,6 @@ theorem singlePoleAnalyticData_of_biholomorph_onePoint
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (P : X) (e : X ≃ₜ OnePoint ℂ)
     (he :
       ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
@@ -3048,7 +2856,6 @@ theorem exists_biholomorph_onePoint_of_analyticGenus_zero
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (_h : analyticGenus ℂ X = 0) :
     ∃ (e : X ≃ₜ OnePoint ℂ),
@@ -3073,7 +2880,6 @@ theorem genusZero_singlePoleMeromorphicAnalyticData_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P) := by
@@ -3084,7 +2890,6 @@ theorem genusZero_pointRRSection_outside_constants_exists
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty (PointRiemannRochSection X P) :=
@@ -3116,7 +2921,6 @@ theorem genusZero_pointRRSection_outside_constants_exists_with_meromorphic_getD
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (_h : analyticGenus ℂ X = 0)
     (f : MeromorphicMapToSphere X)
@@ -3152,7 +2956,6 @@ theorem genusZero_pointRRSection_outside_constants_exists_with_analyticData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0)
     (f : MeromorphicMapToSphere X) (han : f.AnalyticData)
@@ -3167,7 +2970,6 @@ theorem genusZero_fixedPole_rrSection_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty (RiemannRochSectionAtPoint X P) := by
@@ -3179,7 +2981,6 @@ theorem genusZero_fixedPole_simplePoleRRSection_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty (SimplePoleRRSection X P) := by
@@ -3191,7 +2992,6 @@ theorem genusZero_fixedPole_analyticRRWitness_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty (GenusZeroFixedPoleAnalyticRRWitness X P) := by
@@ -3209,7 +3009,6 @@ theorem genusZero_fixedPole_rr_analyticData_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     ∃ f : MeromorphicMapToSphere X,
@@ -3222,7 +3021,6 @@ theorem genusZero_fixedPole_complexPrincipalPart_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     ∃ F : X → ℂ, HasComplexSimplePolePrincipalPart F P := by
@@ -3236,7 +3034,6 @@ theorem genusZero_fixedPole_simplePoleToSphereData_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty (SimplePoleToSphereData X P) := by
@@ -3248,7 +3045,6 @@ theorem genusZero_fixedPole_analyticRouteData_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P) := by
@@ -3260,7 +3056,6 @@ theorem genusZero_fixedPole_singlePoleRouteData_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty (SinglePoleMeromorphicMapData (X := X) P) := by
@@ -3285,7 +3080,6 @@ theorem genusZero_fixedPole_meromorphicData_with_routeData_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X) (h : analyticGenus ℂ X = 0) :
     Nonempty

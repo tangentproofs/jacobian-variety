@@ -11,7 +11,8 @@ import Mathlib.AlgebraicTopology.SingularHomology.Basic
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Jacobian.TraceDegree.PiecewiseC1Def
 import Jacobian.TraceDegree.PiecewiseC1Instance
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 Section 3 of `tex/sections/03-periods-and-riemann-bilinear.tex`.
@@ -133,7 +134,6 @@ def simplex_to_path
 theorem exists_pathChartCover
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     {a b : X} (_γ : Path a b) : Nonempty Unit := by
   exact ⟨()⟩
 
@@ -148,16 +148,14 @@ piece of the multi-chart machinery, partial in
 -/
 theorem pathIntegralViaCover_partition_independent
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Nonempty Unit := by
   exact ⟨()⟩
 
 /-- **Sub-leaf A.1.linear (linearity in the form).** -/
 theorem pathIntegral_linear_in_form
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Nonempty Unit := by
   exact ⟨()⟩
 
@@ -188,7 +186,6 @@ linear in the form and depends naturally on the simplex.
 theorem exists_singularSimplex_integration
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [PiecewiseC1PathRegularity X] :
     ∃ _Iσ : C(unitInterval, X) → (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ), True := by
   refine ⟨fun σ => {
@@ -322,7 +319,6 @@ purely structural, no analytic content beyond A.1.
 theorem singularChain_integration_from_simplex
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_Iσ : C(unitInterval, X) → (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ)) :
     ∃ _ : SingularOneChain X →ₗ[ℤ] (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ),
       True :=
@@ -349,7 +345,6 @@ information for a fixed chain.
 theorem exists_singularChain_integration
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [PiecewiseC1PathRegularity X] :
     ∃ _ : SingularOneChain X →ₗ[ℤ] (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ),
       True := by
@@ -363,7 +358,6 @@ a closed form, via `dω = 0`).**
 theorem holomorphicForm_closed_chain_integral
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (η : HolomorphicOneForm ℂ X) : Nonempty Unit :=
   JacobianChallenge.Blueprint.holomorphic_form_is_closed X η
 
@@ -380,7 +374,6 @@ through the global umbrella.
 theorem holomorphicForm_closed_in_chart
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (c : OpenPartialHomeomorph X ℂ) (η : HolomorphicOneForm ℂ X) :
     Nonempty Unit :=
   JacobianChallenge.Blueprint.chart_pullback_d_eq_zero X c η
@@ -395,8 +388,7 @@ manifold-with-corners structure).
 -/
 theorem stokes_chain_integral_simplex
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Nonempty Unit := by
   exact ⟨()⟩
 
@@ -411,8 +403,7 @@ boundary `∂₂` and the chain integration map.
 -/
 theorem stokes_chain_integral_linearity
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Nonempty Unit := by
   exact ⟨()⟩
 
@@ -427,8 +418,7 @@ corners) one simplex at a time (sub-leaf C.simplex) and summing
 -/
 theorem stokes_chain_integral_boundary
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Nonempty Unit := by
   -- the chain-level linearity (C.linearity). Both currently `True` so the
   -- assembly returns `trivial`.
@@ -445,7 +435,6 @@ argument.
 theorem chain_integration_choice
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [PiecewiseC1PathRegularity X] :
     ∃ _ : SingularOneChain X →ₗ[ℤ] (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ),
       True :=
@@ -466,8 +455,7 @@ are closed (sub-leaf B, `dη = 0`).
 -/
 theorem chain_integration_kills_boundary
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     ∃ (I : SingularOneChain X →ₗ[ℤ] (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ)),
       ∀ (s : SingularTwoChain X) (η : HolomorphicOneForm ℂ X),
         I (singularBoundary21 X s) η = 0 := by
@@ -490,8 +478,7 @@ existence is asserted in sub-leaf A, the integral of a holomorphic
 -/
 theorem chainIntegral_kills_boundary_of_closed
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     ∃ I : SingularOneChain X →ₗ[ℤ] (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ),
       ∀ (s : SingularTwoChain X) (η : HolomorphicOneForm ℂ X),
         I (singularBoundary21 X s) η = 0 :=
@@ -520,8 +507,7 @@ and pickup-able.
 -/
 theorem period_homology_invariance_descent
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     ∃ I : SingularOneChain X →ₗ[ℤ] (HolomorphicOneForm ℂ X →ₗ[ℂ] ℂ),
       ∀ (s : SingularTwoChain X) (η : HolomorphicOneForm ℂ X),
         I (singularBoundary21 X s) η = 0 :=

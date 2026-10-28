@@ -3,7 +3,8 @@ import Jacobian.HolomorphicForms.VanishingOrder
 import Jacobian.HolomorphicForms.Divisor
 import Mathlib.Geometry.Manifold.MFDeriv.Basic
 import Mathlib.Order.Filter.Germ.Basic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Meromorphic functions and the divisor-facing replacement API
@@ -35,7 +36,6 @@ open JacobianChallenge.HolomorphicForms.VanishingOrder
 
 variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 namespace MeromorphicFunctionType
 
@@ -52,8 +52,7 @@ def toFiniteFun (f : MeromorphicFunctionType X) : X → ℂ :=
 
 /-- The zero meromorphic function. -/
 def zero (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     MeromorphicFunctionType X :=
   { toFun := fun _ => (0 : ℂ)
     toFun_continuous := continuous_const
@@ -91,7 +90,6 @@ noncomputable instance : Neg (MeromorphicFunctionType X) := ⟨neg_meromorphic�
 /-- The toFun of a negation is the pointwise negation. -/
 theorem neg_toFun {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) :
     ∀ x, f.toFun x ≠ ∞ → (-f).toFun x = (-(f.toFun x).getD 0 : ℂ) := by
   intro x hx
@@ -130,7 +128,6 @@ noncomputable instance : SMul ℂ (MeromorphicFunctionType X) := ⟨smul_meromor
 /-- The toFun of a scalar multiplication is the pointwise multiplication. -/
 theorem smul_toFun {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (c : ℂ) (f : MeromorphicFunctionType X) :
     ∀ x, f.toFun x ≠ ∞ → (c • f).toFun x = (c * (f.toFun x).getD 0 : ℂ) := by
   intro x hx
@@ -161,15 +158,13 @@ Pole cancellation cannot be represented by pointwise arithmetic on
 instead.
 -/
 theorem meromorphicFunctionVectorSpace_blocked {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     True :=
   trivial
 
 /-- Coefficient of the zero divisor at a point. -/
 noncomputable def zeros_coeff {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (p : X) : ℤ :=
   haveI := Classical.propDecidable (f.toFun p = (0 : ℂ))
   if f.toFun p = (0 : ℂ) then (orderAt p (fun q => (f q).getD 0)).untopD 0 else 0
@@ -177,7 +172,6 @@ noncomputable def zeros_coeff {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ
 /-- Coefficient of the pole divisor at a point. -/
 noncomputable def poles_coeff {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (p : X) : ℤ :=
   haveI := Classical.propDecidable (f.toFun p = ∞)
   if f.toFun p = ∞ then -(orderAt p (fun q => (f q).getD 0)).untopD 0 else 0
@@ -188,7 +182,6 @@ for divisor-sensitive statements.
 -/
 noncomputable def zeros {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_f : MeromorphicFunctionType X) : Divisor X :=
   0
 
@@ -200,14 +193,12 @@ data needed to recover a pole divisor soundly.  Use
 -/
 noncomputable def poles {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_f : MeromorphicFunctionType X) : Divisor X :=
   0
 
 /-- The principal divisor `(f) = (zeros) - (poles)`. -/
 noncomputable def principal {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) : Divisor X :=
   f.zeros - f.poles
 
@@ -223,7 +214,6 @@ the needed hypothesis is exactly that the raw map has no infinite values.
 -/
 theorem toFun_ne_infty_of_is_holomorphic {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (h : f.is_holomorphic) :
     ∀ x, f.toFun x ≠ ∞ :=
   h
@@ -235,7 +225,6 @@ private lemma finiteProjection_continuousAt (c : ℂ) :
   have hid : ContinuousAt (id : ℂ → ℂ) c := continuousAt_id
   exact hid.congr (Filter.Eventually.of_forall fun _ => rfl)
 
-omit [JacobianChallenge.Periods.StableChartAt ℂ X] in
 /-- If a meromorphic function has no infinite values, its finite projection is continuous. -/
 private lemma toFiniteFun_continuousAt (f : MeromorphicFunctionType X)
     (h : ∀ x, f.toFun x ≠ ∞) (p : X) : ContinuousAt f.toFiniteFun p := by
@@ -254,7 +243,6 @@ Structural bridge: if `f.toFun` never takes the value `∞`, then
 -/
 theorem mdifferentiable_toFiniteFun_of_no_infty {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (h : ∀ x, f.toFun x ≠ ∞) :
     MDifferentiable (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ) f.toFiniteFun :=
   fun p => by
@@ -285,7 +273,6 @@ theorem mdifferentiable_toFiniteFun_of_no_infty {X : Type*} [TopologicalSpace X]
 /-- Constant meromorphic functions have no poles. -/
 theorem constant_poles {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (c : ℂ) : (constant (X := X) c).poles = 0 :=
   by
     ext p
@@ -294,7 +281,6 @@ theorem constant_poles {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
 /-- Non-zero constant meromorphic functions have no zeros. -/
 theorem constant_zeros {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (c : ℂ) (_hc : c ≠ 0) : (constant (X := X) c).zeros = 0 :=
   by
     ext p
@@ -303,7 +289,6 @@ theorem constant_zeros {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
 /-- Membership in the Riemann-Roch space `L(D)`: `f = 0` or `(f) + D ≥ 0`. -/
 def MemRiemannRochSpace {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (D : Divisor X) : Prop :=
   f = 0 ∨ Divisor.Effective (f.principal + D)
 
@@ -324,7 +309,7 @@ needed for pole cancellation.
 @[ext] structure MeromorphicGermAt
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] (p : X) where
+ (p : X) where
   germ : Filter.Germ (puncturedNhds p) ℂ
   meromorphic :
     ∃ f : X → ℂ, germ = (f : Filter.Germ (puncturedNhds p) ℂ) ∧ MeromorphicAtX f p
@@ -427,8 +412,7 @@ end MeromorphicGermAt
 /-- A global meromorphic object represented by its local germs at every point. -/
 abbrev MeromorphicGermFamily
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] : Type _ :=
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] : Type _ :=
   ∀ p : X, MeromorphicGermAt X p
 
 namespace MeromorphicGermFamily
@@ -505,8 +489,7 @@ construct a new value and prove the relevant compatibility fields.
 -/
 structure MeromorphicFunctionWithDivisors
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   toFunction : MeromorphicFunctionType X
   /--
 Local meromorphic germs.  These are the additive data; unlike
@@ -540,7 +523,6 @@ namespace MeromorphicFunctionWithDivisors
 
 variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 instance : CoeFun (MeromorphicFunctionWithDivisors X) (fun _ => X → OnePoint ℂ) where
   coe f := f.toFunction.toFun

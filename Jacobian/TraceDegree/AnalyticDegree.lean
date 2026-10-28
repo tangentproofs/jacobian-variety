@@ -2,7 +2,8 @@ import Jacobian.TraceDegree.PullbackBasis
 import Jacobian.TraceDegree.PushforwardBasis
 import Jacobian.HolomorphicForms.TraceSpec
 import Jacobian.TraceDegree.PiecewiseC1Instance
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Jacobian.Blueprint.Sec02.BranchedDegreeFromHolomorphic
 import Jacobian.ComplexTorus.Smul
 
@@ -40,12 +41,10 @@ open JacobianChallenge.HolomorphicForms
 variable {X : Type} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [StableChartAt ℂ X]
   [JacobianChallenge.HolomorphicForms.FiniteDimensionalHolomorphicOneForms ℂ X]
 variable {Y : Type} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [ConnectedSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [StableChartAt ℂ Y]
   [JacobianChallenge.HolomorphicForms.FiniteDimensionalHolomorphicOneForms ℂ Y]
 
 /--
@@ -134,8 +133,8 @@ theorem analyticDegree_eq_canonical_branchedDegree (f : X → Y)
   exact branchedDegree_eq_of_compatible hHol _ hbc hex.choose_spec hcompat
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
-  [IsManifold 𝓘(ℂ) ω X] [StableChartAt ℂ X]
-  [T2Space Y] [CompactSpace Y] [IsManifold 𝓘(ℂ) ω Y] [StableChartAt ℂ Y] in
+  [IsManifold 𝓘(ℂ) ω X]
+  [T2Space Y] [CompactSpace Y] [IsManifold 𝓘(ℂ) ω Y] in
 /--
 **Analytic degree identity, explicit form (legacy wrapper).** The
 equality between the analytic degree and a supplied branched-cover

@@ -2,7 +2,8 @@ import Jacobian.HolomorphicForms.HodgeDecomposition
 import Jacobian.HolomorphicForms.DeRhamSingular
 import Jacobian.Periods.IntegralOneCycleRank
 import Jacobian.HolomorphicForms.CompactRiemannSurface
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Top-level assembly: `2g = rank ℤ H₁(X, ℤ)` (Hodge / de Rham bridge)
@@ -37,7 +38,6 @@ theorem two_analyticGenus_eq_finrank_intH1
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     2 * analyticGenus ℂ X
       = Module.finrank ℤ (JacobianChallenge.Periods.IntegralOneCycle X) := by

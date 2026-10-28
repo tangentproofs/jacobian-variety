@@ -33,20 +33,17 @@ universe u v w
 variable {X : Type u} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 variable {Y : Type v} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [ConnectedSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [JacobianChallenge.Periods.StableChartAt ℂ Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 variable {Z : Type w} [TopologicalSpace Z] [T2Space Z] [CompactSpace Z]
   [ConnectedSpace Z] [ChartedSpace ℂ Z]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Z]
-  [JacobianChallenge.Periods.StableChartAt ℂ Z]
   [FiniteDimensionalHolomorphicOneForms ℂ Z]
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [StableChartAt ℂ X] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
 /-- Identity functoriality of the universe-`u` trace-coordinate map. -/
 theorem holomorphicTraceCoord_idU :
     holomorphicTraceCoordU (X := X) (Y := X) id contMDiff_id = LinearMap.id := by
@@ -57,9 +54,9 @@ theorem holomorphicTraceCoord_idU :
   simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearMap.id_coe, id_eq]
   rw [LinearEquiv.apply_symm_apply]
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [StableChartAt ℂ X]
-  [T2Space Y] [CompactSpace Y] [ConnectedSpace Y] [StableChartAt ℂ Y]
-  [T2Space Z] [CompactSpace Z] [ConnectedSpace Z] [StableChartAt ℂ Z] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
+  [T2Space Y] [CompactSpace Y] [ConnectedSpace Y]
+  [T2Space Z] [CompactSpace Z] [ConnectedSpace Z] in
 /-- Composition functoriality of the universe-`u` trace-coordinate map. -/
 theorem holomorphicTraceCoord_compU
     (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f)
@@ -72,7 +69,7 @@ theorem holomorphicTraceCoord_compU
   intro v
   simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply]
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [StableChartAt ℂ X] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
 /-- The universe-`u` trace-lift linear map along the identity is the identity. -/
 theorem pushforwardTraceLiftLinearMapU_id :
     pushforwardTraceLiftLinearMapU (X := X) (Y := X) id contMDiff_id = LinearMap.id := by
@@ -80,9 +77,9 @@ theorem pushforwardTraceLiftLinearMapU_id :
   rw [holomorphicTraceCoord_idU, LinearMap.toMatrix'_id, Matrix.transpose_one,
       Matrix.toLin'_one]
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [StableChartAt ℂ X]
-  [T2Space Y] [CompactSpace Y] [ConnectedSpace Y] [StableChartAt ℂ Y]
-  [T2Space Z] [CompactSpace Z] [ConnectedSpace Z] [StableChartAt ℂ Z] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
+  [T2Space Y] [CompactSpace Y] [ConnectedSpace Y]
+  [T2Space Z] [CompactSpace Z] [ConnectedSpace Z] in
 /-- The universe-`u` trace-lift linear map distributes over composition (covariantly). -/
 theorem pushforwardTraceLiftLinearMapU_comp
     (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f)

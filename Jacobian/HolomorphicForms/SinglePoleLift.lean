@@ -4,7 +4,8 @@ import Jacobian.HolomorphicForms.Meromorphic
 import Jacobian.HolomorphicForms.Divisor
 import Jacobian.HolomorphicForms.BranchedCover
 import Jacobian.HolomorphicForms.ChartedSpaceComplexPoints
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 namespace JacobianChallenge.HolomorphicForms
 
@@ -14,7 +15,6 @@ open Classical
 
 variable {X : Type _} [TopologicalSpace X] [T2Space X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /-!
 ### Honest prescribed-pole data versus scaffold maps
@@ -154,7 +154,7 @@ noncomputable def twoPointMeromorphicMap (Q1 Q2 : X) (_hne : Q1 ≠ Q2) :
       rw [if_pos heq]
   }
 
-omit [T2Space X] [JacobianChallenge.Periods.StableChartAt ℂ X] in
+omit [T2Space X] in
 /-- A two-pole map is non-constant. -/
 theorem twoPointMeromorphicMap_nonconstant [Nonempty X] (Q1 Q2 : X) (hne : Q1 ≠ Q2) :
     (twoPointMeromorphicMap Q1 Q2 hne).Nonconstant := by
@@ -168,7 +168,6 @@ theorem twoPointMeromorphicMap_nonconstant [Nonempty X] (Q1 Q2 : X) (hne : Q1 �
   subst h1
   simp [hr1, hr2] at hr
 
-omit [JacobianChallenge.Periods.StableChartAt ℂ X] in
 /--
 The two-point indicator scaffold genuinely fails `PoleModulusData`.
 

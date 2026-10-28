@@ -11,7 +11,8 @@ import Jacobian.TraceDegree.PiecewiseC1Def
 import Jacobian.TraceDegree.PiecewiseC1Instance
 import Mathlib.AlgebraicTopology.SingularHomology.Basic
 import Mathlib.Algebra.Category.ModuleCat.Basic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Naturality of `periodPairing` under form-pullback
@@ -40,15 +41,12 @@ open JacobianChallenge.TraceDegree
 variable {X : Type} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [StableChartAt ℂ X]
 variable {Y : Type} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [ConnectedSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [StableChartAt ℂ Y]
 variable {Z : Type} [TopologicalSpace Z] [T2Space Z] [CompactSpace Z]
   [ConnectedSpace Z] [ChartedSpace ℂ Z]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Z]
-  [StableChartAt ℂ Z]
 
 /--
 The covariant pushforward of integral 1-cycles induced by a smooth
@@ -71,7 +69,6 @@ noncomputable def cyclePushforward
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
   [T2Space Y] [CompactSpace Y] [ConnectedSpace Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
   [T2Space Z] [CompactSpace Z] [ConnectedSpace Z]
@@ -98,7 +95,7 @@ theorem cyclePushforward_comp
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] in
+ in
 /-- Identity-functoriality: `cyclePushforward id _` is the identity. -/
 theorem cyclePushforward_id :
     cyclePushforward (id : X → X) contMDiff_id = AddMonoidHom.id _ := by
@@ -280,7 +277,6 @@ theorem pathIntegralViaCover_trans_eq_add
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
   [T2Space Y] [CompactSpace Y] [ConnectedSpace Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y] in
 /--
@@ -614,7 +610,6 @@ theorem periodPairing_eq_zero_placeholder
     [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (γ : IntegralOneCycle X) :
     periodPairing E X γ = 0 := by
   ext; simp [periodPairing];
