@@ -27,7 +27,7 @@ says "CLASSICAL INPUT" and gives the reference.
 | ~~C1~~ | `compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier` | `HolomorphicForms/CompactRiemannSurface.lean` | `H⁰(X, Ω¹)` is finite-dimensional — **proved 2026-10-28** (`HolomorphicForms/Finiteness.lean`, Montel–Riesz) | Forster §14 |
 | C2 | `periodLattice_discrete` | `Periods/GenuinePeriodLattice.lean` | the period subgroup is discrete (spanning over `ℝ` is **proved**: `periodLattice_span`, 2026-10-28) | Riemann bilinear relations; Forster §21; Griffiths–Harris Ch. 2 §2 |
 | C3 | `pathIntegralFunctional_separates_pointsU` | `AbelJacobi/AnalyticOfCurveInjectiveU.lean` | Abel's theorem, two-point form: for `g > 0`, Abel–Jacobi integrals congruent mod periods ⇒ equal endpoints | Forster §20 (Abel's theorem) and §21 |
-| C4 | `exists_biholomorph_onePoint_of_genus_zero` | `HolomorphicForms/GenusZeroClassification.lean` | genus-0 uniformization (a compact surface homeomorphic to `S²` is biholomorphic to `ℂ̂`) | Forster §27 (uniformization of simply connected surfaces) |
+| ~~C4~~ | ~~`exists_biholomorph_onePoint_of_genus_zero`~~ | — | genus-0 uniformization — **no longer needed, removed 2026-10-28**: "homeomorphic to `S²` ⇒ genus 0" is proved without it (`Periods/PrimitiveCovering.lean`) | Forster §27 |
 | C5 | `exists_biholomorph_onePoint_of_analyticGenus_zero` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | analytic genus 0 ⇒ biholomorphic to `ℂ̂` (via Riemann–Roch) | Forster §16 (Riemann–Roch) |
 
 (C4/C5 pre-date the repair; they are listed so the table is complete. The genus-zero chain

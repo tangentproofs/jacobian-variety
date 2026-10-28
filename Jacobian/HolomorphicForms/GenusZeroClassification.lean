@@ -13,6 +13,7 @@ import Mathlib.Analysis.InnerProductSpace.EuclideanDist
 import Mathlib.Topology.Compactification.OnePoint.Sphere
 import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
+import Jacobian.Periods.PrimitiveCovering
 
 /-!
 # Genus-zero classification
@@ -799,33 +800,6 @@ structure GenusZeroSmoothUniformization
     ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
       (⊤ : WithTop ℕ∞) (uniformization.symm : OnePoint ℂ → X)
 
-/--
-Genus-zero uniformization theorem, stated as the single high-level analytic
-provider needed by this file: a compact connected Riemann surface
-homeomorphic to the Riemann sphere admits a biholomorphism to `OnePoint ℂ`.
-
-The given homeomorphism is only topological; the theorem constructs a possibly
-different homeomorphism that is complex-smooth in both directions.
-
-**CLASSICAL INPUT — uniqueness of the complex structure on the sphere** (a compact Riemann
-surface homeomorphic to `S²` is simply connected, hence biholomorphic to `ℂ̂` by
-uniformization). Reference: O. Forster, *Lectures on Riemann Surfaces*, §27
-(uniformization of simply connected Riemann surfaces). Named classical input (`sorry`);
-see `ref/axiom-audit.md` §0.1.
--/
-theorem exists_biholomorph_onePoint_of_genus_zero
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    ∃ (f : X ≃ₜ OnePoint ℂ),
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) f ∧
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) f.symm := by
-  -- Classical uniformization of a genus-zero compact Riemann surface.
-  sorry
-
 
 /--
 Degree-one meromorphic route data strong enough to give the smooth
@@ -1057,153 +1031,6 @@ noncomputable def holomorphicOneFormLinearEquivOfContMDiffHomeomorph
     convert pullbackFormsBundledLM_id.symm
     exact funext fun x => e.symm_apply_apply x
 
-/--
-Smooth uniformization assembly for the Riemann sphere: the normalized
-genus-zero uniformization theorem supplies the biholomorphic homeomorphism
-and its smooth inverse directly.
--/
-theorem genusZero_complexStructureUnique_smoothUniformization_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    Nonempty (GenusZeroSmoothUniformization X) := by
-  obtain ⟨f, hf, hf_symm⟩ := exists_biholomorph_onePoint_of_genus_zero X _e
-  exact ⟨
-    { uniformization := f
-      contMDiff_uniformization := hf
-      contMDiff_symm := hf_symm }⟩
-
-/--
-Holomorphic one-form transport assembly for the Riemann sphere: a smooth
-uniformization transports holomorphic one-forms to `OnePoint ℂ`.
--/
-theorem genusZero_complexStructureUnique_holomorphicOneForm_linearEquiv_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    Nonempty (HolomorphicOneForm ℂ X ≃ₗ[ℂ] HolomorphicOneForm ℂ (OnePoint ℂ)) := by
-  obtain ⟨smooth⟩ := genusZero_complexStructureUnique_smoothUniformization_nonempty X _e
-  exact ⟨holomorphicOneFormLinearEquivOfContMDiffHomeomorph
-    smooth.uniformization smooth.contMDiff_uniformization smooth.contMDiff_symm⟩
-
-/--
-Holomorphic one-form vanishing assembly for the Riemann sphere: transport to
-`OnePoint ℂ`, where holomorphic one-forms already vanish.
--/
-theorem genusZero_complexStructureUnique_holomorphicOneForms_subsingleton
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    Subsingleton (HolomorphicOneForm ℂ X) := by
-  obtain ⟨eForms⟩ :=
-    genusZero_complexStructureUnique_holomorphicOneForm_linearEquiv_nonempty X _e
-  haveI : Subsingleton (HolomorphicOneForm ℂ (OnePoint ℂ)) :=
-    holomorphicOneForm_onePointCx_subsingleton
-  exact eForms.toEquiv.subsingleton
-
-/--
-Analytic-genus-zero assembly for the Riemann sphere: holomorphic one-form
-vanishing implies the analytic genus is zero under the canonical
-finite-dimensionality instance.
--/
-theorem genusZero_complexStructureUnique_analyticGenus_eq_zero
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    letI : FiniteDimensionalHolomorphicOneForms ℂ X :=
-      compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier X
-    analyticGenus ℂ X = 0 := by
-  letI : FiniteDimensionalHolomorphicOneForms ℂ X :=
-    compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier X
-  letI : Subsingleton (HolomorphicOneForm ℂ X) :=
-    genusZero_complexStructureUnique_holomorphicOneForms_subsingleton X _e
-  exact analyticGenus_eq_zero_of_subsingleton
-
-/--
-Fixed-pole Riemann-Roch section assembly for the Riemann sphere: analytic
-genus zero supplies the algebraic RR section with prescribed pole at the point
-corresponding to `∞`.
--/
-theorem genusZero_complexStructureUnique_pointRRSection_at_infty_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (e : X ≃ₜ OnePoint ℂ) :
-    Nonempty (PointRiemannRochSection X (e.symm OnePoint.infty)) := by
-  letI : FiniteDimensionalHolomorphicOneForms ℂ X :=
-    compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier X
-  exact genusZero_pointRRSection_outside_constants_exists X
-    (e.symm OnePoint.infty)
-    (genusZero_complexStructureUnique_analyticGenus_eq_zero X e)
-
-/--
-Fixed-pole principal-part assembly for the Riemann sphere: a fixed-pole
-algebraic RR section supplies the simple-pole principal part via the existing
-local Laurent providers.
--/
-theorem genusZero_complexStructureUnique_simplePolePrincipalPart_at_infty_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (e : X ≃ₜ OnePoint ℂ) :
-    ∃ F : X → ℂ, HasComplexSimplePolePrincipalPart F (e.symm OnePoint.infty) := by
-  obtain ⟨s⟩ :=
-    genusZero_complexStructureUnique_pointRRSection_at_infty_nonempty X e
-  let rr : RiemannRochSectionAtPoint X (e.symm OnePoint.infty) :=
-    s.toRiemannRochSectionAtPoint
-  exact ⟨rr.finiteLift, rr.hasComplexSimplePolePrincipalPart⟩
-
-/--
-Simple-pole principal-part assembly for the Riemann sphere: the fixed pole over
-`∞` supplies the existential principal-part payload used by the single-pole
-analytic-data route.
--/
-theorem genusZero_complexStructureUnique_simplePolePrincipalPart_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (e : X ≃ₜ OnePoint ℂ) :
-    ∃ P : X, ∃ F : X → ℂ, HasComplexSimplePolePrincipalPart F P := by
-  obtain ⟨F, hF⟩ :=
-    genusZero_complexStructureUnique_simplePolePrincipalPart_at_infty_nonempty X e
-  exact ⟨e.symm OnePoint.infty, F, hF⟩
-
-/--
-Single-pole analytic-data assembly for the Riemann sphere: a finite
-simple-pole principal part canonically gives the existing project-wide
-`SinglePoleMeromorphicAnalyticData` payload at the same pole.
--/
-theorem genusZero_complexStructureUnique_singlePoleMeromorphicAnalyticData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    ∃ P : X, Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P) := by
-  obtain ⟨P, F, hF⟩ :=
-    genusZero_complexStructureUnique_simplePolePrincipalPart_nonempty X _e
-  let d : SimplePoleToSphereData X P :=
-    SimplePoleToSphereData.of_complexPrincipalPart F P hF
-  exact ⟨P, singlePoleAnalyticData_of_simplePoleToSphereData (X := X) P d⟩
-
-/--
-Single-pole meromorphic route assembly for the Riemann sphere: existing
-single-pole analytic data directly supplies the route payload.
--/
-theorem genusZero_complexStructureUnique_singlePoleMeromorphicRoute_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    Nonempty (GenusZeroSinglePoleMeromorphicRoute X) := by
-  obtain ⟨P, hdata⟩ :=
-    genusZero_complexStructureUnique_singlePoleMeromorphicAnalyticData_nonempty X _e
-  obtain ⟨data⟩ := hdata
-  exact ⟨data.toGenusZeroSinglePoleMeromorphicRoute⟩
-
 
 /--
 Target-membership frontier for local gluing coordinates: every normalized
@@ -1418,30 +1245,6 @@ theorem genusZeroGlobalGluing_contMDiff_invMap
       (⊤ : WithTop ℕ∞) (selector.uniformization.symm : OnePoint ℂ → X) := by
   exact selector.inverse_uniformization_contMDiff
 
-/--
-**Structural axiom (G1a, uniformization at genus 0).** A compact
-connected Riemann surface homeomorphic to `OnePoint ℂ` (= ℂℙ¹) admits a
-*biholomorphism* to `OnePoint ℂ` — i.e. there EXISTS a homeomorphism
-that is `ContMDiff` in both directions.
-
-Note: the *given* homeomorphism `_e` need not itself be smooth (e.g.
-complex conjugation on `OnePoint ℂ` is a self-homeomorphism that is
-not `ℂ`-smooth); we must therefore construct a different homeomorphism
-`f` that is smooth in both directions. This is the classical content of
-the uniformization theorem at genus 0: every compact simply-connected
-Riemann surface is biholomorphic to `ℂℙ¹`.
--/
-theorem exists_contMDiff_homeomorph_to_onePointCx
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (_e : X ≃ₜ OnePoint ℂ) :
-    ∃ (f : X ≃ₜ OnePoint ℂ),
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) f ∧
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) f.symm := by
-  exact exists_biholomorph_onePoint_of_genus_zero X _e
 
 /-
 Construct a `ℂ`-linear equivalence between holomorphic 1-form spaces
@@ -1479,15 +1282,23 @@ theorem holomorphicOneForm_linearEquiv_of_biholo_to_OnePointCx
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     Nonempty (HolomorphicOneForm ℂ X ≃ₗ[ℂ] HolomorphicOneForm ℂ (OnePoint ℂ)) := by
-  obtain ⟨f, hf, hf_symm⟩ := exists_contMDiff_homeomorph_to_onePointCx X _e
-  exact ⟨pullbackLinearEquivOfHomeomorph f hf hf_symm⟩
+  -- Both spaces are zero: `X` is homeomorphic to `S²`
+  -- (`Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere`).
+  haveI : Subsingleton (HolomorphicOneForm ℂ X) := ⟨fun a b => by
+    rw [JacobianChallenge.Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere a
+        (_e.trans onePointCx_homeomorph_sphere),
+      JacobianChallenge.Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere b
+        (_e.trans onePointCx_homeomorph_sphere)]⟩
+  haveI : Subsingleton (HolomorphicOneForm ℂ (OnePoint ℂ)) :=
+    holomorphicOneForm_onePointCx_subsingleton
+  exact ⟨LinearEquiv.ofSubsingleton _ _⟩
 
 
 /--
-**Structural axiom (G1).** A topological homeomorphism from a
-compact connected complex 1-manifold `X` to the standard 2-sphere
-upgrades to a `ℂ`-linear isomorphism between the spaces of holomorphic
-1-forms on `X` and `OnePoint ℂ`.
+A topological homeomorphism from a compact connected complex 1-manifold `X` to the standard
+2-sphere gives a `ℂ`-linear isomorphism between the spaces of holomorphic 1-forms on `X` and
+`OnePoint ℂ`: both are zero (`Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere`, via
+simple connectivity of the punctured sphere; no uniformization).
 
 Cross-ref: `tex/sections/04-branched-covers-genus-zero.tex`,
 `lem:holomorphic-one-form-equiv-of-homeo-sphere`.
@@ -1499,8 +1310,13 @@ theorem holomorphicOneForm_linearEquiv_of_homeoSphere_exists
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     Nonempty (HolomorphicOneForm ℂ X ≃ₗ[ℂ] HolomorphicOneForm ℂ (OnePoint ℂ)) := by
-  obtain ⟨e⟩ := exists_biholomorphism_to_OnePointCx_of_homeoSphere X h
-  exact holomorphicOneForm_linearEquiv_of_biholo_to_OnePointCx X e
+  obtain ⟨e⟩ := h
+  haveI : Subsingleton (HolomorphicOneForm ℂ X) := ⟨fun a b => by
+    rw [JacobianChallenge.Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere a e,
+      JacobianChallenge.Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere b e]⟩
+  haveI : Subsingleton (HolomorphicOneForm ℂ (OnePoint ℂ)) :=
+    holomorphicOneForm_onePointCx_subsingleton
+  exact ⟨LinearEquiv.ofSubsingleton _ _⟩
 
 /--
 **Opaque data obligation (uniformization-lite core).** A compact
@@ -1601,8 +1417,13 @@ theorem analyticGenus_eq_zero_of_homeomorphic_sphere
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     analyticGenus ℂ X = 0 := by
-  rw [analyticGenus_eq_of_homeomorphic_sphere_of_onePointCx X h]
-  exact analyticGenus_onePointCx_eq_zero
+  -- A surface homeomorphic to `S²` carries no nonzero holomorphic 1-form
+  -- (`Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere`: simple connectivity of the
+  -- punctured sphere + the covering space of primitives). No uniformization needed.
+  obtain ⟨e⟩ := h
+  refine analyticGenus_eq_zero_iff_subsingleton.mpr ⟨fun a b => ?_⟩
+  rw [JacobianChallenge.Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere a e,
+    JacobianChallenge.Periods.holomorphicOneForm_eq_zero_of_homeomorph_sphere b e]
 
 /-!
 #### Mathematical content
