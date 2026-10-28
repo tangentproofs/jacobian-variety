@@ -498,6 +498,21 @@ Reachable `sorry`s: **4** (C2–C5).
 
 ---
 
+## 2026-10-28 — C2 split; the spanning half proved
+
+* `Periods/RealPeriods.lean` (new, axiom-clean): `eq_zero_of_re_chainIntegral_eq` — a
+  holomorphic 1-form whose chain integrals have path-independent real part is zero.
+  `u = Re ∫_{P₀} ω` is continuous (locally `u(Q₀) + Re H`), attains its maximum; at a maximum
+  `exp ∘ H` has maximal modulus at the centre of a chart ball, so it is constant there
+  (Mathlib's maximum modulus principle); the set of maximum points is clopen, so `H' = 0`
+  everywhere and every chart coefficient vanishes.
+* `periodLattice_span` (proved): a real functional `φ` killing all periods is
+  `Re Σ c_j v_j`; `Σ c_j ω_j` then satisfies the lemma, so `c = 0`, `φ = 0`.
+* The classical input is narrowed to `periodLattice_discrete`;
+  `periodLattice_discrete_and_span` is now assembled from the two.
+
+---
+
 ## Commit hashes
 
 | time (EDT) | hash | summary |
