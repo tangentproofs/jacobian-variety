@@ -6,7 +6,7 @@ import Jacobian.TraceDegree
 import Jacobian.Analysis.PlaneCalculus
 import Jacobian.Analysis.WeylDbar
 import Jacobian.Analysis.Poincare
-import Jacobian.Surface.Stokes
+import Jacobian.Surface.L2
 
 /-!
 # Jacobian Challenge
