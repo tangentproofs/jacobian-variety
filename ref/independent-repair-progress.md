@@ -540,6 +540,29 @@ supported are removed. Blueprint: 3 edits in `04-…` (logged §32–34).
 
 Reachable `sorry`s: **3** — C2 (discreteness), C3 (Abel), C5 (analytic genus 0 ⇒ `ℂ̂`).
 
+### Analytic core: Hodge decomposition, and C5 proved (2026-10-28)
+
+* `Jacobian/Analysis/*` (plane calculus, Cauchy–Pompeiu / Cauchy transform, Weyl's lemma for
+  `∂̄`, Poincaré on squares, `L¹` tools) and `Jacobian/Surface/*` (atlas of discs, smooth
+  functions and partitions of unity, chart families of forms, integration and Stokes, the `L²`
+  space of `(0,1)`-forms) build up to `Surface/Hodge8.lean`:
+  `hodge_decomp` — every smooth `(0,1)`-form is `∂̄u + ν̄` with `ν` holomorphic (axiom-clean).
+* `Surface/Extend01.lean`: transplanting a `(0,1)`-form from one chart;
+  `dbar_solvable_of_forall_eq_zero` (genus zero ⇒ `∂̄` is solvable).
+* `Surface/GenusZero.lean`: `homeomorph_onePoint_of_forall_eq_zero`. With `χ` a cutoff at
+  `P`, solve `∂̄u = ∂̄χ/(w - z₀)`; `f = χ/(w - z₀) - u` has a single simple pole, its
+  extension to `ℂ̂` is holomorphic of degree one (`branchedCoverData_of_nonconstant_holomorphic`
+  + `degree_one_bijective`), hence a homeomorphism.
+* `genus_zero_homeomorph_onePointCx` re-proved from it; `genus_eq_zero_iff_homeo` is now
+  axiom-clean. The sorry'd C5 statement, gap 19
+  (`complexSimplePolePrincipalPart_of_biholomorph_onePoint`) and the 26 dead declarations
+  built on them (genus-zero Riemann–Roch section chain in `MeromorphicToBranchedCover`,
+  `RiemannRoch`, `GenusZeroClassification`; `Solution.genus_eq_zero_with_routeData_homeo`)
+  are deleted. Blueprint: §35–37.
+
+Reachable `sorry`s: **2** — C2 (discreteness), C3 (Abel). Engine total: 5 (+ three
+unreachable Hurewicz gaps).
+
 ---
 
 ## Commit hashes

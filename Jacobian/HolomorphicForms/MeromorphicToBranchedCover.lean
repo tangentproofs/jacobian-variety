@@ -2766,117 +2766,10 @@ theorem genusZero_pointRRSection_outside_constants_of_analyticData
     outside_constants := houtside }⟩
   exact le_of_eq horderP.symm
 
-/--
-Principal-part frontier for the explicit biholomorphic pullback route.
 
-The intended function `F` is the standard simple-pole coordinate on
-`OnePoint ℂ` with pole at `e P`, pulled back along the biholomorphism `e`.
-The theorem packages exactly the complex principal-part facts needed by
-`SimplePoleToSphereData.of_complexPrincipalPart`.
 
-GAP (`sorry`): true and elementary (pull back the standard coordinate along the
-biholomorphism), not yet formalized (gap 19).
--/
-theorem complexSimplePolePrincipalPart_of_biholomorph_onePoint
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (P : X) (e : X ≃ₜ OnePoint ℂ)
-    (he :
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) (e : X → OnePoint ℂ))
-    (he_symm :
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) (e.symm : OnePoint ℂ → X)) :
-    ∃ F : X → ℂ, HasComplexSimplePolePrincipalPart F P := by
-  -- Principal-part frontier: prove the pulled-back standard coordinate is
-  -- meromorphic everywhere, extends continuously to `∞` at `P`, has analytic
-  -- order one in the inversion chart, and diverges in norm along the punctured
-  -- neighborhood of `P`.
-  sorry
 
-/--
-Bridge from an explicit biholomorphic uniformization to a prescribed-pole
-single-pole meromorphic map.
 
-Mathematically, choose the standard simple-pole coordinate on `OnePoint ℂ`
-with pole at the image of `P`, pull it back along the biholomorphism `e`, and
-package the resulting principal-part data as an honest single-pole
-meromorphic map.
--/
-theorem singlePoleAnalyticData_of_biholomorph_onePoint
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    (P : X) (e : X ≃ₜ OnePoint ℂ)
-    (he :
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) (e : X → OnePoint ℂ))
-    (he_symm :
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) (e.symm : OnePoint ℂ → X)) :
-    Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P) := by
-  obtain ⟨F, hF⟩ :=
-    complexSimplePolePrincipalPart_of_biholomorph_onePoint X P e he he_symm
-  exact singlePoleAnalyticData_of_simplePoleToSphereData P
-    (SimplePoleToSphereData.of_complexPrincipalPart F P hF)
-
-/--
-Genus-zero analytic uniformization provider in the form needed by the
-prescribed-pole meromorphic-map route.
-
-This is separate from `singlePoleAnalyticData_of_biholomorph_onePoint`: it
-constructs the biholomorphism from the analytic-genus-zero hypothesis, while
-the bridge below consumes explicit biholomorphic data.
-
-**CLASSICAL INPUT — genus zero ⇒ Riemann sphere** (by Riemann–Roch a genus-0 surface
-carries a meromorphic function with a single simple pole, which is a biholomorphism to
-`ℂ̂`). Reference: O. Forster, *Lectures on Riemann Surfaces*, §16 (Riemann–Roch and its
-consequences). Named classical input (`sorry`); see `ref/axiom-audit.md` §0.1.
--/
-theorem exists_biholomorph_onePoint_of_analyticGenus_zero
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (_h : analyticGenus ℂ X = 0) :
-    ∃ (e : X ≃ₜ OnePoint ℂ),
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) (e : X → OnePoint ℂ) ∧
-      ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
-        (⊤ : WithTop ℕ∞) (e.symm : OnePoint ℂ → X) := by
-  -- Genus-zero uniformization frontier: construct a biholomorphism
-  -- `X ≃ OnePoint ℂ` from `analyticGenus ℂ X = 0`.
-  sorry
-
-/--
-Genus-zero compact connected Riemann surfaces admit an honest analytic
-single-pole meromorphic-map package at any prescribed point.
-
-The proof deliberately routes through the explicit biholomorphic
-uniformization frontier and not through
-`genusZero_pointRRSection_outside_constants_exists` or its downstream
-fixed-pole RR-section chain, which depends on this theorem.
--/
-theorem genusZero_singlePoleMeromorphicAnalyticData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P) := by
-  obtain ⟨e, he, he_symm⟩ := exists_biholomorph_onePoint_of_analyticGenus_zero X h
-  exact singlePoleAnalyticData_of_biholomorph_onePoint X P e he he_symm
-
-theorem genusZero_pointRRSection_outside_constants_exists
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (PointRiemannRochSection X P) :=
-  genusZero_pointRRSection_outside_constants_of_analyticData X P h
-    (genusZero_singlePoleMeromorphicAnalyticData_nonempty X P h)
 
 /--
 **Canonical explicit-input form of L2779 (granular).**
@@ -2948,90 +2841,17 @@ theorem genusZero_pointRRSection_outside_constants_exists_with_analyticData
     X P h f han.meromorphic_getD hpole (han.simple_pole_order_one P hpole) hmod
 
 
-theorem genusZero_fixedPole_rrSection_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (RiemannRochSectionAtPoint X P) := by
-  obtain ⟨s⟩ := genusZero_pointRRSection_outside_constants_exists X P h
-  exact ⟨s.toRiemannRochSectionAtPoint⟩
 
 
-theorem genusZero_fixedPole_simplePoleRRSection_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (SimplePoleRRSection X P) := by
-  obtain ⟨s⟩ := genusZero_fixedPole_rrSection_nonempty X P h
-  exact ⟨s.toSimplePoleRRSection⟩
 
 
-theorem genusZero_fixedPole_analyticRRWitness_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (GenusZeroFixedPoleAnalyticRRWitness X P) := by
-  obtain ⟨s⟩ := genusZero_fixedPole_simplePoleRRSection_nonempty X P h
-  exact ⟨s.toGenusZeroFixedPoleAnalyticRRWitness⟩
-
-/--
-* a meromorphic-map-to-sphere `f` with `f.poles = Divisor.point P`;
-* the per-point chart-local `f.AnalyticData` (meromorphicity of the
-  canonical finite lift at every point, global continuity, and
-  order-one at the simple pole);
-* the modulus-divergence `f.PoleModulusData`.
--/
-theorem genusZero_fixedPole_rr_analyticData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    ∃ f : MeromorphicMapToSphere X,
-      f.poles = Divisor.point P ∧ f.AnalyticData ∧ f.PoleModulusData := by
-  obtain ⟨w⟩ := genusZero_fixedPole_analyticRRWitness_nonempty X P h
-  exact ⟨w.map, w.poleDivisor_eq, w.analyticData, w.poleModulusData⟩
 
 
-theorem genusZero_fixedPole_complexPrincipalPart_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    ∃ F : X → ℂ, HasComplexSimplePolePrincipalPart F P := by
-  obtain ⟨f, hpole, han, hmod⟩ :=
-    genusZero_fixedPole_rr_analyticData_nonempty X P h
-  exact ⟨fun x => (f.toMap x).getD 0,
-    complexPrincipalPart_of_meromorphicMap_analyticData P f hpole han hmod⟩
 
 
-theorem genusZero_fixedPole_simplePoleToSphereData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (SimplePoleToSphereData X P) := by
-  obtain ⟨F, hF⟩ := genusZero_fixedPole_complexPrincipalPart_nonempty X P h
-  exact ⟨SimplePoleToSphereData.of_complexPrincipalPart F P hF⟩
 
 
-theorem genusZero_fixedPole_analyticRouteData_nonempty
-    (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
-    [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [FiniteDimensionalHolomorphicOneForms ℂ X]
-    (P : X) (h : analyticGenus ℂ X = 0) :
-    Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P) := by
-  obtain ⟨d⟩ := genusZero_fixedPole_simplePoleToSphereData_nonempty X P h
-  exact singlePoleAnalyticData_of_simplePoleToSphereData (X := X) P d
+
 
 
 end JacobianChallenge.HolomorphicForms

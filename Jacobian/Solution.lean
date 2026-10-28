@@ -44,19 +44,6 @@ noncomputable def genus (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpa
     [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X] : ℕ :=
   Module.finrank ℂ (JacobianChallenge.HolomorphicForms.HolomorphicOneForm ℂ X)
 
-lemma genus_eq_zero_with_routeData_homeo {X : Type*} [TopologicalSpace X] [T2Space X]
-    [CompactSpace X] [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X]
-    (h : genus X = 0)
-    (hmod :
-      (JacobianChallenge.HolomorphicForms.simplePoleMeromorphicMapOfGenusZero X
-        (by simpa [genus] using h)).meromorphicMap.PoleModulusData)
-    (hbranch :
-      (JacobianChallenge.HolomorphicForms.simplePoleMeromorphicMapOfGenusZero X
-        (by simpa [genus] using h)).meromorphicMap.BranchedCoverDataOfPoleDegree) :
-    Nonempty (X ≃ₜ (Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :=
-  JacobianChallenge.HolomorphicForms.homeomorphic_sphere_of_analyticGenus_eq_zero_with_routeData X
-    (by simpa [genus] using h) hmod hbranch
-
 /-- Genus zero classification. -/
 lemma genus_eq_zero_iff_homeo {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X] [ConnectedSpace X]
     [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X] :

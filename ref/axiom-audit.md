@@ -28,10 +28,10 @@ says "CLASSICAL INPUT" and gives the reference.
 | C2 | `periodLattice_discrete` | `Periods/GenuinePeriodLattice.lean` | the period subgroup is discrete (spanning over `ℝ` is **proved**: `periodLattice_span`, 2026-10-28) | Riemann bilinear relations; Forster §21; Griffiths–Harris Ch. 2 §2 |
 | C3 | `pathIntegralFunctional_separates_pointsU` | `AbelJacobi/AnalyticOfCurveInjectiveU.lean` | Abel's theorem, two-point form: for `g > 0`, Abel–Jacobi integrals congruent mod periods ⇒ equal endpoints | Forster §20 (Abel's theorem) and §21 |
 | ~~C4~~ | ~~`exists_biholomorph_onePoint_of_genus_zero`~~ | — | genus-0 uniformization — **no longer needed, removed 2026-10-28**: "homeomorphic to `S²` ⇒ genus 0" is proved without it (`Periods/PrimitiveCovering.lean`) | Forster §27 |
-| C5 | `exists_biholomorph_onePoint_of_analyticGenus_zero` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | analytic genus 0 ⇒ biholomorphic to `ℂ̂` (via Riemann–Roch) | Forster §16 (Riemann–Roch) |
+| ~~C5~~ | ~~`exists_biholomorph_onePoint_of_analyticGenus_zero`~~ | `Surface/GenusZero.lean` | analytic genus 0 ⇒ homeomorphic to `ℂ̂` — **proved 2026-10-28** (`homeomorph_onePoint_of_forall_eq_zero`: Hodge decomposition ⇒ a function with one simple pole ⇒ degree-one map) | Forster §16 |
 
-(C4/C5 pre-date the repair; they are listed so the table is complete. The genus-zero chain
-`genus_eq_zero_iff_homeo` rests on them.)
+(C4/C5 pre-date the repair; they are listed so the table is complete. `genus_eq_zero_iff_homeo`
+is now axiom-clean.)
 
 ### §0.2 Labelled gaps (true statements, proof not yet formalized)
 
@@ -43,12 +43,13 @@ replaced `C¹` paths). The remaining gaps are **unreachable** from the public AP
 
 | declaration | file | status |
 |---|---|---|
-| `complexSimplePolePrincipalPart_of_biholomorph_onePoint` | `HolomorphicForms/MeromorphicToBranchedCover.lean` | pre-existing (gap 19); off the public path since the genus-zero route uses C5 directly |
 | `polygon4g_quotient_path_finite_lift_subdivision`, `polygon4g_partial_side_arc_homologous_to_edge_chain`, `edgeChain_sum_singular_boundary_scalar_coefficient_zero` | `Periods/Hurewicz.lean` | pre-existing gaps 11–13; true, hard, unreachable |
 
-Engine `sorry` declarations: **9** (C1–C5 + the four above). Reachable from the public API:
-**5** (C1–C5). Per public declaration: `genus`, `ContMDiff.degree` clean; `ofCurve_inj` rests
-on C1–C3; `genus_eq_zero_iff_homeo` on C1, C4, C5; everything else on C1, C2.
+Engine `sorry` declarations: **5** (C2, C3 + the three Hurewicz gaps above). Reachable from
+the public API: **2** (C2, C3). Per public declaration: `genus`, `ContMDiff.degree`,
+`genus_eq_zero_iff_homeo` clean; `ofCurve_inj` rests on C2, C3; everything else on C2.
+(The dead genus-zero Riemann–Roch section chain that sat on the old C5 `sorry`, 28
+declarations including gap 19, was deleted 2026-10-28.)
 
 ### §0.3 Dropped in the cleanup pass (2026-10-28)
 

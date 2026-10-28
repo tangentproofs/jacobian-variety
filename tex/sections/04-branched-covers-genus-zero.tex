@@ -929,27 +929,28 @@ data of the classical proof is then \emph{obtained from} this biholomorphism,
 not used to construct it.
 \end{proof}
 
-\begin{lemma}[Analytic genus zero gives a sphere biholomorphism (open)]
+\begin{lemma}[Analytic genus zero gives a sphere homeomorphism]
 \label{lem:exists-biholomorph-one-point-of-analytic-genus-zero}
-\uses{thm:exists-biholomorph-one-point-of-genus-zero}
 A compact connected Riemann surface with \(g_{\mathrm{an}}(X)=0\) admits a
-biholomorphism \(X\simeq\code{OnePoint}\,\C\). Packages
-Theorem~\ref{thm:exists-biholomorph-one-point-of-genus-zero} into the
-\(g_{\mathrm{an}}=0\) hypothesis the meromorphic bridge consumes. Open
-obligation (\code{sorry}) in the Lean development.
+homeomorphism \(X\simeq\code{OnePoint}\,\C\), realized by a holomorphic map of
+degree one.
 Tracking: \ghissue{233}.
-\lean{JacobianChallenge.HolomorphicForms.exists_biholomorph_onePoint_of_analyticGenus_zero}
+\lean{JacobianChallenge.Surface.homeomorph_onePoint_of_forall_eq_zero}
+\leanok
 \end{lemma}
-
-\begin{lemma}[Simple-pole principal part from a sphere biholomorphism (open)]
-\label{lem:complex-simple-pole-principal-part-of-biholomorph-one-point}
-\uses{thm:exists-biholomorph-one-point-of-genus-zero}
-Pulling the standard simple-pole coordinate on \(\code{OnePoint}\,\C\) back along
-the biholomorphism yields a map with a simple-pole principal part at the chosen
-point. Open obligation (\code{sorry}).
-Tracking: \ghissue{234}.
-\lean{JacobianChallenge.HolomorphicForms.complexSimplePolePrincipalPart_of_biholomorph_onePoint}
-\end{lemma}
+\begin{proof}
+\leanok
+Fix \(P\in X\) and a chart \(z\) at \(P\) with \(z(P)=z_0\); let \(\chi\) be a
+cutoff equal to \(1\) near \(z_0\). The \((0,1)\)-form
+\(\psi=\bar\partial\chi/(z-z_0)\) is smooth and compactly supported in the chart.
+Since every holomorphic 1-form vanishes, the Hodge decomposition makes \(\psi\)
+\(\bar\partial\)-exact: \(\psi=\bar\partial u\). Then \(f=\chi/(z-z_0)-u\) is
+holomorphic off \(P\) with a simple pole at \(P\), so its extension
+\(X\to\code{OnePoint}\,\C\) is holomorphic, nonconstant, and takes the value
+\(\infty\) only at \(P\), with multiplicity one. Its degree is therefore one, so
+it is bijective, and a continuous bijection from a compact space to a Hausdorff
+space is a homeomorphism.
+\end{proof}
 
 \begin{lemma}[Pullback of holomorphic 1-forms via biholomorphism]
 \label{lem:holomorphic-one-form-pullback-via-biholo}
