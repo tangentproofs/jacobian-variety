@@ -1,4 +1,4 @@
-import Jacobian.Periods.GenuinePeriodLattice
+import Jacobian.Periods.GenuinePeriodLatticeDiscrete
 
 /-!
 # Universe-polymorphic period `FullComplexLattice`
