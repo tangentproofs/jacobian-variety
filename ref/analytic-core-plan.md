@@ -5,6 +5,11 @@ form), C5 (analytic genus 0 ⇒ `ℂ̂`). All three need an existence theorem fo
 `∂̄`-equation on a compact Riemann surface. The route chosen is the L² / Hodge route; it
 uses only Mathlib's Hilbert-space projection, convolution and change-of-variables API.
 
+**Status (2026-10-28): done.** DECOMP is `hodge_decomp` (`Surface/Hodge8.lean`); C5 is
+`Surface/GenusZero.lean`, C3 `Surface/Abel.lean`, C2 `Surface/PeriodDiscrete.lean`. For C2 the
+route below (realizing integer functionals by closed forms) was replaced by a monodromy
+argument that needs no de Rham input: see `ref/independent-repair-progress.md`.
+
 ## The central theorem (DECOMP)
 
 Every smooth `(0,1)`-form `θ` on a compact connected Riemann surface is `∂̄u + ν̄`, with `u`

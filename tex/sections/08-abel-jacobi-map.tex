@@ -249,7 +249,7 @@ principal divisor is \((Q_1) - (Q_2)\). In particular, the pole
 divisor of \(f\) equals the single point \((Q_2)\).
 Not formalized: the former Lean statement was built on placeholder
 (\code{Unit}-witness) Abel data and has been removed; Abel's theorem
-enters as the classical input \code{pathIntegralFunctional\_separates\_pointsU}.
+enters as \code{pathIntegralFunctional\_separates\_pointsU}, which is proved.
 \end{theorem}
 
 \begin{layman}
@@ -479,27 +479,41 @@ Theorem~\ref{thm:riemann-hurwitz-deg1} forces \(g(X)=0\), contradicting
 the hypothesis.
 \end{proof}
 
-\begin{lemma}[Abel--Jacobi injectivity for positive genus (open)]
+\begin{lemma}[Abel--Jacobi injectivity for positive genus]
 \label{lem:analytic-of-curve-injective}
 \uses{thm:abel-point-separation}
 For \(g(X)>0\) the Abel--Jacobi map \(\AJ_P\) is injective. Follows from the
 point-separation theorem; matches the frozen public \code{ofCurve\_inj}
-signature. The point-separation theorem stands as the named classical input
-\code{pathIntegralFunctional\_separates\_pointsU} (Abel's theorem, two-point form).
+signature. The point-separation theorem is
+\code{pathIntegralFunctional\_separates\_pointsU} (Abel's theorem, two-point form), proved.
 Consumed by the challenge API (\ref{thm:challenge-api}).
 Tracking: \ghissue{224}.
 \lean{JacobianChallenge.AbelJacobi.analyticOfCurve_injectiveU}
+\leanok
 \end{lemma}
 
-\begin{lemma}[Universe-polymorphic point separation (open)]
+\begin{lemma}[Universe-polymorphic point separation]
 \label{lem:path-integral-functional-separates-points-u}
 \uses{thm:abel-point-separation}
 Universe-\(u\) companion of the point-separation theorem, needed by the public
-\code{ofCurve\_inj} for \(X:\mathrm{Type}\,u\). Open obligation
-(\code{sorry}). Consumed by the challenge API (\ref{thm:challenge-api}).
+\code{ofCurve\_inj} for \(X:\mathrm{Type}\,u\). Consumed by the challenge API
+(\ref{thm:challenge-api}).
 Tracking: \ghissue{225}.
 \lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_pointsU}
+\leanok
 \end{lemma}
+\begin{proof}
+\leanok
+If \(Q_1\ne Q_2\), the hypothesis gives a formal chain of chart segments from \(Q_1\) to
+\(Q_2\) whose integral against every holomorphic 1-form vanishes. For a segment from \(a\)
+to \(b\) let \(E=\exp(\chi\,\mathrm{Log}\tfrac{z-b}{z-a})\), with \(\chi\) a cutoff equal
+to \(1\) near the segment; \(\bar\partial E/E\) is a smooth \((0,1)\)-form \(\theta\) with
+\(\int_X\theta\wedge\omega=\pi\int_{[a,b]}\omega\) (Cauchy--Pompeiu along the segment). The
+form \(\theta\) of the whole chain is therefore orthogonal to all holomorphic forms, hence
+\(\theta=\bar\partial u\) by the Hodge decomposition, and \(f=e^{-u}\prod E^{\pm1}\) is a
+meromorphic function with a single simple pole at \(Q_1\). It is a degree-one map
+\(X\to\widehat{\C}\), so \(X\) is a sphere and \(g=0\), a contradiction.
+\end{proof}
 
 \begin{theorem}[Classical input: Abel's theorem (umbrella)]
 \label{input:abel-theorem}

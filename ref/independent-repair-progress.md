@@ -563,6 +563,34 @@ Reachable `sorry`s: **3** — C2 (discreteness), C3 (Abel), C5 (analytic genus 0
 Reachable `sorry`s: **2** — C2 (discreteness), C3 (Abel). Engine total: 5 (+ three
 unreachable Hurewicz gaps).
 
+### C3 and C2 proved; strict comparator passes (2026-10-28)
+
+* `Analysis/SegmentCP.lean`: Cauchy–Pompeiu along a segment,
+  `∫ ∂̄φ · Log((z-b)/(z-a)) = π (b-a) ∫₀¹ φ(a + t(b-a)) dt`.
+* `Surface/SegmentFn.lean`: for a chart segment, `E = exp(χ Log((z-b)/(z-a)))` — smooth and
+  non-vanishing off the end points, `∂̄E = E θ_s`, simple zero/pole at the ends.
+* `Surface/Pairing.lean`: `∫ θ_s ∧ ω = π ∫_s ω`; definiteness of the `L²` pairing on
+  holomorphic forms; `dbar_solvable_of_orthogonal`.
+* `Surface/FormalChain.lean`: products over formal chains, local form at the vertices.
+* `Surface/GenusZero.lean` refactored around `SimplePole.homeomorph` (a function with a single
+  simple pole makes `X` a sphere).
+* `Surface/Abel.lean` (**C3**): a formal chain from `Q₁` to `Q₂` with zero periods yields
+  such a function; `pathIntegralFunctional_separates_pointsU` is proved.
+* `Surface/PeriodDiscrete.lean` (**C2**): for a closed chain `Γ`, `F_Γ e^{-u}` is smooth and
+  nowhere zero with `d log = ν̄ - ν + β`; monodromy along chains forces `β = 0` and
+  `Im ∫_δ ν_Γ ∈ π ℤ`. With `ν_Γ` determined by the periods of `Γ` (the `L²` Gram map is a
+  real-linear isomorphism), `B(x, y) = Im ⟨y, ν_x⟩` is non-degenerate and `π ℤ`-valued on
+  `Λ × Λ`, so `Λ` is discrete. The bundled lattice moves to
+  `Periods/GenuinePeriodLatticeDiscrete.lean`.
+* Integrals of densities are unchanged by adjoining discs to an atlas
+  (`DiscAtlas.integral_extend`), so one Gram form serves all chains.
+* Blueprint: §38–43 in `ref/plain-english-changes.md`.
+
+**Result.** Reachable `sorry`s: **0**. `#print axioms` on every public declaration:
+`[propext, Classical.choice, Quot.sound]`. Official comparator, strict config
+`comparator/jacobian.json`: "Lean default kernel accepts the solution. Your solution is
+okay!". Remaining `sorry`s in the tree: the three unreachable Hurewicz gaps (polygonal model).
+
 ---
 
 ## Commit hashes

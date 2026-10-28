@@ -6,14 +6,14 @@
 
 * Custom axioms (`axiom` declarations) in `Jacobian/`: **0**. `comparator/jacobian.json`
   permits only `propext`, `Quot.sound`, `Classical.choice`.
-* `lake build Jacobian` green. Engine `sorry` declarations: see the tables below (every one
-  is either a **named classical input** or a **labelled gap**; no `axiom`, no typeclass, no
-  hidden binder stands in for any of them).
+* `lake build Jacobian` green. **No public declaration depends on a `sorry`.** The only
+  `sorry`s left in the tree are three labelled gaps in `Periods/Hurewicz.lean`, unreachable
+  from the public API (§0.2).
 * Comparator (official, pinned at `leanprover/comparator@3afea23`, the last revision on
-  `v4.31.0-rc1`): **smoketest passes** ("Your solution is okay!"); **strict fails** with
-  `Illegal axiom detected: 'sorryAx'`, from the classical inputs C1–C5 only.
-* `#print axioms` on the public API: `genus` and `ContMDiff.degree` are **axiom-clean**; every
-  other public declaration reaches `sorryAx` only through the classical inputs C1–C5.
+  `v4.31.0-rc1`): the **strict** configuration `comparator/jacobian.json` (allowed axioms
+  `propext`, `Quot.sound`, `Classical.choice`) **passes**: "Lean default kernel accepts the
+  solution. Your solution is okay!" (2026-10-28).
+* `#print axioms` on every public declaration: `[propext, Classical.choice, Quot.sound]`.
 * `StableChartAt` is deleted. The former axiom `localPullbackAt_holomorphic` (§1 below) is
   retired to `Attic/StableChartRetired/` with the rest of the eval-at-`1` chain.
 
@@ -25,13 +25,14 @@ says "CLASSICAL INPUT" and gives the reference.
 | # | declaration | file | statement | reference |
 |---|---|---|---|---|
 | ~~C1~~ | `compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier` | `HolomorphicForms/CompactRiemannSurface.lean` | `H⁰(X, Ω¹)` is finite-dimensional — **proved 2026-10-28** (`HolomorphicForms/Finiteness.lean`, Montel–Riesz) | Forster §14 |
-| C2 | `periodLattice_discrete` | `Periods/GenuinePeriodLattice.lean` | the period subgroup is discrete (spanning over `ℝ` is **proved**: `periodLattice_span`, 2026-10-28) | Riemann bilinear relations; Forster §21; Griffiths–Harris Ch. 2 §2 |
-| C3 | `pathIntegralFunctional_separates_pointsU` | `AbelJacobi/AnalyticOfCurveInjectiveU.lean` | Abel's theorem, two-point form: for `g > 0`, Abel–Jacobi integrals congruent mod periods ⇒ equal endpoints | Forster §20 (Abel's theorem) and §21 |
+| ~~C2~~ | `periodLattice_discrete` | `Periods/GenuinePeriodLatticeDiscrete.lean` | the period subgroup is discrete — **proved 2026-10-28** (`Surface/PeriodDiscrete.lean`: a non-degenerate real bilinear form, `π ℤ`-valued on the lattice; spanning: `periodLattice_span`) | Forster §21 |
+| ~~C3~~ | `pathIntegralFunctional_separates_pointsU` | `AbelJacobi/AnalyticOfCurveInjectiveU.lean` | Abel's theorem, two-point form — **proved 2026-10-28** (`Surface/Abel.lean`: a null chain gives a function with one simple pole, hence a sphere) | Forster §20 |
 | ~~C4~~ | ~~`exists_biholomorph_onePoint_of_genus_zero`~~ | — | genus-0 uniformization — **no longer needed, removed 2026-10-28**: "homeomorphic to `S²` ⇒ genus 0" is proved without it (`Periods/PrimitiveCovering.lean`) | Forster §27 |
 | ~~C5~~ | ~~`exists_biholomorph_onePoint_of_analyticGenus_zero`~~ | `Surface/GenusZero.lean` | analytic genus 0 ⇒ homeomorphic to `ℂ̂` — **proved 2026-10-28** (`homeomorph_onePoint_of_forall_eq_zero`: Hodge decomposition ⇒ a function with one simple pole ⇒ degree-one map) | Forster §16 |
 
-(C4/C5 pre-date the repair; they are listed so the table is complete. `genus_eq_zero_iff_homeo`
-is now axiom-clean.)
+All five classical inputs are discharged. The analytic core used for C2, C3, C5 is the
+`L²` Hodge decomposition of `(0,1)`-forms (`Surface/Hodge8.lean`, `hodge_decomp`), built
+from Weyl's lemma for `∂̄`, the Cauchy transform and a chart Poincaré inequality.
 
 ### §0.2 Labelled gaps (true statements, proof not yet formalized)
 
@@ -45,9 +46,8 @@ replaced `C¹` paths). The remaining gaps are **unreachable** from the public AP
 |---|---|---|
 | `polygon4g_quotient_path_finite_lift_subdivision`, `polygon4g_partial_side_arc_homologous_to_edge_chain`, `edgeChain_sum_singular_boundary_scalar_coefficient_zero` | `Periods/Hurewicz.lean` | pre-existing gaps 11–13; true, hard, unreachable |
 
-Engine `sorry` declarations: **5** (C2, C3 + the three Hurewicz gaps above). Reachable from
-the public API: **2** (C2, C3). Per public declaration: `genus`, `ContMDiff.degree`,
-`genus_eq_zero_iff_homeo` clean; `ofCurve_inj` rests on C2, C3; everything else on C2.
+Engine `sorry` declarations: **3** (the Hurewicz gaps above). Reachable from the public
+API: **0**. Every public declaration is axiom-clean.
 (The dead genus-zero Riemann–Roch section chain that sat on the old C5 `sorry`, 28
 declarations including gap 19, was deleted 2026-10-28.)
 
