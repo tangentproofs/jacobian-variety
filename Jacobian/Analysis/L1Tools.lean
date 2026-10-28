@@ -3,6 +3,9 @@ import Mathlib.MeasureTheory.Function.L1Space.AEEqFun
 import Mathlib.MeasureTheory.Integral.Bochner.L1
 import Mathlib.MeasureTheory.Measure.OpenPos
 import Mathlib.Topology.Bases
+import Mathlib.MeasureTheory.Function.Jacobian
+import Mathlib.RingTheory.Complex
+import Mathlib.RingTheory.Norm.Transitivity
 
 /-!
 # `L¹` limits on sets of the plane, and gluing local representatives
@@ -105,6 +108,28 @@ theorem L1Conv.mono {f : ℕ → ℂ → ℂ} {F : ℂ → ℂ} {K K' : Set ℂ}
   refine squeeze_zero (fun _ => integral_nonneg fun _ => norm_nonneg _) (fun n => ?_) h
   exact setIntegral_mono_set ((hfi n).sub hF).norm (ae_of_all _ fun _ => norm_nonneg _)
     (Eventually.of_forall hK')
+
+theorem L1Conv.congr {f g : ℕ → ℂ → ℂ} {F G : ℂ → ℂ} {K : Set ℂ} (hK : MeasurableSet K)
+    (hfg : ∀ n, ∀ z ∈ K, f n z = g n z) (hFG : ∀ᵐ z, z ∈ K → F z = G z) (h : L1Conv f F K) :
+    L1Conv g G K := by
+  refine Filter.Tendsto.congr (fun n => ?_) h
+  refine integral_congr_ae ?_
+  rw [EventuallyEq, ae_restrict_iff' hK]
+  filter_upwards [hFG] with z hz hzK
+  rw [hfg n z hzK, hz hzK]
+
+theorem L1Conv.mul_bounded {f : ℕ → ℂ → ℂ} {F : ℂ → ℂ} {K : Set ℂ} (h : L1Conv f F K)
+    {m : ℂ → ℂ} {C : ℝ} (hm : ∀ z ∈ K, ‖m z‖ ≤ C) (hK : MeasurableSet K)
+    (hint : ∀ n, IntegrableOn (fun z => ‖f n z - F z‖) K) :
+    L1Conv (fun n z => m z * f n z) (fun z => m z * F z) K := by
+  refine squeeze_zero (fun _ => integral_nonneg fun _ => norm_nonneg _) (fun n => ?_)
+    (by simpa using h.const_mul C)
+  rw [← integral_const_mul]
+  refine integral_mono_of_nonneg (ae_of_all _ fun _ => norm_nonneg _) ((hint n).const_mul C) ?_
+  rw [EventuallyLE, ae_restrict_iff' hK]
+  refine ae_of_all _ fun z hz => ?_
+  rw [← mul_sub, norm_mul]
+  exact mul_le_mul_of_nonneg_right (hm z hz) (norm_nonneg _)
 
 /-- **Gluing** local continuous representatives over an open set. -/
 theorem exists_glue {O : Set ℂ} (hO : IsOpen O) {U : ℂ → ℂ} {Q : (ℂ → ℂ) → ℂ → ℝ → Prop}
