@@ -1,6 +1,7 @@
 import Jacobian.AbelJacobi.WitnessMk
 import Jacobian.AnalyticJacobian.MkPeriodPairingCycle
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # `witnessAbelJacobi` is invariant under `periodPairing` perturbations
@@ -22,7 +23,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 Adding a `periodPairing` value inside the witness's `mk` argument

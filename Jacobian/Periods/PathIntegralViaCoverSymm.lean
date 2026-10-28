@@ -68,5 +68,6 @@ theorem pathIntegralViaCoverWith_symm
     (congrArg γ e1) (congrArg γ e2) ?_ _ _
   -- HEq path equality
   rw [e1, e2]
+  rfl
 
 end JacobianChallenge.Periods

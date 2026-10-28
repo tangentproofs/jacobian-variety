@@ -1,5 +1,6 @@
 import Jacobian.AnalyticJacobian.MkPeriodPairing
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # `mk` is invariant under integer-scaled `periodPairing` adjustments
@@ -18,7 +19,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /-- `mk` of a natural-scaled `periodPairing` value is `0`. -/
 @[simp] theorem mk_nsmul_periodPairing

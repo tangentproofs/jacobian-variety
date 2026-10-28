@@ -4,7 +4,8 @@ import Jacobian.HolomorphicForms.DeRhamCohomology
 import Jacobian.HolomorphicForms.HodgeProjection
 import Jacobian.HolomorphicForms.RealComplexDeRham
 import Jacobian.HolomorphicForms.AnalyticGenus
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Hodge decomposition dimension formula on a Riemann surface
@@ -46,8 +47,7 @@ open scoped Manifold
 theorem complexDimDeRhamH1ℂ_eq_analyticHarmonicGenus
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     complexDimDeRhamH1ℂ X = analyticHarmonicGenus X :=
   complexDimDeRhamH1ℂ_eq_analyticHarmonicGenus_via_cocycle X
 
@@ -61,7 +61,6 @@ theorem analyticHarmonicGenus_eq_two_analyticGenus
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     analyticHarmonicGenus X = 2 * analyticGenus ℂ X := by
   rw [analyticHarmonicGenus_eq_analyticGenus_add_anti X,
@@ -77,7 +76,6 @@ theorem complexDimDeRhamH1ℂ_eq_two_analyticGenus
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     complexDimDeRhamH1ℂ X = 2 * analyticGenus ℂ X := by
   rw [complexDimDeRhamH1ℂ_eq_analyticHarmonicGenus X,
@@ -94,7 +92,6 @@ theorem realDimDeRhamH1_eq_two_analyticGenus
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     realDimDeRhamH1 X = 2 * analyticGenus ℂ X := by
   rw [realDim_deRhamH1_eq_complexDim_deRhamH1ℂ X,

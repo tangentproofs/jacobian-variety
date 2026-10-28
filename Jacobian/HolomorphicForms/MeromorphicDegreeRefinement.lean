@@ -1,7 +1,8 @@
 import Jacobian.HolomorphicForms.MeromorphicDegree
 import Jacobian.HolomorphicForms.MeromorphicToCp1
 import Mathlib.Topology.Compactification.OnePoint.Basic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Stepwise refinement of `MeromorphicDegree.lean` (sum-of-orders)
@@ -87,7 +88,6 @@ universe u
 variable (X : Type u) [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /-! ### Pass 1: continuity off the pole locus -/
 

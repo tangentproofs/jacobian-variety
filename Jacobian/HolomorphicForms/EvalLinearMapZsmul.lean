@@ -20,7 +20,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 theorem evalLinearMap_zsmul
     (x : X) (v : E) (n : ℤ) (η : HolomorphicOneForm E X) :
     evalLinearMap x v (n • η) = n • evalLinearMap x v η :=
-  (evalLinearMap x v).toAddMonoidHom.map_zsmul η n
+  (evalLinearMap x v).toAddMonoidHom.map_zsmul n η
 
 /-- `evalLinearMap` distributes over `Nat.cast • _`. -/
 theorem evalLinearMap_natCast_smul

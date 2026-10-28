@@ -1,5 +1,6 @@
 import Jacobian.AnalyticJacobian.EvalJacobianClassZero
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Non-triviality witness for `AnalyticJacobianGroup`
@@ -18,7 +19,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 A witness `(x, v)` whose `evalLinearMap` value is outside the

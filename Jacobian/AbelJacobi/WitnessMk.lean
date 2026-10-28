@@ -1,6 +1,7 @@
 import Jacobian.AbelJacobi.Specialize
 import Jacobian.AnalyticJacobian.MkPeriodPairing
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # `witnessAbelJacobi` ↔ `mk` explicit-form bridges
@@ -20,7 +21,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 `witnessAbelJacobi` is the `mk`-image of the difference of

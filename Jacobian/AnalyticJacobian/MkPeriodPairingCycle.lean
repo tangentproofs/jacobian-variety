@@ -1,5 +1,6 @@
 import Jacobian.AnalyticJacobian.MkPeriodPairingSmul
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # `mk` ∘ `periodPairing` on cycle-arithmetic combinations
@@ -18,7 +19,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /-- `mk` of `periodPairing (σ + τ)` is `0`. -/
 @[simp] theorem mk_periodPairing_add_cycle

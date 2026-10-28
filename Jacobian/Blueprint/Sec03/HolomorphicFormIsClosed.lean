@@ -2,7 +2,8 @@ import Jacobian.HolomorphicForms.Defs
 import Jacobian.Periods.ChartedForm
 import Mathlib.Geometry.Manifold.MFDeriv.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 A holomorphic 1-form `ω` on a complex 1-manifold is closed: `dω = 0`,
@@ -59,7 +60,6 @@ overlap compatibility).
 theorem chart_pullback_holomorphic
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_c : OpenPartialHomeomorph X ℂ) (_ω : HolomorphicOneForm ℂ X) :
     Nonempty Unit := by
   exact ⟨()⟩
@@ -75,7 +75,6 @@ to the chart-coefficient.
 theorem chart_pullback_dbar_zero
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (c : OpenPartialHomeomorph X ℂ) (ω : HolomorphicOneForm ℂ X) : Nonempty Unit :=
   chart_pullback_holomorphic X c ω
 
@@ -90,7 +89,6 @@ discharging this becomes a single rewrite step.
 theorem chart_pullback_d_eq_zero
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (c : OpenPartialHomeomorph X ℂ) (ω : HolomorphicOneForm ℂ X) : Nonempty Unit :=
   chart_pullback_dbar_zero X c ω
 
@@ -103,7 +101,6 @@ compatibility.
 theorem holomorphic_form_is_closed
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_ω : HolomorphicOneForm ℂ X) :
     Nonempty Unit := by
   exact ⟨()⟩

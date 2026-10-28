@@ -5,7 +5,8 @@ import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.FreeModule.Finite.Basic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Pure-algebra rank leaves for `IntegralOneCycle X`
@@ -47,8 +48,7 @@ ingredient is `IntegralOneCycle_torsionFree` below; together they imply
 theorem IntegralOneCycle_finite
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Module.Finite ℤ (IntegralOneCycle X) :=
   IntegralOneCycle_finite_via_cellular X
 
@@ -63,8 +63,7 @@ needs a separate argument (Hurewicz + abelianisation of `π_1`).
 theorem IntegralOneCycle_torsionFree
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Module.Free ℤ (IntegralOneCycle X) :=
   IntegralOneCycle_torsionFree_via_cellular X
 

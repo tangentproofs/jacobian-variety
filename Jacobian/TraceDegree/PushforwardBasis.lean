@@ -75,17 +75,14 @@ open JacobianChallenge.ComplexTorus
 variable {X : Type} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 variable {Y : Type} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [ConnectedSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [StableChartAt ℂ Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 variable {Z : Type} [TopologicalSpace Z] [T2Space Z] [CompactSpace Z]
   [ConnectedSpace Z] [ChartedSpace ℂ Z]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Z]
-  [StableChartAt ℂ Z]
   [FiniteDimensionalHolomorphicOneForms ℂ Z]
 
 /-!

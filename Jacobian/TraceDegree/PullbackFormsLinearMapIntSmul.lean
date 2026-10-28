@@ -24,14 +24,14 @@ theorem pullbackFormsLinearMap_nsmul
     (f : X → Y) (n : ℕ) (η : HolomorphicOneForm E Y) :
     pullbackFormsLinearMap f (n • η) =
       n • pullbackFormsLinearMap f η :=
-  (pullbackFormsLinearMap (E := E) f).toAddMonoidHom.map_nsmul η n
+  (pullbackFormsLinearMap (E := E) f).toAddMonoidHom.map_nsmul n η
 
 /-- Bundled pullback distributes over `ℤ`-scalar form mult. -/
 theorem pullbackFormsLinearMap_zsmul
     (f : X → Y) (n : ℤ) (η : HolomorphicOneForm E Y) :
     pullbackFormsLinearMap f (n • η) =
       n • pullbackFormsLinearMap f η :=
-  (pullbackFormsLinearMap (E := E) f).toAddMonoidHom.map_zsmul η n
+  (pullbackFormsLinearMap (E := E) f).toAddMonoidHom.map_zsmul n η
 
 /-- At-point + vec-applied: bundled pullback `ℕ`-smul. -/
 theorem pullbackFormsLinearMap_nsmul_apply_vec

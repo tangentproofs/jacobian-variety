@@ -12,7 +12,8 @@ import Jacobian.HolomorphicForms.UniformizationLocal
 import Jacobian.TraceDegree.TraceDefinition
 import Mathlib.Analysis.InnerProductSpace.EuclideanDist
 import Mathlib.Topology.Compactification.OnePoint.Sphere
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Genus-zero classification
@@ -504,7 +505,6 @@ theorem exists_biholomorphism_to_OnePointCx_of_homeoSphere
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     Nonempty (X ≃ₜ OnePoint ℂ) := by
   obtain ⟨e⟩ := h
@@ -786,8 +786,7 @@ postulating a smooth homeomorphism directly.
 structure GenusZeroGlobalGluingData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   PatchIndex : Type
   patch_fintype : Fintype PatchIndex
   patch_nonempty : Nonempty PatchIndex
@@ -830,8 +829,7 @@ actual global map is assembled.
 structure GenusZeroGlobalPatchFamily
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   PatchIndex : Type
   patch_fintype : Fintype PatchIndex
   patch_nonempty : Nonempty PatchIndex
@@ -852,8 +850,7 @@ patch-family theorem below only forgets these analytic witnesses.
 structure GenusZeroNormalizedMontelPatchSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   uniformization : X ≃ₜ OnePoint ℂ
   family : GenusZeroGlobalPatchFamily X
   coord_represents_uniformization :
@@ -879,8 +876,7 @@ two-chart packaging of this map.
 structure GenusZeroSmoothUniformization
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   uniformization : X ≃ₜ OnePoint ℂ
   contMDiff_uniformization :
     ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
@@ -901,7 +897,6 @@ theorem exists_biholomorph_onePoint_of_genus_zero
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     ∃ (f : X ≃ₜ OnePoint ℂ),
       ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
@@ -949,8 +944,7 @@ local chart-ball/homeomorphism package for each selected source patch.
 structure GenusZeroLocalMontelChartSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   selector : GenusZeroNormalizedMontelPatchSelector X
   localPatch : selector.family.PatchIndex → GenusZeroLocalMontelChartPatch
   localPatch_targetChart_eq :
@@ -968,7 +962,6 @@ structure GenusZeroLocalMontelPatchRealization
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (patch : GenusZeroGlobalGluingPatch X)
     (localPatch : GenusZeroLocalMontelChartPatch) where
   sourceChart : X → ℂ
@@ -997,8 +990,7 @@ inverse branch are the ones induced by the attached local chart-ball limit.
 structure GenusZeroCoherentLocalMontelChartSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   localSelector : GenusZeroLocalMontelChartSelector X
   realization :
     ∀ i, GenusZeroLocalMontelPatchRealization
@@ -1016,8 +1008,7 @@ overlap lemma.
 structure GenusZeroTransitionCoherentLocalMontelChartSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   coherentSelector : GenusZeroCoherentLocalMontelChartSelector X
   local_transition_compatible :
     ∀ i j x,
@@ -1041,8 +1032,7 @@ the domains on which the local normal-family limits are defined.
 structure GenusZeroChartBallDomainLocalMontelSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   transitionSelector : GenusZeroTransitionCoherentLocalMontelChartSelector X
   source_eq_chartBall_domain :
     ∀ i x,
@@ -1063,8 +1053,7 @@ that every selected patch is one of those two patches.
 structure GenusZeroTwoChartMontelAtlasSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   chartBallSelector : GenusZeroChartBallDomainLocalMontelSelector X
   identityIndex :
     chartBallSelector.transitionSelector.coherentSelector.localSelector.selector.family.PatchIndex
@@ -1091,8 +1080,7 @@ cover `X`, and that the two public target charts cover `OnePoint ℂ`.
 structure GenusZeroTwoChartMontelCoverSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   atlasSelector : GenusZeroTwoChartMontelAtlasSelector X
   identityLocalPatch : GenusZeroLocalMontelChartPatch
   identityLocalPatch_eq :
@@ -1125,8 +1113,7 @@ before gluing the two public `OnePoint ℂ` charts.
 structure GenusZeroNormalizedTwoChartMontelCoverSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   coverSelector : GenusZeroTwoChartMontelCoverSelector X
   identity_value_at_center :
     coverSelector.identityLocalPatch.chartBall.toFun
@@ -1151,8 +1138,7 @@ target chart.
 structure GenusZeroNormalizedLimitTwoChartMontelCoverSelector
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   coverSelector : GenusZeroTwoChartMontelCoverSelector X
   identity_normalizedLimit :
     ChartBallPowerSeries.NormalizedChartBallLimit
@@ -1179,8 +1165,7 @@ bijectivity, and local branch-cover inverse holomorphicity.
 structure GenusZeroDegreeOneBiholomorphicRoute
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   meromorphicMap : MeromorphicMapToSphere X
   analyticData : meromorphicMap.AnalyticData
   branchedCoverData : BranchedCoverData X (OnePoint ℂ) meromorphicMap.toMap
@@ -1198,8 +1183,7 @@ The compatible degree-one branched-cover package is derived from this data.
 structure GenusZeroSinglePoleMeromorphicRoute
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   meromorphicMap : MeromorphicMapToSphere X
   pole : X
   poleDivisor_eq : meromorphicMap.poles = Divisor.point pole
@@ -1214,7 +1198,6 @@ noncomputable def SinglePoleMeromorphicAnalyticData.toGenusZeroSinglePoleMeromor
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     {P : X} (data : SinglePoleMeromorphicAnalyticData (X := X) P) :
     GenusZeroSinglePoleMeromorphicRoute X where
   meromorphicMap := data.map
@@ -1249,7 +1232,6 @@ theorem ramificationIndex_eq_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (route : GenusZeroDegreeOneBiholomorphicRoute X) (x : X) :
     route.branchedCoverData.ramificationIndex x = 1 :=
   route.branchedCoverData.ramificationIndex_eq_one_of_branchedDegree_one
@@ -1263,7 +1245,6 @@ theorem localInverse_is_inverse
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (route : GenusZeroDegreeOneBiholomorphicRoute X) (x : X) :
     ∃ U : Set X, ∃ V : Set (OnePoint ℂ),
       IsOpen U ∧ IsOpen V ∧ x ∈ U ∧ route.meromorphicMap.toMap x ∈ V ∧
@@ -1287,7 +1268,6 @@ theorem localInverseAt_holomorphic
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (route : GenusZeroDegreeOneBiholomorphicRoute X) (x : X) :
     IsHolomorphicAt
       (route.branchedCoverData.localInverseAt x
@@ -1308,7 +1288,6 @@ theorem eventuallyEq_symm_localInverseAt
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (route : GenusZeroDegreeOneBiholomorphicRoute X) (y : OnePoint ℂ) :
     let e : X ≃ OnePoint ℂ :=
       Equiv.ofBijective route.meromorphicMap.toMap
@@ -1332,7 +1311,6 @@ theorem isHolomorphicAt_symm
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (route : GenusZeroDegreeOneBiholomorphicRoute X) (y : OnePoint ℂ) :
     let e : X ≃ OnePoint ℂ :=
       Equiv.ofBijective route.meromorphicMap.toMap
@@ -1358,7 +1336,6 @@ theorem continuous_invMap
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (route : GenusZeroDegreeOneBiholomorphicRoute X) :
     Continuous
         ((Equiv.ofBijective route.meromorphicMap.toMap
@@ -1381,7 +1358,6 @@ theorem contMDiff_invMap
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (route : GenusZeroDegreeOneBiholomorphicRoute X) :
     ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
       (⊤ : WithTop ℕ∞)
@@ -1403,7 +1379,6 @@ noncomputable def GenusZeroSinglePoleMeromorphicRoute.toDegreeOneBiholomorphicRo
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (route : GenusZeroSinglePoleMeromorphicRoute X) :
     GenusZeroDegreeOneBiholomorphicRoute X := by
   classical
@@ -1467,7 +1442,6 @@ noncomputable def toHomeomorph
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (data : GenusZeroGlobalGluingData X) :
     X ≃ₜ OnePoint ℂ where
   toFun := data.toMap
@@ -1492,7 +1466,6 @@ theorem exists_contMDiff_homeomorph
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (data : GenusZeroGlobalGluingData X) :
     ∃ (f : X ≃ₜ OnePoint ℂ),
       ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
@@ -1541,7 +1514,6 @@ theorem genusZero_complexStructureUnique_smoothUniformization_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     Nonempty (GenusZeroSmoothUniformization X) := by
   obtain ⟨f, hf, hf_symm⟩ := exists_biholomorph_onePoint_of_genus_zero X _e
@@ -1558,7 +1530,6 @@ theorem genusZero_complexStructureUnique_holomorphicOneForm_linearEquiv_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     Nonempty (HolomorphicOneForm ℂ X ≃ₗ[ℂ] HolomorphicOneForm ℂ (OnePoint ℂ)) := by
   obtain ⟨smooth⟩ := genusZero_complexStructureUnique_smoothUniformization_nonempty X _e
@@ -1573,7 +1544,6 @@ theorem genusZero_complexStructureUnique_holomorphicOneForms_subsingleton
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     Subsingleton (HolomorphicOneForm ℂ X) := by
   obtain ⟨eForms⟩ :=
@@ -1591,7 +1561,6 @@ theorem genusZero_complexStructureUnique_analyticGenus_eq_zero
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     letI : FiniteDimensionalHolomorphicOneForms ℂ X :=
       compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier X
@@ -1611,7 +1580,6 @@ theorem genusZero_complexStructureUnique_pointRRSection_at_infty_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (e : X ≃ₜ OnePoint ℂ) :
     Nonempty (PointRiemannRochSection X (e.symm OnePoint.infty)) := by
   letI : FiniteDimensionalHolomorphicOneForms ℂ X :=
@@ -1629,7 +1597,6 @@ theorem genusZero_complexStructureUnique_simplePolePrincipalPart_at_infty_nonemp
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (e : X ≃ₜ OnePoint ℂ) :
     ∃ F : X → ℂ, HasComplexSimplePolePrincipalPart F (e.symm OnePoint.infty) := by
   obtain ⟨s⟩ :=
@@ -1647,7 +1614,6 @@ theorem genusZero_complexStructureUnique_simplePolePrincipalPart_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (e : X ≃ₜ OnePoint ℂ) :
     ∃ P : X, ∃ F : X → ℂ, HasComplexSimplePolePrincipalPart F P := by
   obtain ⟨F, hF⟩ :=
@@ -1663,7 +1629,6 @@ theorem genusZero_complexStructureUnique_singlePoleMeromorphicAnalyticData_nonem
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     ∃ P : X, Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P) := by
   obtain ⟨P, F, hF⟩ :=
@@ -1680,7 +1645,6 @@ theorem genusZero_complexStructureUnique_singlePoleMeromorphicRoute_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     Nonempty (GenusZeroSinglePoleMeromorphicRoute X) := by
   obtain ⟨P, hdata⟩ :=
@@ -1696,7 +1660,6 @@ theorem genusZero_complexStructureUnique_degreeOneBiholomorphicRoute_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     Nonempty (GenusZeroDegreeOneBiholomorphicRoute X) := by
   obtain ⟨route⟩ :=
@@ -1712,7 +1675,6 @@ theorem genusZero_complexStructureUnique_smoothUniformization_provider_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     Nonempty (GenusZeroSmoothUniformization X) := by
   classical
@@ -1745,7 +1707,6 @@ theorem genusZeroGlobalGluing_coord_mem_target_on_patch
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (family : GenusZeroGlobalPatchFamily X) :
     ∀ i x, x ∈ (family.patch i).source →
       (family.patch i).coord x ∈ (family.patch i).targetChart.target := by
@@ -1764,7 +1725,6 @@ noncomputable def genusZeroGlobalGluing_toMap
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (family : GenusZeroGlobalPatchFamily X) : X → OnePoint ℂ :=
   fun x =>
     let i := Classical.choose (family.patch_cover x)
@@ -1778,7 +1738,6 @@ theorem genusZeroGlobalGluing_toMap_eq_uniformization
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ∀ x, genusZeroGlobalGluing_toMap selector.family x = selector.uniformization x := by
   intro x
@@ -1797,7 +1756,6 @@ theorem genusZeroGlobalGluing_overlap_compatible
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ∀ i j x,
       x ∈ (selector.family.patch i).source → x ∈ (selector.family.patch j).source →
@@ -1815,7 +1773,6 @@ theorem genusZeroGlobalGluing_toMap_target_mem_on_patch
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ∀ i x, x ∈ (selector.family.patch i).source →
       genusZeroGlobalGluing_toMap selector.family x ∈
@@ -1846,7 +1803,6 @@ theorem genusZeroGlobalGluing_toMap_exists
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ∃ toMap : X → OnePoint ℂ,
       ∀ i x, x ∈ (selector.family.patch i).source →
@@ -1861,7 +1817,6 @@ theorem genusZeroGlobalGluing_chart_expression_on_patch
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ∀ i x, x ∈ (selector.family.patch i).source →
       (selector.family.patch i).targetChart (genusZeroGlobalGluing_toMap selector.family x) =
@@ -1887,7 +1842,6 @@ theorem genusZeroGlobalGluing_invMap_exists
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ∃ invMap : OnePoint ℂ → X,
       ∀ i z, z ∈ (selector.family.patch i).targetChart.target →
@@ -1904,7 +1858,6 @@ theorem genusZeroGlobalGluing_local_left_inverse_on_patch
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ∀ i x, x ∈ (selector.family.patch i).source →
       selector.uniformization.symm (genusZeroGlobalGluing_toMap selector.family x) = x := by
@@ -1919,7 +1872,6 @@ theorem genusZeroGlobalGluing_local_right_inverse_on_target_chart
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ∀ i z, z ∈ (selector.family.patch i).targetChart.target →
       genusZeroGlobalGluing_toMap selector.family ((selector.family.patch i).invCoord z) =
@@ -1936,7 +1888,6 @@ theorem genusZeroGlobalGluing_contMDiff_toMap
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
       (⊤ : WithTop ℕ∞) (genusZeroGlobalGluing_toMap selector.family) := by
@@ -1955,7 +1906,6 @@ theorem genusZeroGlobalGluing_contMDiff_invMap
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (selector : GenusZeroNormalizedMontelPatchSelector X) :
     ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
       (⊤ : WithTop ℕ∞) (selector.uniformization.symm : OnePoint ℂ → X) := by
@@ -1978,7 +1928,6 @@ theorem exists_contMDiff_homeomorph_to_onePointCx
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     ∃ (f : X ≃ₜ OnePoint ℂ),
       ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
@@ -2020,7 +1969,6 @@ theorem holomorphicOneForm_linearEquiv_of_biholo_to_OnePointCx
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (_e : X ≃ₜ OnePoint ℂ) :
     Nonempty (HolomorphicOneForm ℂ X ≃ₗ[ℂ] HolomorphicOneForm ℂ (OnePoint ℂ)) := by
@@ -2041,7 +1989,6 @@ theorem holomorphicOneForm_linearEquiv_of_homeoSphere_exists
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     Nonempty (HolomorphicOneForm ℂ X ≃ₗ[ℂ] HolomorphicOneForm ℂ (OnePoint ℂ)) := by
@@ -2057,7 +2004,6 @@ theorem homeoSphereHolomorphicOneFormVanishing
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     Subsingleton (HolomorphicOneForm ℂ X) := by
@@ -2071,7 +2017,6 @@ theorem subsingleton_holomorphicOneForm_of_homeo_sphere
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     Subsingleton (HolomorphicOneForm ℂ X) := by
@@ -2087,7 +2032,6 @@ noncomputable def holomorphicOneFormLinearEquivOfHomeoSphere
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (_h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     HolomorphicOneForm ℂ X ≃ₗ[ℂ] HolomorphicOneForm ℂ (OnePoint ℂ) := by
@@ -2119,7 +2063,6 @@ theorem analyticGenus_eq_of_homeomorphic_sphere_of_onePointCx
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (_h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     analyticGenus ℂ X = analyticGenus ℂ (OnePoint ℂ) := by
@@ -2148,7 +2091,6 @@ theorem analyticGenus_eq_zero_of_homeomorphic_sphere
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)) :
     analyticGenus ℂ X = 0 := by
@@ -2382,7 +2324,6 @@ namespace GenusZeroSimplePoleMeromorphicMap
 /-- The underlying map to the Riemann sphere. -/
 def toMap {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : GenusZeroSimplePoleMeromorphicMap X) : X → OnePoint ℂ :=
   f.meromorphicMap.toMap
 
@@ -2395,8 +2336,7 @@ properness plus the local degree calculation, then derive these fields.
 -/
 structure GenusZeroProperDegreeOneMap
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] where
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] where
   toMap : X → OnePoint ℂ
   continuous_toMap : Continuous toMap
   bijective_toMap : Function.Bijective toMap
@@ -2436,7 +2376,6 @@ abbrev GenusZeroRiemannRochFixedPoleData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X)
     (h : analyticGenus ℂ X = 0) : Type _ :=
@@ -2455,7 +2394,6 @@ theorem genusZeroRiemannRochFixedPoleData_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X)
     (h : analyticGenus ℂ X = 0) :
@@ -2470,7 +2408,6 @@ noncomputable def genusZeroRiemannRochFixedPoleData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X)
     (h : analyticGenus ℂ X = 0) :
@@ -2482,7 +2419,6 @@ noncomputable def genusZeroRiemannRochNonconstantMapAt
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X)
     (h : analyticGenus ℂ X = 0) :
@@ -2498,7 +2434,6 @@ theorem genusZeroRiemannRochSimplePoleAt
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X)
     (h : analyticGenus ℂ X = 0) :
@@ -2518,7 +2453,6 @@ noncomputable def genusZeroSimplePoleMeromorphicMapAt
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X)
     (h : analyticGenus ℂ X = 0) :
@@ -2538,7 +2472,6 @@ noncomputable def simplePoleMeromorphicMapOfGenusZero
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : analyticGenus ℂ X = 0) :
     GenusZeroSimplePoleMeromorphicMap X :=
@@ -2553,7 +2486,6 @@ theorem genus_zero_exists_simplePole_meromorphicMap
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : analyticGenus ℂ X = 0) :
     Nonempty (GenusZeroSimplePoleMeromorphicMap X) := by
@@ -2572,7 +2504,6 @@ theorem properDegreeOneMapOfSimplePole_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (_f : GenusZeroSimplePoleMeromorphicMap X)
     (hmod : _f.meromorphicMap.PoleModulusData)
@@ -2597,7 +2528,6 @@ noncomputable def properDegreeOneMapOfSimplePole
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (f : GenusZeroSimplePoleMeromorphicMap X)
     (hmod : f.meromorphicMap.PoleModulusData)
@@ -2610,7 +2540,6 @@ theorem simplePole_meromorphicMap_proper_degreeOne
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (f : GenusZeroSimplePoleMeromorphicMap X)
     (hmod : f.meromorphicMap.PoleModulusData)
@@ -2631,7 +2560,6 @@ theorem proper_degreeOne_meromorphicMap_biholomorphic
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (f : GenusZeroProperDegreeOneMap X) :
     Nonempty (GenusZeroBiholomorphicParametrization X) := by
@@ -2653,7 +2581,6 @@ theorem genus_zero_homeomorph_onePointCx_with_routeData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : analyticGenus ℂ X = 0)
     (hmod : (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.PoleModulusData)
@@ -2675,7 +2602,6 @@ theorem homeomorphic_sphere_of_analyticGenus_eq_zero_with_routeData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (_h : analyticGenus ℂ X = 0)
     (hmod : (simplePoleMeromorphicMapOfGenusZero X _h).meromorphicMap.PoleModulusData)
@@ -2713,7 +2639,6 @@ theorem genusZero_fixedPole_routeData_nonempty
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : analyticGenus ℂ X = 0) :
     Nonempty
@@ -2748,7 +2673,6 @@ theorem genus_zero_homeomorph_onePointCx
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : analyticGenus ℂ X = 0) :
     Nonempty (X ≃ₜ OnePoint ℂ) := by
@@ -2762,7 +2686,6 @@ theorem genus_zero_homeomorph_onePointCx_of_routeData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (h : analyticGenus ℂ X = 0)
     (hmod : (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.PoleModulusData)
@@ -2776,7 +2699,6 @@ theorem homeomorphic_sphere_of_analyticGenus_eq_zero
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (_h : analyticGenus ℂ X = 0) :
     Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1) :=
@@ -2791,7 +2713,6 @@ theorem analyticGenus_eq_zero_with_routeData_homeomorphic_sphere
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     (∃ h : analyticGenus ℂ X = 0,
       (simplePoleMeromorphicMapOfGenusZero X h).meromorphicMap.PoleModulusData ∧
@@ -2808,7 +2729,6 @@ theorem analyticGenus_eq_zero_iff_homeomorphic_sphere
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] :
     analyticGenus ℂ X = 0 ↔
       Nonempty (X ≃ₜ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1) :=

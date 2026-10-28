@@ -4,7 +4,8 @@ import Jacobian.HolomorphicForms.BranchedCover
 import Jacobian.HolomorphicForms.OnePointCxChartedSpace
 import Mathlib.Topology.Compactification.OnePoint.Basic
 import Mathlib.Geometry.Manifold.MFDeriv.Basic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Meromorphic maps to the Riemann sphere
@@ -78,7 +79,6 @@ namespace MeromorphicMapToSphere
 
 variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 instance : CoeFun (MeromorphicMapToSphere X) (fun _ => X → OnePoint ℂ) where
   coe f := f.toMap
@@ -220,7 +220,6 @@ At a *simple* pole, the chart-local analytic order of `f.toMap`
       f.poles = Divisor.point P →
         JacobianChallenge.HolomorphicForms.mapAnalyticOrderAt f.toMap P = 1
 
-omit [Periods.StableChartAt ℂ X] in
 @[simp] theorem principal_eq_zeroDivisor_sub_poleDivisor
     (f : MeromorphicMapToSphere X) :
     f.principal = f.zeroDivisor - f.poleDivisor :=
@@ -245,7 +244,6 @@ theorem MeromorphicMapToSphere.modulus_tendsto_atTop_of_poleModulusData_poleDivi
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P)
     (hmod : f.PoleModulusData) :
@@ -289,7 +287,6 @@ theorem MeromorphicMapToSphere.modulus_tendsto_atTop_of_poleDivisor_point
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P)
     (hmod : f.PoleModulusData) :

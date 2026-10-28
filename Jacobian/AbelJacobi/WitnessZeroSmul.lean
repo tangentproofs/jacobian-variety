@@ -1,6 +1,7 @@
 import Jacobian.AbelJacobi.WitnessZeroIff
 import Jacobian.AnalyticJacobian.MkPeriodPairingSmul
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Sufficient witness-zero conditions via integer-scaled `periodPairing`
@@ -22,7 +23,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 Sufficient: endpoint diff = `n • periodPairing E X σ` (`n : ℕ`)

@@ -2,7 +2,8 @@ import Jacobian.Periods.PathIntegralViaCoverWithRefine
 import Jacobian.Periods.ChartedFormPullbackChartChange
 import Jacobian.Periods.ChartedFormPullbackCurveIntegrable
 import Jacobian.Periods.ChartedFormPullbackContinuous
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
 import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
 
@@ -279,7 +280,6 @@ Integrability of the chart-pullback integrand on each segment,
 derived from the C¹ path hypothesis and StableChartAt.
 -/
 private lemma segment_integrability
-    [StableChartAt E X]
     (ω : HolomorphicOneForm E X) {a b : X} (γ : Path a b)
     (hγ : ∀ (p : X), ContDiffOn ℝ 1 ((chartAt E p) ∘ γ.extend)
           (γ.extend ⁻¹' (chartAt E p).source ∩ Set.Icc 0 1))
@@ -422,7 +422,6 @@ private lemma segment_integrability
 
 
 theorem pathIntegralViaCoverWith_refinement_invariant'
-    [StableChartAt E X]
     (ω : HolomorphicOneForm E X) {a b : X} (γ : Path a b)
     (hγ : ∀ (p : X), ContDiffOn ℝ 1 ((chartAt E p) ∘ γ.extend)
           (γ.extend ⁻¹' (chartAt E p).source ∩ Set.Icc 0 1))

@@ -16,10 +16,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (h : range (Path.refl a) ⊆ c.source) :
     pathIntegralViaChart c ω (Path.refl a) h = 0 := by
   unfold pathIntegralViaChart chartLift
-  have : (Path.refl a).map' (c.continuousOn_toFun.mono h) = Path.refl (c a) :=
-    Path.ext rfl
-  rw [this]
-  exact pathIntegralInChart_refl c ω (c a)
+  convert pathIntegralInChart_refl c ω (c a) using 2
 
 /-- The from-`X` chart-local path integral reverses sign under path symmetry. -/
 theorem pathIntegralViaChart_symm

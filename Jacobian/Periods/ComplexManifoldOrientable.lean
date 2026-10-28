@@ -1,7 +1,8 @@
 import Jacobian.Periods.Orientable
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Analysis.Complex.Basic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Complex 1-manifolds are orientable
@@ -38,8 +39,7 @@ open scoped Manifold
 
 instance complexManifold_orientable
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     Orientable X :=
   ⟨⟨()⟩⟩
 

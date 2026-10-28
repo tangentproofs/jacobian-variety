@@ -100,14 +100,17 @@ to install all the \code{AddCommGroup}/\code{TopologicalSpace}/\code{T2Space}/\c
 instances required by \code{Jacobian/Challenge.lean}.
 \end{definition}
 
-\begin{lemma}[Chart-stability adapter instance (open)]
+\begin{lemma}[Chart-stability adapter instance (retired: refuted)]
 \label{lem:stable-chart-at-instance}
-The \code{StableChartAt} adapter instance threaded through the public manifold /
-Lie structure of \(\Jac(X)\). It currently stands as an open obligation
-(\code{sorry}) in \code{Jacobian/Solution.lean}; the honest route replaces
-it with genuine chart-overlap-derivative continuity (worker jc3).
+The \code{StableChartAt} adapter instance used to be threaded through the public manifold /
+Lie structure of \(\Jac(X)\). It is not an open obligation but a false one: no
+compact connected Riemann surface has chart stability, and this is now a proved
+theorem (\code{not\_chartStable\_of\_compactSpace}). The instance and the class are
+deleted; the few places that really used them now carry honest, labelled gaps,
+and the honest route is genuine chart-overlap-derivative continuity (worker jc3).
 Tracking: \ghissue{237}.
-\lean{JacobianChallenge.Solution.instStableChartAtComplexOfT2SpaceOfCompactSpaceOfConnectedSpaceOfIsManifoldModelWithCornersSelfTopWithTopENat}
+\lean{JacobianChallenge.Periods.not_chartStable_of_compactSpace}
+\leanok
 \end{lemma}
 
 \begin{layman}

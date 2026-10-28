@@ -3,7 +3,8 @@ import Jacobian.HolomorphicForms.HolomorphicMap
 import Jacobian.HolomorphicForms.OnePointCxIsManifold
 import Jacobian.HolomorphicForms.LocalMappingThm
 import Jacobian.Blueprint.Sec02.WeightedFiberCardConst
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 Production API promoted from blueprint: `def:meromorphic-to-cp1` in
@@ -25,7 +26,6 @@ meromorphic function: simply the underlying set function `f.toFun`.
 noncomputable def meromorphicToCp1
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) : X → OnePoint ℂ :=
   f.toFun
 
@@ -43,7 +43,6 @@ Used by `liftToCp1_branchedCoverData` (sub-leaf 2 of
 theorem liftToCp1_continuous
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (_hholo : True) :
     Continuous (meromorphicToCp1 X f) :=
   f.toFun_continuous
@@ -59,7 +58,6 @@ in every source chart and the corresponding finite/infinite chart on
 theorem liftToCp1_holomorphicAt_finite
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (_hholo : True)
     (p : X) {z : ℂ} (_hp : meromorphicToCp1 X f p = (z : OnePoint ℂ)) :
     IsHolomorphicAt (meromorphicToCp1 X f) p := by
@@ -105,7 +103,6 @@ local branch of the meromorphic projection.
 theorem liftToCp1_holomorphicAt_infty
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (_hholo : True)
     (p : X) (_hp : meromorphicToCp1 X f p = (∞ : OnePoint ℂ)) :
     IsHolomorphicAt (meromorphicToCp1 X f) p := by
@@ -134,7 +131,6 @@ This is now a case split on the target value: finite values use
 theorem liftToCp1_holomorphicAt
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (_hholo : True) :
     ∀ p, IsHolomorphicAt (meromorphicToCp1 X f) p := by
   intro p
@@ -157,7 +153,6 @@ theorem) for the lift.
 theorem liftToCp1_contMDiff
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) :
     ContMDiff (modelWithCornersSelf ℂ ℂ) (modelWithCornersSelf ℂ ℂ)
       (⊤ : WithTop ℕ∞) (meromorphicToCp1 X f) :=
@@ -169,7 +164,6 @@ theorem liftToCp1_contMDiff
 theorem liftToCp1_local_kfold_ramified
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (_hholo : True) :
     ∀ [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) (OnePoint ℂ)]
       {x : X} {k : ℕ}, 0 < k →
@@ -188,7 +182,6 @@ theorem liftToCp1_local_kfold_ramified
 theorem liftToCp1_weightedFiberSum_eventually_eq
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (_hholo : True) :
     ∀ [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) (OnePoint ℂ)]
       [CompactSpace X] [T2Space X] [PreconnectedSpace X] [T2Space (OnePoint ℂ)],
@@ -207,7 +200,6 @@ theorem liftToCp1_weightedFiberSum_eventually_eq
 theorem liftToCp1_isHolomorphicBasic
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (hholo : True) :
     JacobianChallenge.HolomorphicForms.IsHolomorphicBasic
       (meromorphicToCp1 X f) := by
@@ -222,7 +214,6 @@ basic holomorphicity.
 theorem liftToCp1_hasLocalKfoldRamification
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (hholo : True) :
     JacobianChallenge.HolomorphicForms.HasLocalKfoldRamification
       (meromorphicToCp1 X f) := by
@@ -243,7 +234,6 @@ the now-separated basic and local-kfold route data.
 theorem liftToCp1_isHolomorphic
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (hholo : True) :
     JacobianChallenge.HolomorphicForms.IsHolomorphic
       (meromorphicToCp1 X f) := by
@@ -258,7 +248,6 @@ basic/local holomorphicity.
 theorem liftToCp1_hasWeightedFiberConservation
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicFunctionType X) (hholo : True) :
     JacobianChallenge.HolomorphicForms.HasWeightedFiberConservation
       (meromorphicToCp1 X f) := by

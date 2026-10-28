@@ -4,7 +4,8 @@ import Jacobian.HolomorphicForms.RealSingularH1
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import Mathlib.LinearAlgebra.FreeModule.Finite.Basic
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Universal-coefficient bridge: `H¹_sing(X, ℝ) ≃ Hom_ℤ(H₁(X, ℤ), ℝ)`
@@ -44,8 +45,7 @@ short exact sequence collapses to an isomorphism:
 theorem realDimSingularH1_eq_finrank_intHom1
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     realDimSingularH1 X = Module.finrank ℝ (IntegralOneCycle X →ₗ[ℤ] ℝ) := by
   unfold realDimSingularH1
   rfl
@@ -61,8 +61,7 @@ ingredients:
 theorem realDim_singularH1_eq_finrank_intH1_via_uct
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
-    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X] :
+    [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X] :
     realDimSingularH1 X = Module.finrank ℤ (IntegralOneCycle X) := by
   haveI : Module.Finite ℤ (IntegralOneCycle X) := IntegralOneCycle_finite X
   haveI : Module.Free ℤ (IntegralOneCycle X) := IntegralOneCycle_torsionFree X

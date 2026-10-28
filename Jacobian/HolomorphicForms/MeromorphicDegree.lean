@@ -1,7 +1,8 @@
 import Jacobian.HolomorphicForms.AnalyticGenus
 import Jacobian.HolomorphicForms.Meromorphic
 import Jacobian.HolomorphicForms.BranchedCover
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Degree of meromorphic maps to the Riemann sphere
@@ -26,7 +27,6 @@ structure GenusZeroFixedPoleMeromorphicData
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X]
     (P : X)
     (h : analyticGenus ℂ X = 0) where
@@ -43,7 +43,6 @@ explains why these consequences hold.
 structure MeromorphicDegreeOneData
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) where
   continuous_toMap : Continuous f.toMap
   bijective_toMap : Function.Bijective f.toMap
@@ -68,7 +67,6 @@ Cross-ref: `tex/sections/04-branched-covers-genus-zero.tex`,
 theorem MeromorphicMapToSphere.toMap_ne_infty_off_pole
     {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P) :
     ∀ x : X, x ≠ P → f.toMap x ≠ (OnePoint.infty : OnePoint ℂ) := by
@@ -94,7 +92,6 @@ Cross-ref: `tex/sections/04-branched-covers-genus-zero.tex`,
 theorem MeromorphicMapToSphere.continuousOn_of_no_infty_on
     {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (S : Set X)
     (hne : ∀ x ∈ S, f.toMap x ≠ (OnePoint.infty : OnePoint ℂ)) :
     ContinuousOn f.toMap S :=
@@ -112,7 +109,6 @@ Cross-ref: `tex/sections/04-branched-covers-genus-zero.tex`,
 theorem MeromorphicMapToSphere.continuousOn_compl_pole_of_poleDivisor_point
     {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P) :
     ContinuousOn f.toMap {P}ᶜ :=
@@ -129,7 +125,6 @@ Cross-ref: `tex/sections/04-branched-covers-genus-zero.tex`,
 theorem MeromorphicMapToSphere.toMap_pole_eq_infty_of_poleDivisor_point
     {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P) :
     f.toMap P = (OnePoint.infty : OnePoint ℂ) := by
@@ -157,7 +152,6 @@ Cross-ref: `tex/sections/04-branched-covers-genus-zero.tex`,
 theorem MeromorphicMapToSphere.modulus_diverges_at_simple_pole
     {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P)
     (hmod : f.PoleModulusData) :
@@ -221,7 +215,6 @@ Cross-ref: `tex/sections/04-branched-covers-genus-zero.tex`,
 theorem MeromorphicMapToSphere.tendsto_infty_at_pole_of_poleDivisor_point
     {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P)
     (hmod : f.PoleModulusData) :
@@ -257,7 +250,6 @@ theorem meromorphicMapToSphere_continuous_of_poleDivisor_point
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P)
     (hmod : f.PoleModulusData) :
@@ -285,7 +277,6 @@ degree is one.
 theorem meromorphicMapToSphere_poleDivisor_degree_eq_one_of_point
     {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P) :
     Divisor.degree f.poles = 1 := by
@@ -313,7 +304,6 @@ theorem MeromorphicMapToSphere.exists_branchedCoverData_of_pole_degree_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X)
     (hcont : Continuous f.toMap)
     (hdegree : Divisor.degree f.poles = 1)
@@ -336,7 +326,6 @@ compact space is compact (purely topological; routes through Mathlib's
 theorem MeromorphicMapToSphere.image_isCompact
     {X : Type*} [TopologicalSpace X] [CompactSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X)
     (hcont : Continuous f.toMap) :
     IsCompact (Set.range f.toMap) :=
@@ -358,7 +347,6 @@ theorem MeromorphicMapToSphere.surjective_of_continuous_and_pole_degree_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X] [Nonempty X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X)
     (hcont : Continuous f.toMap)
     (hdegree : Divisor.degree f.poles = 1)
@@ -393,7 +381,6 @@ theorem MeromorphicMapToSphere.injective_of_continuous_and_pole_degree_one
     {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X] [Nonempty X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X)
     (hcont : Continuous f.toMap)
     (hdegree : Divisor.degree f.poles = 1)
@@ -411,7 +398,6 @@ theorem meromorphicMapToSphere_bijective_of_poleDivisor_degree_one
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X)
     (hcont : Continuous f.toMap)
     (hdegree : Divisor.degree f.poles = 1)
@@ -429,7 +415,6 @@ theorem meromorphicDegreeOneData_of_poleDivisor_point
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (f : MeromorphicMapToSphere X) (P : X)
     (hpole : f.poles = Divisor.point P)
     (hmod : f.PoleModulusData)

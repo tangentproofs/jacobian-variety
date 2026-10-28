@@ -7,7 +7,8 @@ import Jacobian.HolomorphicForms.Meromorphic
 import Jacobian.HolomorphicForms.MeromorphicDegree
 import Jacobian.HolomorphicForms.GenusZeroClassification
 import Jacobian.HolomorphicForms.SinglePoleLift
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 set_option linter.unusedSectionVars false
 
@@ -38,7 +39,6 @@ open JacobianChallenge.ComplexTorus
 variable (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 
 /--
@@ -69,7 +69,6 @@ structure PathIntegralFunctionalBundle
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     [FiniteDimensionalHolomorphicOneForms ℂ X] where
   /-- The path-integral coordinates `(P, Q) ↦ (∫_P^Q ω₁, …, ∫_P^Q ωₘ)`. -/
   val : X → X → Fin (analyticGenus ℂ X) → ℂ
@@ -318,7 +317,6 @@ The `ord` field is intentionally absent: the project's
 structure ThirdKindMeromorphicData
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (Q₁ Q₂ : X) where
   /-- The underlying meromorphic data, packaged via `RawMeromorphicWithPrincipal`. -/
   data : RawMeromorphicWithPrincipal X
@@ -341,7 +339,6 @@ Under the residue-theorem normalisation, this is equivalent to
 structure LogPeriodVanishing
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (_data : RawMeromorphicWithPrincipal X) where
   
   witness : Unit
@@ -1127,7 +1124,6 @@ period-lattice quotient at the function level.
 structure SingleValuedLogPrimitive
     (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-    [JacobianChallenge.Periods.StableChartAt ℂ X]
     (Q₁ Q₂ : X)
     (_td : ThirdKindMeromorphicData X Q₁ Q₂) where
   

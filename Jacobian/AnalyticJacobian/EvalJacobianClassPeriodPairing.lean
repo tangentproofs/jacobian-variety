@@ -1,6 +1,7 @@
 import Jacobian.AnalyticJacobian.MkPeriodPairingSmul
 import Jacobian.AnalyticJacobian.EvalJacobianClass
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # `evalJacobianClass` invariance under `periodPairing` adjustments
@@ -19,7 +20,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 If `evalLinearMap x v` differs from `φ` by a `periodPairing` value,

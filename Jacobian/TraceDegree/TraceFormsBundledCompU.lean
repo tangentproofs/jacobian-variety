@@ -17,19 +17,16 @@ universe u v w
 variable {X : Type u} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 
 variable {Y : Type v} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [ConnectedSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [StableChartAt ℂ Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 
 variable {Z : Type w} [TopologicalSpace Z] [T2Space Z] [CompactSpace Z]
   [ConnectedSpace Z] [ChartedSpace ℂ Z]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Z]
-  [StableChartAt ℂ Z]
   [FiniteDimensionalHolomorphicOneForms ℂ Z]
 
 theorem traceFormsBundled_comp_of_nonconstantU

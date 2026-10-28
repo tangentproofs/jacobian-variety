@@ -1,6 +1,7 @@
 import Jacobian.AbelJacobi.Nontrivial
 import Jacobian.HolomorphicForms.AnalyticGenusWitness
-import Jacobian.Periods.TrivializationContinuousLinearMapAt
+import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 
 /-!
 # Unified witness chain: genus + Jacobian non-triviality
@@ -21,7 +22,6 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [IsManifold (modelWithCornersSelf ℂ E) (⊤ : WithTop ℕ∞) X]
   [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
 
 /--
 A non-zero witness `evalLinearMap basePoint v ≠ evalLinearMap P v`

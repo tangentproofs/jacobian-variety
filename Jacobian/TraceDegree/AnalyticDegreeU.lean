@@ -39,12 +39,10 @@ universe u v
 variable {X : Type u} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 variable {Y : Type v} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [ConnectedSpace Y] [ChartedSpace ℂ Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [JacobianChallenge.Periods.StableChartAt ℂ Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 
 /--
@@ -74,10 +72,10 @@ noncomputable def analyticDegreeU (f : X → Y)
 -- `[Nonempty Y]` to `branchedDegree`); omit the unused section variables.
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ X]
+ [FiniteDimensionalHolomorphicOneForms ℂ X]
   [T2Space Y] [CompactSpace Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
-  [JacobianChallenge.Periods.StableChartAt ℂ Y] [FiniteDimensionalHolomorphicOneForms ℂ Y]
+ [FiniteDimensionalHolomorphicOneForms ℂ Y]
 
 /-- Constant maps have analytic degree zero. Universe-`u` companion of
 `analyticDegree_constant` (`AnalyticDegree.lean:72`). -/

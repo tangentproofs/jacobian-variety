@@ -34,10 +34,9 @@ universe u
 variable {X : Type u} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ConnectedSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) X]
-  [JacobianChallenge.Periods.StableChartAt ℂ X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [JacobianChallenge.Periods.StableChartAt ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
 /-- The chart-local order of the identity map at any point is `1`. Universe-`u`
 restatement of the Type-0 `mapAnalyticOrderAt_id_eq_one` (`PullbackBasis.lean:797`). -/
 theorem mapAnalyticOrderAt_id_eq_oneU (x : X) :
@@ -75,7 +74,7 @@ theorem mapAnalyticOrderAt_id_eq_oneU (x : X) :
   unfold mapAnalyticOrderAt analyticOrderNatAt
   rw [hord]; rfl
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [JacobianChallenge.Periods.StableChartAt ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
 /-- The cotangent pushforward along the identity is the identity on cotangent
 vectors. Universe-`u` restatement of the Type-0 `cotangentPushforward_id_apply`
 (`PullbackBasis.lean:882`). -/
@@ -144,13 +143,13 @@ noncomputable def idBranchedCoverDataU :
     · intro z _ z' _ hzz'; exact hzz'
     · intro y _; exact ⟨y, Set.mem_univ _, rfl⟩
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ, ℂ) ω X] [JacobianChallenge.Periods.StableChartAt ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ, ℂ) ω X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
 /-- Every value of the identity map is a regular value. -/
 theorem isRegularValue_idBranchedCoverDataU (y : X) :
     isRegularValue (idBranchedCoverDataU (X := X)) y := by
   intro x _; rfl
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [JacobianChallenge.Periods.StableChartAt ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
 /-- The identity branched-cover datum is compatible with `mapAnalyticOrderAt`. -/
 theorem idBranchedCoverData_compatibleU :
     (idBranchedCoverDataU (X := X)).RamificationIndexCompatible := by
@@ -158,7 +157,7 @@ theorem idBranchedCoverData_compatibleU :
   show 1 = mapAnalyticOrderAt (id : X → X) x
   exact (mapAnalyticOrderAt_id_eq_oneU x).symm
 
-omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [JacobianChallenge.Periods.StableChartAt ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
 /-- Local trace identity at a regular value of the identity map. -/
 theorem traceAtRegularValue_idU
     (η : HolomorphicOneForm ℂ X)
