@@ -1,5 +1,4 @@
 import Jacobian.TraceDegree.AnalyticDegreeU
-import Jacobian.TraceDegree.PullbackBasis
 
 /-!
 # Universe-polymorphic trace-of-pullback = degree identity (route-β, E3b)

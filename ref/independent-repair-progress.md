@@ -418,6 +418,66 @@ None touched in this round (no `tex/` edits; the closed gaps had no `\lean{}` po
 
 ---
 
+## 2026-10-28 — cleanup pass: unused placeholders and dead code dropped
+
+Owner request: drop the placeholders if unused, and a general cleanup.
+
+### Rule
+
+Keep = everything the public API (`Jacobian/Solution.lean`) depends on, plus everything a
+blueprint `\lean{}` pointer depends on, **minus** anything built on a placeholder.
+Placeholders (found in the compiled environment, not by grep): 270 theorems whose
+statement is `True`, 4 `opaque`s, 17 definitions whose value is `Unit`/`PUnit`/`True`-typed,
+8 definitions whose value is `0` (`exteriorDerivative`, `dStarOperator1/2`,
+`integrateOneFormBoundary`, `integrateTwoForm`, the Type-0 meromorphic `zeros`/`poles`, …), and
+two `witness : Unit` structures. Removed = the placeholders, every declaration depending on
+one (they are vacuous too), every module with nothing kept, and whatever depended on those
+modules. None of it was reachable from the public API (checked on the declaration graph
+before deleting).
+
+### What changed
+
+* **384 Lean files deleted** (the Type-0 mirror layer `AnalyticJacobian/*`, the Type-0
+  Abel/period/push-pull chains, the polygon/cellular/prism tower, the de Rham/Hodge
+  surrogates, Stokes `0 = 0`, …), plus 6 files that no build imported (never compiled:
+  `HarmonicConjugate`, `HarmonicDipole`, `CMfldBumpStub`, `ChartOverlapDerivContinuous`,
+  `IntegralOneCycleU`, `SingularChainComplexZU`).
+* **Surviving files trimmed** by declaration source range (Lean's recorded ranges, with
+  docstrings and `omit … in` prefixes): `Periods/Hurewicz.lean` (−2.5k lines),
+  `HolomorphicForms/CompactRiemannSurface.lean` (−1.3k, including its 19 `True` lemmas),
+  `GenusZeroClassification`, `AnalyticOfCurveBasis` (Unit-witness Abel scaffold,
+  `PathIntegralFunctionalBundle` and its zero `Inhabited` witness),
+  `MeromorphicToBranchedCover`, `PeriodHomologyInvariance`, `AnalyticDegree`, and three
+  small ones. Orphaned "retained docstring" comment blocks removed.
+* **Imports**: imports of deleted modules replaced by the surviving modules they provided,
+  then every import implied by another import of the same file dropped (485 lines).
+  Empty umbrellas `Jacobian/AbelJacobi.lean`, `Jacobian/AnalyticJacobian.lean` deleted.
+* README-only plan directories `Jacobian/Analysis/`, `Jacobian/StageA/`, `Jacobian/StageB/`
+  deleted (they described build targets that do not exist and a tex section 12 that is
+  not in `tex/`); one-off script `scripts/apply_jc2_proof.py` (patched a deleted file)
+  deleted. `Attic/` and `sorries.jsonl` (the owner's tracker) left as they are.
+* **Blueprint**: 6 `\lean{}` pointers targeted removed declarations; 10 edits in
+  `tex/sections/06-…` and `08-…` (pointer moved to the live classical input C3, or
+  `\lean`/`\leanok` dropped with one sentence saying why), logged in
+  `ref/plain-english-changes.md` §22–31. All 93 `\lean{}` names resolve.
+
+### Builds and counts
+
+`lake build Jacobian`: **green** (3975 jobs, was 4354).
+
+| metric | before | after |
+|---|---|---|
+| Lean files under `Jacobian/` | 512 | **128** |
+| lines | ~76k | **36.5k** |
+| placeholder declarations (`True` statements, `opaque`, `Unit`/`0` values) | 301 | **0** |
+| engine `sorry` declarations | 9 | 9 |
+| reachable from the public API | 5 (C1–C5) | 5 (C1–C5) |
+
+The public API is untouched (same 911 reachable declarations). The four unreachable gaps
+(19; 11–13 in `Hurewicz.lean`) remain because blueprint pointers depend on them.
+
+---
+
 ## Commit hashes
 
 | time (EDT) | hash | summary |
@@ -432,4 +492,4 @@ None touched in this round (no `tex/` edits; the closed gaps had no `\lean{}` po
 | 2026-10-28 | `c1bbbf6` | chart chains; Abel–Jacobi holomorphy proved |
 | 2026-10-28 | `268fb9f` | pushforward preserves the period lattice |
 | 2026-10-28 | `eac1735` | removable singularities on surfaces; genus-zero short-circuit |
-| 2026-10-28 | (this commit) | trace extends across branch values; pullback preserves the period lattice |
+| 2026-10-28 | `99ce6d7` | trace extends across branch values; pullback preserves the period lattice |

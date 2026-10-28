@@ -413,3 +413,190 @@ Tracking: \ghissue{224}.
 ```latex
 \lean{JacobianChallenge.TraceDegree.pullbackFormsLinearMap}
 ```
+
+---
+
+## Cleanup pass (2026-10-28): pointers to removed placeholder declarations
+
+### 22. `tex/sections/08-abel-jacobi-map.tex:248`
+
+**Why.** Lean decl removed with the placeholder Abel scaffold (Unit witnesses); \lean/\leanok dropped, one sentence added.
+
+**Old.**
+```latex
+principal divisor is \((Q_1) - (Q_2)\). In particular, the pole
+divisor of \(f\) equals the single point \((Q_2)\).
+\lean{JacobianChallenge.AbelJacobi.abelJacobi_image_zero_implies_principal}
+\leanok
+\end{theorem}
+```
+**New.**
+```latex
+principal divisor is \((Q_1) - (Q_2)\). In particular, the pole
+divisor of \(f\) equals the single point \((Q_2)\).
+Not formalized: the former Lean statement was built on placeholder
+(\code{Unit}-witness) Abel data and has been removed; Abel's theorem
+enters as the classical input \code{pathIntegralFunctional\_separates\_pointsU}.
+\end{theorem}
+```
+
+### 23. `tex/sections/08-abel-jacobi-map.tex:271`
+
+**Why.** Proof \leanok dropped (its Lean proof was removed with the placeholder scaffold).
+
+**Old.**
+```latex
+\begin{proof}\leanok
+Pure assembly of Lemma~\ref{lem:abel-two-point-form}
+```
+**New.**
+```latex
+\begin{proof}
+Pure assembly of Lemma~\ref{lem:abel-two-point-form}
+```
+
+### 24. `tex/sections/08-abel-jacobi-map.tex:298`
+
+**Why.** Lean decl removed with the placeholder Abel scaffold; \lean/\leanok dropped, one sentence added.
+
+**Old.**
+```latex
+difference of the two points).
+\lean{JacobianChallenge.AbelJacobi.abel_meromorphicFunction_of_zero_aj_two_point}
+\leanok
+\end{lemma}
+```
+**New.**
+```latex
+difference of the two points).
+Not formalized: the former Lean statement was built on placeholder
+(\code{Unit}-witness) Abel data and has been removed.
+\end{lemma}
+```
+
+### 25. `tex/sections/08-abel-jacobi-map.tex:450`
+
+**Why.** Type-0 decl (built on placeholder Abel data) removed; pointer moved to the universe-polymorphic statement (classical input C3).
+
+**Old.**
+```latex
+If \(g(X)>0\) and \(\AJ_P(Q_1)=\AJ_P(Q_2)\), then \(Q_1=Q_2\).
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_points}
+\leanok
+\end{theorem}
+```
+**New.**
+```latex
+If \(g(X)>0\) and \(\AJ_P(Q_1)=\AJ_P(Q_2)\), then \(Q_1=Q_2\).
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_pointsU}
+\leanok
+\end{theorem}
+```
+
+### 26. `tex/sections/08-abel-jacobi-map.tex:472`
+
+**Why.** Proof \leanok dropped: the Lean statement is the classical input C3 (no Lean proof).
+
+**Old.**
+```latex
+\begin{proof}\leanok
+Assume \(Q_1\ne Q_2\).
+```
+**New.**
+```latex
+\begin{proof}
+Assume \(Q_1\ne Q_2\).
+```
+
+### 27. `tex/sections/08-abel-jacobi-map.tex:510`
+
+**Why.** Pointer moved from the removed Type-0 decl to the universe-polymorphic classical input C3.
+
+**Old.**
+```latex
+\(\AJ_P(Q_1)=\AJ_P(Q_2)\), then \(Q_1=Q_2\).
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_points}
+\end{theorem}
+```
+**New.**
+```latex
+\(\AJ_P(Q_1)=\AJ_P(Q_2)\), then \(Q_1=Q_2\).
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_pointsU}
+\end{theorem}
+```
+
+### 28. `tex/sections/06-periods-and-riemann-bilinear.tex:306`
+
+**Why.** Lean decl was a True-valued placeholder; removed, \lean/\leanok dropped, sentence names the local exactness lemma actually used.
+
+**Old.**
+```latex
+atlas.}
+\lean{JacobianChallenge.Blueprint.holomorphic_form_is_closed}
+\leanok
+\end{lemma}
+\begin{proof}\leanok\end{proof}
+```
+**New.**
+```latex
+atlas.}
+Not formalized as stated: the former Lean statement was a placeholder (its type was
+\code{True}) and has been removed. The project uses the local form instead: on a
+coordinate ball a holomorphic 1-form has a primitive (\code{chartForm\_hasFDerivAt\_primitive}).
+\end{lemma}
+```
+
+### 29. `tex/sections/06-periods-and-riemann-bilinear.tex:338`
+
+**Why.** Lean decl stated with zero-placeholder integrals (vacuous); removed, \lean/\leanok dropped, one sentence added.
+
+**Old.**
+```latex
+per the project inventory.}
+\lean{JacobianChallenge.Blueprint.Sec03.stokes_on_rs_with_boundary}
+\leanok
+\end{theorem}
+\begin{proof}\leanok\end{proof}
+```
+**New.**
+```latex
+per the project inventory.}
+Not formalized: the former Lean statement integrated with placeholder integrals
+(\code{:= 0}) and has been removed.
+\end{theorem}
+```
+
+### 30. `tex/sections/06-periods-and-riemann-bilinear.tex:721`
+
+**Why.** Lean decl rested on the placeholder exteriorDerivative := 0; removed, \lean/\leanok dropped, one sentence added.
+
+**Old.**
+```latex
+LinearMap.range (exteriorDerivative 0 X)}.}
+\lean{JacobianChallenge.HolomorphicForms.deRhamComparisonMap1_zero_period_primitiveExists_exact_assembly}
+\leanok
+\end{lemma}
+\begin{proof}\leanok\end{proof}
+```
+**New.**
+```latex
+LinearMap.range (exteriorDerivative 0 X)}.}
+Not formalized: the former Lean statement used the placeholder
+\code{exteriorDerivative := 0} and has been removed.
+\end{lemma}
+```
+
+### 31. `tex/sections/08-abel-jacobi-map.tex:316`
+
+**Why.** Proof \leanok dropped (Lean proof removed with the placeholder scaffold).
+
+**Old.**
+```latex
+\begin{proof}\leanok
+The substantive content is the classical Abel construction
+```
+**New.**
+```latex
+\begin{proof}
+The substantive content is the classical Abel construction
+```

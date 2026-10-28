@@ -247,8 +247,9 @@ then there exists a meromorphic map \(f : X \to \widehat{\C}\) whose
 zero divisor is \((Q_1)\), whose pole divisor is \((Q_2)\), and whose
 principal divisor is \((Q_1) - (Q_2)\). In particular, the pole
 divisor of \(f\) equals the single point \((Q_2)\).
-\lean{JacobianChallenge.AbelJacobi.abelJacobi_image_zero_implies_principal}
-\leanok
+Not formalized: the former Lean statement was built on placeholder
+(\code{Unit}-witness) Abel data and has been removed; Abel's theorem
+enters as the classical input \code{pathIntegralFunctional\_separates\_pointsU}.
 \end{theorem}
 
 \begin{layman}
@@ -267,7 +268,7 @@ point-separation form of Abel's theorem (and hence the anti-hack
 injectivity statement) cannot be derived.
 \end{layman}
 
-\begin{proof}\leanok
+\begin{proof}
 Pure assembly of Lemma~\ref{lem:abel-two-point-form}
 (Abel existence in two-point form: get a meromorphic \(f\) with
 \((f) = (Q_1) - (Q_2)\)) and
@@ -295,8 +296,8 @@ Fix \(P\in X\), distinct \(Q_1\neq Q_2\). If
 non-zero meromorphic function \(f\in\Mer(X)^\times\) with
 \((f) = (Q_1) - (Q_2)\) (i.e. principal divisor exactly the formal
 difference of the two points).
-\lean{JacobianChallenge.AbelJacobi.abel_meromorphicFunction_of_zero_aj_two_point}
-\leanok
+Not formalized: the former Lean statement was built on placeholder
+(\code{Unit}-witness) Abel data and has been removed.
 \end{lemma}
 
 \begin{layman}
@@ -312,7 +313,7 @@ full \(\Div^0(X) \to \Pic^0(X)\) machinery just to apply it once.
 
 \end{layman}
 
-\begin{proof}\leanok
+\begin{proof}
 The substantive content is the classical Abel construction: from
 third-kind data \(f_0\) with pole divisor \((Q_1)+(Q_2)\), the
 Riemann reciprocity (bilinear) identity converts the period-congruence
@@ -447,7 +448,7 @@ genus, and \(g(\CPone)=0\) is a separate well-known computation
 \label{thm:abel-point-separation}
 \uses{thm:abel-basis-aligned-two-point, thm:riemann-hurwitz-deg1-basis-aligned}
 If \(g(X)>0\) and \(\AJ_P(Q_1)=\AJ_P(Q_2)\), then \(Q_1=Q_2\).
-\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_points}
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_pointsU}
 \leanok
 \end{theorem}
 
@@ -468,7 +469,7 @@ nontrivial Jacobian could distinguish all the points of the
 surface.
 \end{layman}
 
-\begin{proof}\leanok
+\begin{proof}
 Assume \(Q_1\ne Q_2\). Theorem~\ref{thm:aj-divisor-hom} reduces to
 \(\AJ(Q_1-Q_2)=0\). Theorem~\ref{thm:abel-existence} produces a
 meromorphic \(f\) with \((f)=Q_1-Q_2\).
@@ -507,7 +508,7 @@ Tracking: \ghissue{225}.
 For degree-zero divisors on \(X\), the Abel-Jacobi map has kernel exactly the
 principal divisors. In particular, if \(g(X)>0\) and
 \(\AJ_P(Q_1)=\AJ_P(Q_2)\), then \(Q_1=Q_2\).
-\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_points}
+\lean{JacobianChallenge.AbelJacobi.pathIntegralFunctional_separates_pointsU}
 \end{theorem}
 \begin{proof}\leanok\end{proof}
 

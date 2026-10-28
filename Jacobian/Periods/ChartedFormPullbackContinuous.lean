@@ -1,4 +1,3 @@
-import Jacobian.Periods.ChartedFormPullbackCurveIntegrable
 import Jacobian.HolomorphicForms.Defs
 import Mathlib.Geometry.Manifold.MFDeriv.Atlas
 import Mathlib.Geometry.Manifold.VectorBundle.Hom
@@ -6,6 +5,10 @@ import Mathlib.Geometry.Manifold.VectorBundle.Tangent
 import Mathlib.Topology.VectorBundle.Hom
 import Mathlib.Topology.VectorBundle.Constructions
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+import Jacobian.Periods.ChartedFormPullbackSimp
+import Jacobian.Periods.ChartedFormPullbackSmul
+import Mathlib.MeasureTheory.Integral.CurveIntegral.Basic
+import Mathlib.Geometry.Manifold.MFDeriv.Tangent
 
 /-!
 # `chartedFormPullback_continuousOn` without `StableChartAt` (Path 1′ Step 1)

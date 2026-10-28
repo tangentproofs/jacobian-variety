@@ -304,10 +304,10 @@ For \(\omega\in\HX\), \(d\omega=0\).
 \depends{Local computation: \(d(h(z)\,dz)=\frac{\partial h}{\partial \bar
 z}\,d\bar z\wedge dz=0\) by Cauchy-Riemann; globalization via the chart
 atlas.}
-\lean{JacobianChallenge.Blueprint.holomorphic_form_is_closed}
-\leanok
+Not formalized as stated: the former Lean statement was a placeholder (its type was
+\code{True}) and has been removed. The project uses the local form instead: on a
+coordinate ball a holomorphic 1-form has a primitive (\code{chartForm\_hasFDerivAt\_primitive}).
 \end{lemma}
-\begin{proof}\leanok\end{proof}
 
 \begin{layman}
 A holomorphic 1-form, written locally as a holomorphic function times the
@@ -336,10 +336,9 @@ For an oriented compact Riemann surface with boundary \(M\) and a smooth
 rectangle subsets of \(\R^n\), not on manifolds with boundary). This is
 the single largest classical-analysis gap for the period-lattice route
 per the project inventory.}
-\lean{JacobianChallenge.Blueprint.Sec03.stokes_on_rs_with_boundary}
-\leanok
+Not formalized: the former Lean statement integrated with placeholder integrals
+(\code{:= 0}) and has been removed.
 \end{theorem}
-\begin{proof}\leanok\end{proof}
 
 \begin{layman}
 Stokes' theorem is the grandfather of all integration-by-parts results.
@@ -720,10 +719,9 @@ If a zero-period closed form admits a global primitive
 the range-witness unpacking of \(\mathrm{ExactForm}\).
 \depends{The project definition \code{ExactForm 0 X =
 LinearMap.range (exteriorDerivative 0 X)}.}
-\lean{JacobianChallenge.HolomorphicForms.deRhamComparisonMap1_zero_period_primitiveExists_exact_assembly}
-\leanok
+Not formalized: the former Lean statement used the placeholder
+\code{exteriorDerivative := 0} and has been removed.
 \end{lemma}
-\begin{proof}\leanok\end{proof}
 
 \begin{lemma}[Zero-period closed form is exact (retired)]
 \label{lem:de-rham-comparison-map1-zero-period-primitive-exists-provider}

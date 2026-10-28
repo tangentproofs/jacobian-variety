@@ -50,7 +50,14 @@ Engine `sorry` declarations: **9** (C1–C5 + the four above). Reachable from th
 **5** (C1–C5). Per public declaration: `genus`, `ContMDiff.degree` clean; `ofCurve_inj` rests
 on C1–C3; `genus_eq_zero_iff_homeo` on C1, C4, C5; everything else on C1, C2.
 
-### §0.3 Retired (not built; `Attic/`)
+### §0.3 Dropped in the cleanup pass (2026-10-28)
+
+Every placeholder declaration (`True`-valued theorems, `opaque`s, `Unit`/`PUnit`/`0`-valued
+definitions, `Unit`-witness structures) and everything built on one, plus every module with
+no declaration used by the public API or cited by the blueprint, is deleted (384 Lean files;
+see `ref/independent-repair-progress.md`). Placeholder count in the compiled tree: **0**.
+
+### §0.4 Retired (not built; `Attic/`)
 
 `Attic/StableChartRetired/` (goal (a)), `Attic/ZeroPeriodPairingU/` (goal (b): the zero
 period pairing and `…_eq_bot`), `Attic/FalseGaps/` (goal (d): gaps 5, 6, 8, 9, 10, 14, 16, 17

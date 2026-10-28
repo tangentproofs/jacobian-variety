@@ -1,4 +1,4 @@
-import Jacobian.HolomorphicForms.ToFunApplyVec
+import Jacobian.HolomorphicForms.Defs
 
 /-!
 # Extensionality for `HolomorphicOneForm`

@@ -1,6 +1,8 @@
 import Jacobian.ComplexTorus.Defs
-import Jacobian.ComplexTorus.ChartBall
 import Mathlib.Logic.Function.Basic
+import Jacobian.ComplexTorus.IsolationAtZero
+import Jacobian.ComplexTorus.MkInjOnSmallBall
+import Jacobian.ComplexTorus.MkImage
 
 /-!
 # Local section of `mk` on a chart ball

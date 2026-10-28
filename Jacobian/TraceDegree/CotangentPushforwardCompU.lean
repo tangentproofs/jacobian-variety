@@ -1,4 +1,7 @@
-import Jacobian.TraceDegree.PullbackBasis
+import Jacobian.AbelJacobi.AnalyticOfCurveBasis
+import Jacobian.ComplexTorus.OfClm
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+import Jacobian.HolomorphicForms.TraceSpec
 
 set_option backward.isDefEq.respectTransparency false
 

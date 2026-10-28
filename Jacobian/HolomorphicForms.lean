@@ -1,29 +1,8 @@
 import Jacobian.HolomorphicForms.AnalyticGenus
-import Jacobian.HolomorphicForms.AnalyticGenusOrder
 import Jacobian.HolomorphicForms.BasisAlignedDualEquiv
-import Jacobian.HolomorphicForms.AnalyticGenusPos
-import Jacobian.HolomorphicForms.ToFunApply
-import Jacobian.HolomorphicForms.ToFunApplyVec
-import Jacobian.HolomorphicForms.ToFunApplyVecExtra
-import Jacobian.HolomorphicForms.ToFunNeg
-import Jacobian.HolomorphicForms.EvalLinearMapNeg
-import Jacobian.HolomorphicForms.EvalLinearMap
-import Jacobian.HolomorphicForms.EvalLinearMapApi
-import Jacobian.HolomorphicForms.EvalLinearMapEqIff
-import Jacobian.HolomorphicForms.EvalLinearMapEqZero
-import Jacobian.HolomorphicForms.EvalLinearMapNegEqZero
-import Jacobian.HolomorphicForms.EvalLinearMapSubEqZeroIffEq
-import Jacobian.HolomorphicForms.EvalLinearMapApiExtra
-import Jacobian.HolomorphicForms.EvalLinearMapZsmul
-import Jacobian.HolomorphicForms.ToFunZsmul
 import Jacobian.HolomorphicForms.Ext
-import Jacobian.HolomorphicForms.ExtEvalLinearMap
-import Jacobian.HolomorphicForms.AnalyticGenusWitness
-import Jacobian.HolomorphicForms.EvalLinearMapVec
-import Jacobian.HolomorphicForms.EvalLinearMapVecExtra
 import Jacobian.HolomorphicForms.CotangentBundle
 import Jacobian.HolomorphicForms.Defs
 import Jacobian.HolomorphicForms.FiniteDimensional
-import Jacobian.HolomorphicForms.MeromorphicDegreeRefinement
 
 /-! # Holomorphic forms infrastructure -/

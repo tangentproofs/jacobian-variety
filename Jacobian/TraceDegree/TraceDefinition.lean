@@ -2,13 +2,13 @@ import Jacobian.HolomorphicForms.BranchedCover
 import Jacobian.HolomorphicForms.CotangentBundle
 import Jacobian.HolomorphicForms.PullbackBundled
 import Jacobian.HolomorphicForms.HolomorphicMap
-import Jacobian.HolomorphicForms.EvalAtOneHelper
 import Jacobian.HolomorphicForms.TangentSpaceComplexBridge
 import Mathlib.Geometry.Manifold.VectorBundle.Tangent
 import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Analytic
 import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+import Jacobian.Periods.ChartStabilityRefutation
 
 /-!
 # Trace (pushforward) of differential forms along a branched cover
