@@ -4,6 +4,7 @@ import Jacobian.HolomorphicForms
 import Jacobian.Periods
 import Jacobian.TraceDegree
 import Jacobian.Analysis.PlaneCalculus
+import Jacobian.Analysis.WeylDbar
 
 /-!
 # Jacobian Challenge
