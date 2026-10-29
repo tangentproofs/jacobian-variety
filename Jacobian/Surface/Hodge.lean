@@ -197,7 +197,7 @@ theorem continuous_dbar_of_contDiff {φ : ℂ → ℂ} (hφ : ContDiff ℝ ∞ �
 
 theorem hasCompactSupport_dbar {φ : ℂ → ℂ} (hs : HasCompactSupport φ) :
     HasCompactSupport (dbar φ) :=
-  HasCompactSupport.intro hs.isCompact fun z hz =>
+  HasCompactSupport.intro hs.isCompact fun _ hz =>
     dbar_eq_zero_of_eventuallyEq (c := 0) (notMem_tsupport_iff_eventuallyEq.mp hz)
 
 /-- The pairing of a limit with `∂̄` of a test function, computed from the chart limit. -/

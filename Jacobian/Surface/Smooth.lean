@@ -58,7 +58,7 @@ theorem isSmooth_of_local {u : X → ℂ}
     exact hp.comp w (trans_contDiffAt hwo)
   exact (h1.congr_of_eventuallyEq (rd_eventuallyEq hwo)).contDiffWithinAt
 
-theorem isSmooth_const (c : ℂ) : IsSmooth (fun _ : X => c) := fun p =>
+theorem isSmooth_const (c : ℂ) : IsSmooth (fun _ : X => c) := fun _ =>
   contDiffOn_const
 
 theorem IsSmooth.add {u v : X → ℂ} (hu : IsSmooth u) (hv : IsSmooth v) :

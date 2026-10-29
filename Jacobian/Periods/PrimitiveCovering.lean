@@ -414,7 +414,7 @@ theorem exists_not_mem_segments [T2Space X] [CompactSpace X] [Nonempty X]
     (L : List (ChartSegment X)) :
     ∃ z : X, ∀ s ∈ L, ∀ t ∈ segment ℝ s.a s.b, (chartAt ℂ s.p).symm t ≠ z := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   let K : Fin L.length → Set X := fun i =>
     (chartAt ℂ (L.get i).p).symm '' segment ℝ (L.get i).a (L.get i).b
   have hsegT : ∀ s : ChartSegment X, segment ℝ s.a s.b ⊆ (chartAt ℂ s.p).target := fun s =>

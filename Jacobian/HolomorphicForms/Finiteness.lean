@@ -45,11 +45,11 @@ noncomputable def chartCoeff (p : X) (ω : HolomorphicOneForm ℂ X) (z : ℂ) :
 
 theorem chartCoeff_add (p : X) (ω₁ ω₂ : HolomorphicOneForm ℂ X) (z : ℂ) :
     chartCoeff p (ω₁ + ω₂) z = chartCoeff p ω₁ z + chartCoeff p ω₂ z := by
-  simp [chartCoeff, ChartSegment.chartForm_add]
+  simp [chartCoeff]
 
 theorem chartCoeff_smul (p : X) (c : ℂ) (ω : HolomorphicOneForm ℂ X) (z : ℂ) :
     chartCoeff p (c • ω) z = c * chartCoeff p ω z := by
-  simp [chartCoeff, ChartSegment.chartForm_smul]
+  simp [chartCoeff]
 
 theorem chartCoeff_differentiableOn (p : X) (ω : HolomorphicOneForm ℂ X) :
     DifferentiableOn ℂ (chartCoeff p ω) (chartAt ℂ p).target :=
@@ -78,7 +78,7 @@ theorem chartForm_transition (ω : HolomorphicOneForm ℂ X) {p q : X} {w : ℂ}
   rw [hround, hpt, mfderiv_id]
   have h := mfderiv_chartAt_symm_comp_self q hq
   refine ContinuousLinearMap.ext fun v => ?_
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.id_apply]
+  simp only [ContinuousLinearMap.comp_apply]
   congr 1
   exact (congrArg (fun L => L ((mfderiv 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (chartAt ℂ p).symm w) v)) h).symm
 

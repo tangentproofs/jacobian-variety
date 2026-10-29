@@ -129,7 +129,7 @@ theorem dbarL_mem_E {u : X → ℂ} (hu : IsSmooth u) :
 instance : CompleteSpace A.E :=
   (Submodule.isClosed_topologicalClosure _).completeSpace_coe
 
-theorem U_subset_ball (k : Fin A.N) {x : X} (hx : x ∈ (chartAt ℂ (A.p k)).source)
+theorem U_subset_ball (k : Fin A.N) {x : X} (_hx : x ∈ (chartAt ℂ (A.p k)).source)
     (hb : chartAt ℂ (A.p k) x ∈ ball (A.ctr k) (A.r k)) :
     chartAt ℂ (A.p k) x ∈ ball (A.ctr k) (3 / 2 * A.r k) :=
   ball_subset_ball (by linarith [A.r_pos k]) hb

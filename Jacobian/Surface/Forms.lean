@@ -180,7 +180,7 @@ theorem smoothFam_dzF {u : X → ℂ} (hu : IsSmooth u) : SmoothFam (dzF u) := f
 /-- The readings of a holomorphic 1-form. -/
 noncomputable def holoF (η : HolomorphicOneForm ℂ X) : X → ℂ → ℂ := fun p => chartCoeff p η
 
-theorem holoF_is10 (η : HolomorphicOneForm ℂ X) : Is10 (holoF η) := fun p q w hw =>
+theorem holoF_is10 (η : HolomorphicOneForm ℂ X) : Is10 (holoF η) := fun _ _ _ hw =>
   chartCoeff_transition η hw.1 hw.2
 
 theorem smoothFam_holoF (η : HolomorphicOneForm ℂ X) : SmoothFam (holoF η) := fun p =>

@@ -93,7 +93,7 @@ theorem contDiff_extTarget (j : Fin A.N) {ψ : ℂ → ℂ}
 theorem hasCompactSupport_extTarget (j : Fin A.N) {ψ : ℂ → ℂ}
     (h0 : ∀ v ∈ (chartAt ℂ (A.p j)).target, v ∉ closedBall (A.ctr j) (2 * A.r j) → ψ v = 0) :
     HasCompactSupport (A.extTarget j ψ) :=
-  HasCompactSupport.intro (isCompact_closedBall _ _) fun v hv => A.extTarget_eq_zero j h0 hv
+  HasCompactSupport.intro (isCompact_closedBall _ _) fun _ hv => A.extTarget_eq_zero j h0 hv
 
 /-- `∫_{target} ∂ψ = 0` for `ψ` smooth on the chart target `j`, vanishing near the points
 outside the disc of radius `2 r_j`. -/
@@ -153,7 +153,7 @@ theorem integral_sum {ι : Type*} (s : Finset ι) {σ : ι → X → ℂ → ℂ
   unfold integral
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => ?_
-  refine integral_finset_sum s fun k hk => ?_
+  refine integral_finsetSum s fun k hk => ?_
   have hK := A.ball_subset_target i (s := 1) (by norm_num)
   rw [one_mul] at hK
   exact (((hc k hk (A.p i)).mono hK).integrableOn_compact (isCompact_closedBall _ _)).mono_set

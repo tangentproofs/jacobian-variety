@@ -83,7 +83,7 @@ theorem deriv_trans_ne_zero {p q : X} {w : ℂ} (hw : w ∈ overlap p q) :
 
 /-- Cocycle: `τ_{qr} ∘ τ_{pq} = τ_{pr}` near points of the triple overlap. -/
 theorem trans_comp_eventuallyEq {p q r : X} {w : ℂ} (hw : w ∈ overlap p q)
-    (hw' : w ∈ overlap p r) :
+    (_hw' : w ∈ overlap p r) :
     (trans q r ∘ trans p q) =ᶠ[𝓝 w] trans p r := by
   filter_upwards [(isOpen_overlap p q).mem_nhds hw] with v hv
   show chartAt ℂ r ((chartAt ℂ q).symm (chartAt ℂ q ((chartAt ℂ p).symm v))) =
@@ -152,7 +152,7 @@ theorem exists_piece (x : X) : ∃ i, x ∈ A.piece i := by
       ⟨hex.choose, by simpa using hex.choose_spec⟩
     simpa using this
   refine ⟨i, hi, ?_⟩
-  simp only [mem_iUnion, mem_Iio, not_exists, not_and]
+  simp only [mem_iUnion, mem_Iio, not_exists]
   intro j hj hxj
   have := Finset.min'_le (Finset.univ.filter fun i => x ∈ A.U i) j (by simpa using hxj)
   exact absurd hj (not_lt.mpr this)
