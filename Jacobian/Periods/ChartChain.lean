@@ -89,7 +89,7 @@ variable (p : X) (ω : HolomorphicOneForm ℂ X) {z : ℂ} {r : ℝ}
 
 /-- On an open subset of the chart target, the chart reading has a (real-linear) derivative,
 and it is symmetric. -/
-private theorem chartForm_hasFDerivWithinAt {s : Set ℂ} (hs : IsOpen s)
+private theorem chartForm_hasFDerivWithinAt {s : Set ℂ} (_hs : IsOpen s)
     (hsub : s ⊆ (chartAt ℂ p).target) :
     ∀ x ∈ s, HasFDerivWithinAt (chartForm p ω)
       ((fderiv ℂ (chartForm p ω) x).restrictScalars ℝ) s x := by

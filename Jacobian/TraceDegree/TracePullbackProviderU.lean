@@ -68,7 +68,8 @@ theorem hasWeightedFiberConservation_providerU (f : X → Y)
     HasWeightedFiberConservation f :=
   hasWeightedFiberConservation_of_contMDiff hf
 
-omit [FiniteDimensionalHolomorphicOneForms ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ Y] in
+omit [CompactSpace Y] [FiniteDimensionalHolomorphicOneForms ℂ X]
+  [FiniteDimensionalHolomorphicOneForms ℂ Y] in
 /-- **Trace-of-pullback = degree on holomorphic 1-forms** at `Type u`. Universe-`u`
 companion of the deep Type-0 `trace_pullback_provider` (`AnalyticDegree.lean:191`):
 `traceFormsBundled (pullbackFormsBundled η) = analyticDegreeU • η`. Case split on
@@ -113,7 +114,7 @@ theorem trace_pullback_providerU (f : X → Y)
         htrace.apply_fun_regular hbc hcompat (pullbackFormsBundled f hf η) y hy]
     exact trace_pullback_at_regular_value hbc hcompat hf hHol η y hy
 
-omit [FiniteDimensionalHolomorphicOneForms ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ Y] in
+omit [FiniteDimensionalHolomorphicOneForms ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ Y] [CompactSpace Y] in
 /-- **The genuine trace-of-pullback = degree identity** (linear-map level) at
 `Type u`: `(traceFormsBundledLM f hf).comp (pullbackFormsBundledLM X Y f hf) =
 (analyticDegreeU f hf : ℂ) • LinearMap.id`. This is the genuine discharge of the

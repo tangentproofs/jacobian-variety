@@ -132,7 +132,7 @@ theorem L1Conv.mul_bounded {f : ℕ → ℂ → ℂ} {F : ℂ → ℂ} {K : Set 
   exact mul_le_mul_of_nonneg_right (hm z hz) (norm_nonneg _)
 
 /-- **Gluing** local continuous representatives over an open set. -/
-theorem exists_glue {O : Set ℂ} (hO : IsOpen O) {U : ℂ → ℂ} {Q : (ℂ → ℂ) → ℂ → ℝ → Prop}
+theorem exists_glue {O : Set ℂ} (_hO : IsOpen O) {U : ℂ → ℂ} {Q : (ℂ → ℂ) → ℂ → ℝ → Prop}
     (loc : ∀ x ∈ O, ∃ ρ > 0, ball x ρ ⊆ O ∧ ∃ g : ℂ → ℂ, Q g x ρ ∧
       ContinuousOn g (ball x ρ) ∧ ∀ᵐ z, z ∈ ball x ρ → U z = g z) :
     ∃ G : ℂ → ℂ, (∀ᵐ z, z ∈ O → U z = G z) ∧

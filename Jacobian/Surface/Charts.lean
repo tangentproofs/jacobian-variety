@@ -91,7 +91,7 @@ theorem det_restrictScalars_fderiv {τ : ℂ → ℂ} {w : ℂ} :
     ((fderiv ℂ τ w).restrictScalars ℝ).det = ‖deriv τ w‖ ^ 2 := by
   have hL : (fderiv ℂ τ w : ℂ →ₗ[ℂ] ℂ) = deriv τ w • LinearMap.id := by
     apply LinearMap.ext_ring
-    simp [fderiv_apply_one_eq_deriv]
+    simp
   show LinearMap.det ((fderiv ℂ τ w : ℂ →ₗ[ℂ] ℂ).restrictScalars ℝ) = _
   rw [LinearMap.det_restrictScalars, hL, LinearMap.det_smul, LinearMap.det_id,
     Module.finrank_self, pow_one, mul_one, Algebra.norm_complex_apply,

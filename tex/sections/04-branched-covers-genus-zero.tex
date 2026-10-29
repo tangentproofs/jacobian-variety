@@ -885,50 +885,6 @@ theorem for holomorphic functions or sections.
 \subsection{Uniformization-lite further decomposition}
 \label{sec:uniformization-lite-iter3}
 
-\begin{lemma}[Homeomorphism to \(\code{OnePoint}\,\C\) from a sphere homeomorphism]
-\label{lem:uniformization-genus-zero-homeomorphism}
-A compact connected complex 1-manifold homeomorphic to \(S^2\) admits a
-\emph{homeomorphism} to \(\code{OnePoint}\,\C\).
-\lean{JacobianChallenge.HolomorphicForms.exists_biholomorphism_to_OnePointCx_of_homeoSphere}
-\leanok
-\end{lemma}
-\begin{proof}
-\leanok
-Purely topological: compose the given \(X\simeq_{\mathrm{top}}S^2\) with the
-fixed homeomorphism \(S^2\simeq_{\mathrm{top}}\code{OnePoint}\,\C\). This yields
-only a homeomorphism; the complex-smooth upgrade is
-Theorem~\ref{thm:exists-biholomorph-one-point-of-genus-zero}.
-\end{proof}
-
-\begin{theorem}[Biholomorphism from sphere homeomorphism (genus-zero uniformization)]
-\label{thm:exists-biholomorph-one-point-of-genus-zero}
-\uses{lem:uniformization-genus-zero-homeomorphism, lem:holomorphic-one-form-pointwise-limit-exists, lem:holomorphic-one-form-limit-continuous, lem:holomorphic-one-form-limit-holomorphic}
-A compact connected complex 1-manifold homeomorphic to \(S^2\) admits a
-\emph{biholomorphism} to \(\code{OnePoint}\,\C\): a homeomorphism
-\(f:X\simeq\code{OnePoint}\,\C\) with both \(f\) and \(f^{-1}\) complex-smooth
-(\code{ContMDiff}).
-Tracking: \ghissue{232}.
-Not needed by the formal development: the genus statement uses
-Lemma~\ref{lem:holomorphic-one-form-equiv-of-homeo-sphere}, proved without
-uniformization; the former Lean statement (a named classical input) is removed.
-\end{theorem}
-\begin{proof}
-This is the genus-zero uniformization theorem. Classically it follows from the
-Riemann mapping theorem with a removable-singularities argument, or from
-Riemann--Roch (genus \(0\Rightarrow\) a degree-one meromorphic map to
-\(\code{OnePoint}\,\C\)). \emph{The Lean development takes neither route}: the
-Riemann--Roch section chain (\code{genusZero\_pointRRSection\_*}) is circular
-here, feeding back through the genus-zero single-pole data it is meant to
-produce. Instead the biholomorphism is built from a self-contained local
-analytic uniformization substrate --- local chart-ball power series, an
-open-mapping / inverse-function normalization of local coordinates, a normal
-family (Montel / Arzel\`a--Ascoli) extraction of compatible normalized patches,
-and a gluing through the two-chart \(\code{OnePoint}\,\C\) atlas that is
-\code{ContMDiff} in both directions. The simple-pole / degree-one meromorphic
-data of the classical proof is then \emph{obtained from} this biholomorphism,
-not used to construct it.
-\end{proof}
-
 \begin{lemma}[Analytic genus zero gives a sphere homeomorphism]
 \label{lem:exists-biholomorph-one-point-of-analytic-genus-zero}
 A compact connected Riemann surface with \(g_{\mathrm{an}}(X)=0\) admits a
@@ -1002,4 +958,53 @@ continuous at \(w=0\).
 Same chart-trivialisation argument as
 Lemma~\ref{lem:section-localRepr-identity-chart-contdiff}, applied
 in the inversion chart instead.
+\end{proof}
+
+\section{Orphaned statements (genus zero)}
+\label{sec:orphaned-statements}
+
+Statements kept for the record; they no longer feed the main theorem.
+
+\begin{lemma}[Homeomorphism to \(\code{OnePoint}\,\C\) from a sphere homeomorphism]
+\label{lem:uniformization-genus-zero-homeomorphism}
+A compact connected complex 1-manifold homeomorphic to \(S^2\) admits a
+\emph{homeomorphism} to \(\code{OnePoint}\,\C\).
+\lean{JacobianChallenge.HolomorphicForms.exists_biholomorphism_to_OnePointCx_of_homeoSphere}
+\leanok
+\end{lemma}
+\begin{proof}
+\leanok
+Purely topological: compose the given \(X\simeq_{\mathrm{top}}S^2\) with the
+fixed homeomorphism \(S^2\simeq_{\mathrm{top}}\code{OnePoint}\,\C\). This yields
+only a homeomorphism; the complex-smooth upgrade is
+Theorem~\ref{thm:exists-biholomorph-one-point-of-genus-zero}.
+\end{proof}
+
+\begin{theorem}[Biholomorphism from sphere homeomorphism (genus-zero uniformization)]
+\label{thm:exists-biholomorph-one-point-of-genus-zero}
+\uses{lem:uniformization-genus-zero-homeomorphism, lem:holomorphic-one-form-pointwise-limit-exists, lem:holomorphic-one-form-limit-continuous, lem:holomorphic-one-form-limit-holomorphic}
+A compact connected complex 1-manifold homeomorphic to \(S^2\) admits a
+\emph{biholomorphism} to \(\code{OnePoint}\,\C\): a homeomorphism
+\(f:X\simeq\code{OnePoint}\,\C\) with both \(f\) and \(f^{-1}\) complex-smooth
+(\code{ContMDiff}).
+Tracking: \ghissue{232}.
+Not needed by the formal development: the genus statement uses
+Lemma~\ref{lem:holomorphic-one-form-equiv-of-homeo-sphere}, proved without
+uniformization; the former Lean statement (a named classical input) is removed.
+\end{theorem}
+\begin{proof}
+This is the genus-zero uniformization theorem. Classically it follows from the
+Riemann mapping theorem with a removable-singularities argument, or from
+Riemann--Roch (genus \(0\Rightarrow\) a degree-one meromorphic map to
+\(\code{OnePoint}\,\C\)). \emph{The Lean development takes neither route}: the
+Riemann--Roch section chain (\code{genusZero\_pointRRSection\_*}) is circular
+here, feeding back through the genus-zero single-pole data it is meant to
+produce. Instead the biholomorphism is built from a self-contained local
+analytic uniformization substrate --- local chart-ball power series, an
+open-mapping / inverse-function normalization of local coordinates, a normal
+family (Montel / Arzel\`a--Ascoli) extraction of compatible normalized patches,
+and a gluing through the two-chart \(\code{OnePoint}\,\C\) atlas that is
+\code{ContMDiff} in both directions. The simple-pole / degree-one meromorphic
+data of the classical proof is then \emph{obtained from} this biholomorphism,
+not used to construct it.
 \end{proof}

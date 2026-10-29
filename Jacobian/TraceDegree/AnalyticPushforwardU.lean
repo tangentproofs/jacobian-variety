@@ -48,6 +48,8 @@ variable {Y : Type v} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [T2Space Y] [CompactSpace Y]
+  [ConnectedSpace Y] in
 /-- The ambient pushforward (transpose of `f^*` in basis coordinates) sends the period vector
 of a chain `l` to the period vector of any chain `l'` with `∫_{l'} η = ∫_l f^*η` for all `η`. -/
 theorem pushforwardTraceLiftCLMU_periodVector

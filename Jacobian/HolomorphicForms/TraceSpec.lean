@@ -85,6 +85,8 @@ At every regular value of any compatible branched-cover datum on
   map_zero_spec : η = 0 → traceForm = 0
 
 
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space Y]
+  [CompactSpace Y] [ConnectedSpace Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 private theorem cotangentPushforward_zero
     (f : X → Y) (x : X) :
     cotangentPushforward f x (0 : CotangentSpace ℂ X x) = 0 := by
@@ -95,6 +97,8 @@ private theorem cotangentPushforward_zero
   · simp only [dif_neg h]
 
 
+omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space Y]
+  [CompactSpace Y] [ConnectedSpace Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 private theorem traceAtRegularValue_zero
     {f : X → Y} (hbc : BranchedCoverData X Y f)
     (y : Y) (hy : isRegularValue hbc y) :
@@ -2586,6 +2590,7 @@ theorem traceAtRegularValue_BCD_invariance
 
 
 omit [CompactSpace Y] in
+omit [ConnectedSpace Y] in
 /--
 **Trace of a holomorphic 1-form extends across the branch locus** (per
 branched-cover datum): the fibre-sum trace `traceAtRegularValue hbc η`, defined on
@@ -2780,7 +2785,7 @@ noncomputable def traceFormsBundled
 /- **Identity principle for holomorphic 1-forms.**
 Two holomorphic 1-forms that agree on a dense set of a connected Riemann
 surface are equal everywhere. -/
-omit [ConnectedSpace Y] in
+omit [T2Space Y] [CompactSpace Y] [ConnectedSpace Y] in
 theorem holomorphicOneForm_ext_on
     {s : Set Y} (hs : Dense s)
     {ω₁ ω₂ : HolomorphicOneForm ℂ Y} (h : ∀ y ∈ s, ω₁.toFun y = ω₂.toFun y) :
@@ -2842,6 +2847,7 @@ structure TraceFormsRegularSpec
       (traceFormsBundled f hf η).toFun y =
         traceAtRegularValue hbc (fun x => η.toFun x) y hy
 
+omit [CompactSpace Y] in
 /--
 Private helper: in the constant-map case, the construction-data
 provider for any input form `η` reduces to
@@ -2959,6 +2965,7 @@ noncomputable def traceFormsBundledLM
       rw [h_eq]
       exact traceAtRegularValue_smul hbc k (fun x => η.toFun x) y hy
 
+omit [CompactSpace Y] in
 /-- The bundled trace map is the trace form built from local primitives
 (`HolomorphicForms/TraceLocal.lean`), for any choice of fibre-finiteness witness. -/
 theorem traceFormsBundled_eq_traceHolomorphicForm

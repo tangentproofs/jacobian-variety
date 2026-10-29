@@ -105,12 +105,9 @@ The full multi-chart definition will assemble these local pieces.
 The chart-local path integral is \(\C\)-linear in the form, additive
 under concatenation of subpaths, and changes sign under path
 reversal.
-\lean{JacobianChallenge.Periods.pathIntegralInChartCorrect_smul,
-JacobianChallenge.Periods.pathIntegralInChartCorrect_trans_of_curveIntegrable,
-JacobianChallenge.Periods.pathIntegralInChartCorrect_neg_form_eq_symm_path}
-\leanok
+Not formalized in this form: the chart-local integral was replaced by chart chains
+(\code{ChartSegment.integral\_add}, \code{ChartSegment.integral\_smul}); the Lean statements were removed in the cleanup pass (unused by the public development).
 \end{lemma}
-\begin{proof}\leanok\end{proof}
 
 \begin{layman}
 Three structural facts about the chart-local integral, each proved
@@ -613,16 +610,8 @@ stand-in.
 Mathlib's finite-sum algebra, \code{Finset.sum_congr},
 \code{Finset.sum_neg_distrib}, \code{Finset.mul_sum}, and the
 \code{ring} tactic over \(\C\).}
-\lean{JacobianChallenge.Periods.RiemannBilinearRefinement.Q_skeleton_antisym,
-JacobianChallenge.Periods.RiemannBilinearRefinement.Q_skeleton_diag_zero,
-JacobianChallenge.Periods.RiemannBilinearRefinement.Q_skeleton_smul_left,
-JacobianChallenge.Periods.RiemannBilinearRefinement.Q_skeleton_smul_right,
-JacobianChallenge.Periods.RiemannBilinearRefinement.handleTerm_antisym,
-JacobianChallenge.Periods.RiemannBilinearRefinement.handleTerm_diag_zero,
-JacobianChallenge.Periods.RiemannBilinearRefinement.riemann_bilinear_identity_skeleton}
-\leanok
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
 \end{lemma}
-\begin{proof}\leanok\end{proof}
 
 \begin{lemma}[Quadratic positivity implies real linear independence]
 \label{lem:quadratic-positivity-linear-independent-skeleton}
@@ -642,14 +631,8 @@ Mathlib's \code{Complex.normSq_nonneg},
 \code{Complex.normSq_eq_zero},
 \code{Finset.sum_eq_zero_iff_of_nonneg}, and
 \code{Fintype.linearIndependent_iff}.}
-\lean{JacobianChallenge.Periods.RiemannBilinearRefinement.quadraticSkeleton_nonneg,
-JacobianChallenge.Periods.RiemannBilinearRefinement.quadraticSkeleton_eq_zero_iff,
-JacobianChallenge.Periods.RiemannBilinearRefinement.sum_nonneg_eq_zero_iff_pointwise,
-JacobianChallenge.Periods.RiemannBilinearRefinement.real_linearIndependent_of_quadratic_pos_def,
-JacobianChallenge.Periods.RiemannBilinearRefinement.quadratic_pos_def_of_real_linearIndependent}
-\leanok
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
 \end{lemma}
-\begin{proof}\leanok\end{proof}
 
 \begin{lemma}[Period pairing satisfies the algebraic bilinear identity]
 \label{lem:period-pairing-satisfies-bilinear-identity}
@@ -706,11 +689,8 @@ exactly when it lies in the kernel. This is the definitional
 \(\ker f = \{x \mid f x = 0\}\) transport used by the de Rham
 injectivity branch.
 \depends{Mathlib's \code{LinearMap.mem_ker} and definitional rewriting.}
-\lean{JacobianChallenge.HolomorphicForms.deRhamComparisonMap1_zero_period_mem_kernel_frontier,
-JacobianChallenge.HolomorphicForms.deRhamComparisonMap1_comparison_kernel_zero_period_frontier}
-\leanok
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
 \end{lemma}
-\begin{proof}\leanok\end{proof}
 
 \begin{lemma}[Primitive existence gives exactness]
 \label{lem:de-rham-primitive-to-exact-assembly}
@@ -748,11 +728,8 @@ The harmonic projection has the explicit coefficient-section
 inverse for the projection on harmonic coefficient data.
 \depends{Definitional simplification of \code{harmonicProjection1} and
 \code{harmonicEmbed}.}
-\lean{JacobianChallenge.HolomorphicForms.harmonicEmbed,
-JacobianChallenge.HolomorphicForms.harmonicProjection1_harmonicEmbed}
-\leanok
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
 \end{lemma}
-\begin{proof}\leanok\end{proof}
 
 \begin{lemma}[Zero-harmonic closed form is exact (retired)]
 \label{lem:hodge-remainder-period-payload-exact}
@@ -825,6 +802,27 @@ to obtain a full lattice in the underlying real vector space.
 \leanok
 \end{proof}
 
+\begin{layman}
+The image of the period pairing --- the set of all integer-coefficient
+combinations of period vectors --- is a \emph{full lattice} inside the
+real vector space underlying the dual of the holomorphic 1-forms.
+``Full'' means it's a discrete grid spanning the whole real space, not
+a sublattice of lower rank. This is a direct consequence of the linear
+independence of the \(2g\) symplectic-basis period vectors (from the
+Riemann bilinear relations), since \(2g\) independent vectors in a
+\(2g\)-real-dimensional space generate a lattice of full rank. Why
+bother? A full lattice is exactly the input the complex-torus package
+needs to produce a compact quotient. With the period lattice in
+hand, the Jacobian (Definition~\ref{def:analytic-jacobian}) is just
+``dual-of-1-forms modulo lattice'' --- and that quotient is
+automatically a compact complex Lie additive group.
+\end{layman}
+
+\section{Orphaned statements (periods)}
+\label{sec:orphaned-statements-periods}
+
+Statements kept for the record; they no longer feed the main theorem.
+
 % Universe-u companions of the period-lattice content (the public Jacobian
 % universe bridge consumes these); both are open obligations.
 \begin{lemma}[Universe-$u$ $H_1$ basis (retired)]
@@ -844,19 +842,3 @@ retired, and the content now lives in \code{periodLattice\_discrete\_and\_span}
 (proved).
 Tracking: \ghissue{241}.
 \end{lemma}
-
-\begin{layman}
-The image of the period pairing --- the set of all integer-coefficient
-combinations of period vectors --- is a \emph{full lattice} inside the
-real vector space underlying the dual of the holomorphic 1-forms.
-``Full'' means it's a discrete grid spanning the whole real space, not
-a sublattice of lower rank. This is a direct consequence of the linear
-independence of the \(2g\) symplectic-basis period vectors (from the
-Riemann bilinear relations), since \(2g\) independent vectors in a
-\(2g\)-real-dimensional space generate a lattice of full rank. Why
-bother? A full lattice is exactly the input the complex-torus package
-needs to produce a compact quotient. With the period lattice in
-hand, the Jacobian (Definition~\ref{def:analytic-jacobian}) is just
-``dual-of-1-forms modulo lattice'' --- and that quotient is
-automatically a compact complex Lie additive group.
-\end{layman}

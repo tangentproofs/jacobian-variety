@@ -58,7 +58,7 @@ variable {Y : Type v} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y]
   [IsManifold (modelWithCornersSelf ℂ ℂ) (⊤ : WithTop ℕ∞) Y]
   [FiniteDimensionalHolomorphicOneForms ℂ Y]
 
-omit [FiniteDimensionalHolomorphicOneForms ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ Y] in
+omit [FiniteDimensionalHolomorphicOneForms ℂ X] [FiniteDimensionalHolomorphicOneForms ℂ Y] [CompactSpace Y] in
 /-- **Universe-`u` trace-of-pullback = degree** — GENUINELY DISCHARGED (R-tracepullback).
 Companion of the Type-0 `traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smul`
 (`AnalyticDegree.lean:236`); the genuine proof is
@@ -75,6 +75,7 @@ theorem traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smulU
 ### Genuine descent (no sorry of its own)
 -/
 
+omit [CompactSpace Y] in
 /-- **Matrix-level trace-pullback identity.** Companion of
 `traceFormsCoord_holomorphicTraceCoord_eq_degree_smul` (`AnalyticDegree.lean:254`). -/
 theorem traceFormsCoordU_holomorphicTraceCoordU_eq_degree_smul
@@ -95,6 +96,7 @@ theorem traceFormsCoordU_holomorphicTraceCoordU_eq_degree_smul
     LinearMap.id_apply] at happ
   rw [happ, map_smul, LinearEquiv.apply_symm_apply]
 
+omit [CompactSpace Y] in
 /-- **Vector-level trace-pullback identity.** Companion of
 `pushforwardTraceLift_traceDualPullbackLift_eq_degree_smul` (`AnalyticDegree.lean:316`):
 `pushforwardTraceLiftU ∘ traceDualPullbackLiftU = (analyticDegreeU : ℂ) • id`. -/

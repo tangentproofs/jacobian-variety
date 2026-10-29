@@ -37,6 +37,7 @@ variable (X : Type u) [TopologicalSpace X] [ChartedSpace ℂ X]
 noncomputable def chosenChain (P Q : X) : List (ChartSegment X) :=
   (exists_chain P Q).choose
 
+omit [FiniteDimensionalHolomorphicOneForms ℂ X] in
 theorem chosenChain_isChain (P Q : X) : IsChain (chosenChain X P Q) P Q :=
   (exists_chain P Q).choose_spec
 

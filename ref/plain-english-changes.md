@@ -873,3 +873,176 @@ yellow ``not ready'' flags. The remaining open items are
 off the path of the public API: the surface classification underlying
 the polygonal model.
 ```
+
+### 44. `tex/sections/04-branched-covers-genus-zero.tex:888` (lem:uniformization-genus-zero-homeomorphism, thm:exists-biholomorph-one-point-of-genus-zero)
+
+**Why.** Genus-zero uniformization and its helper lemma no longer feed the main theorem (C5 is proved via the Hodge decomposition, entry 35), so they became unreachable in the dependency graph; the graph audit accepts unreachable statements only inside an `Orphaned statements` section.
+
+**Old.**
+```latex
+(block at its original position)
+```
+**New.**
+```latex
+(same text, moved verbatim to a new final section `Orphaned statements (genus zero)`)
+```
+
+### 45. `tex/sections/06-periods-and-riemann-bilinear.tex:828` (lem:h1-basis-of-compact-riemann-surface-u, lem:riemann-classical-real-li-input-u)
+
+**Why.** The two retired universe-u lemmas are no longer used by the period-lattice theorem, so they were unreachable in the dependency graph; moved to an `Orphaned statements` section.
+
+**Old.**
+```latex
+(block at its original position)
+```
+**New.**
+```latex
+(same text, moved verbatim to a new final section `Orphaned statements (periods)`)
+```
+
+### 46. `tex/sections/05-polygonal-model.tex:292` (def:smooth-real-structure)
+
+**Why.** The cited Lean declarations were deleted as dead code; `\leanok` pointed at missing names.
+
+**Old.**
+```latex
+\lean{JacobianChallenge.Periods.complexChartedSpaceReal2,
+JacobianChallenge.Periods.ChartedSpaceComplex_to_smoothReal2}
+\leanok
+\end{definition}
+```
+**New.**
+```latex
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
+\end{definition}
+```
+
+### 47. `tex/sections/05-polygonal-model.tex:505` (lem:polygon4g-endpoint-repair-bookkeeping-substrate)
+
+**Why.** One cited declaration (`polygon4g_endpoint_pair_repaired_refl`) was deleted as dead code; the reference is dropped (the other eight exist and are sorry-free).
+
+**Old.**
+```latex
+JacobianChallenge.Periods.polygon4g_endpoint_pair_repaired_refl,
+
+```
+**New.**
+```latex
+
+```
+
+### 48. `tex/sections/06-periods-and-riemann-bilinear.tex:108` (lem:path-integral-in-chart-linearity)
+
+**Why.** The cited Lean declarations were deleted as dead code (superseded by chart chains).
+
+**Old.**
+```latex
+\lean{JacobianChallenge.Periods.pathIntegralInChartCorrect_smul,
+JacobianChallenge.Periods.pathIntegralInChartCorrect_trans_of_curveIntegrable,
+JacobianChallenge.Periods.pathIntegralInChartCorrect_neg_form_eq_symm_path}
+\leanok
+\end{lemma}
+\begin{proof}\leanok\end{proof}
+```
+**New.**
+```latex
+Not formalized in this form: the chart-local integral was replaced by chart chains
+(\code{ChartSegment.integral\_add}, \code{ChartSegment.integral\_smul}); the Lean statements were removed in the cleanup pass (unused by the public development).
+\end{lemma}
+```
+
+### 49. `tex/sections/06-periods-and-riemann-bilinear.tex:613` (lem:riemann-bilinear-algebra-skeleton)
+
+**Why.** The cited Lean declarations were deleted as dead code; `\leanok` pointed at missing names.
+
+**Old.**
+```latex
+\lean{JacobianChallenge.Periods.RiemannBilinearRefinement.Q_skeleton_antisym,
+JacobianChallenge.Periods.RiemannBilinearRefinement.Q_skeleton_diag_zero,
+JacobianChallenge.Periods.RiemannBilinearRefinement.Q_skeleton_smul_left,
+JacobianChallenge.Periods.RiemannBilinearRefinement.Q_skeleton_smul_right,
+JacobianChallenge.Periods.RiemannBilinearRefinement.handleTerm_antisym,
+JacobianChallenge.Periods.RiemannBilinearRefinement.handleTerm_diag_zero,
+JacobianChallenge.Periods.RiemannBilinearRefinement.riemann_bilinear_identity_skeleton}
+\leanok
+\end{lemma}
+\begin{proof}\leanok\end{proof}
+```
+**New.**
+```latex
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
+\end{lemma}
+```
+
+### 50. `tex/sections/06-periods-and-riemann-bilinear.tex:634` (lem:quadratic-positivity-linear-independent-skeleton)
+
+**Why.** The cited Lean declarations were deleted as dead code; `\leanok` pointed at missing names.
+
+**Old.**
+```latex
+\lean{JacobianChallenge.Periods.RiemannBilinearRefinement.quadraticSkeleton_nonneg,
+JacobianChallenge.Periods.RiemannBilinearRefinement.quadraticSkeleton_eq_zero_iff,
+JacobianChallenge.Periods.RiemannBilinearRefinement.sum_nonneg_eq_zero_iff_pointwise,
+JacobianChallenge.Periods.RiemannBilinearRefinement.real_linearIndependent_of_quadratic_pos_def,
+JacobianChallenge.Periods.RiemannBilinearRefinement.quadratic_pos_def_of_real_linearIndependent}
+\leanok
+\end{lemma}
+\begin{proof}\leanok\end{proof}
+```
+**New.**
+```latex
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
+\end{lemma}
+```
+
+### 51. `tex/sections/06-periods-and-riemann-bilinear.tex:692` (lem:de-rham-zero-period-kernel-bookkeeping)
+
+**Why.** The cited Lean declarations were deleted as dead code; `\leanok` pointed at missing names.
+
+**Old.**
+```latex
+\lean{JacobianChallenge.HolomorphicForms.deRhamComparisonMap1_zero_period_mem_kernel_frontier,
+JacobianChallenge.HolomorphicForms.deRhamComparisonMap1_comparison_kernel_zero_period_frontier}
+\leanok
+\end{lemma}
+\begin{proof}\leanok\end{proof}
+```
+**New.**
+```latex
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
+\end{lemma}
+```
+
+### 52. `tex/sections/06-periods-and-riemann-bilinear.tex:731` (lem:hodge-harmonic-embed-bookkeeping)
+
+**Why.** The cited Lean declarations were deleted as dead code; `\leanok` pointed at missing names.
+
+**Old.**
+```latex
+\lean{JacobianChallenge.HolomorphicForms.harmonicEmbed,
+JacobianChallenge.HolomorphicForms.harmonicProjection1_harmonicEmbed}
+\leanok
+\end{lemma}
+\begin{proof}\leanok\end{proof}
+```
+**New.**
+```latex
+Not formalized: the Lean statements were removed in the cleanup pass (unused by the public development).
+\end{lemma}
+```
+
+### 53. `tex/sections/08-abel-jacobi-map.tex:472` (thm:abel-point-separation (proof))
+
+**Why.** The Lean proof (`pathIntegralFunctional_separates_pointsU`) is now sorry-free; proof-level `\leanok` added.
+
+**Old.**
+```latex
+\begin{proof}
+Assume \(Q_1\ne Q_2\). Theorem~\ref{thm:aj-divisor-hom} reduces to
+```
+**New.**
+```latex
+\begin{proof}
+\leanok
+Assume \(Q_1\ne Q_2\). Theorem~\ref{thm:aj-divisor-hom} reduces to
+```

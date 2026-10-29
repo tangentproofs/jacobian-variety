@@ -60,7 +60,7 @@ theorem L1Cauchy.neg {f : ℕ → ℂ → ℂ} {K : Set ℂ} (hf : L1Cauchy f K)
     _ < δ := this
 
 /-- A Cauchy sequence of constants is `L¹`-Cauchy on a set of finite measure. -/
-theorem L1Cauchy.const {c : ℕ → ℂ} (hc : CauchySeq c) {K : Set ℂ} (hK : volume K < ⊤) :
+theorem L1Cauchy.const {c : ℕ → ℂ} (hc : CauchySeq c) {K : Set ℂ} (_hK : volume K < ⊤) :
     L1Cauchy (fun n _ => c n) K := fun δ hδ => by
   set V := volume.real K + 1
   have hV : 0 < V := by positivity
@@ -132,7 +132,7 @@ theorem index_connected {ι : Type*} [Fintype ι] {Y : Type*} [TopologicalSpace 
     (P : ι → Prop) (k₀ : ι) (h₀ : P k₀) (hk₀ : (U k₀).Nonempty)
     (hstep : ∀ k l, P k → (U k ∩ U l).Nonempty → P l) : ∀ k, (U k).Nonempty → P k := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   obtain ⟨k₁, hk₁, hP₁⟩ := hcon
   set Y₁ := ⋃ k ∈ {k | P k}, U k
   set Y₂ := ⋃ k ∈ {k | ¬P k}, U k

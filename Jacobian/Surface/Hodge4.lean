@@ -57,7 +57,7 @@ theorem isOpen_Qo (k : Fin A.N) : IsOpen (A.Qo k) := by
   have h2 : Continuous fun w : ℂ => |w.im - (A.ctr k).im| := by fun_prop
   exact (isOpen_lt h1 continuous_const).inter (isOpen_lt h2 continuous_const)
 
-theorem Qo_subset_Q (k : Fin A.N) : A.Qo k ⊆ A.Q k := fun w hw =>
+theorem Qo_subset_Q (k : Fin A.N) : A.Qo k ⊆ A.Q k := fun _ hw =>
   A.mem_Q.mpr ⟨hw.1.le, hw.2.le⟩
 
 theorem ball_subset_Qo (k : Fin A.N) : ball (A.ctr k) (A.r k) ⊆ A.Qo k := by

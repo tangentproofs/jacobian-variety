@@ -1326,6 +1326,7 @@ variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [FiniteDimensionalHolomorphicOneForms ℂ X]
 
 
+omit [ConnectedSpace X] [FiniteDimensionalHolomorphicOneForms ℂ X] in
 theorem toSinglePoleMeromorphicAnalyticData
     {P : X} (s : SimplePoleRRSection X P) :
     Nonempty (SinglePoleMeromorphicAnalyticData (X := X) P) :=
