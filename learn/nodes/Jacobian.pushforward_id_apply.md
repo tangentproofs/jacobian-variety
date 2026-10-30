@@ -16,7 +16,7 @@ quiz:
   - 'A pointwise equality: for every `P : Jacobian X`, `pushforward id contMDiff_id P = P`'
   - 'An equality of the two underlying linear maps on ℂ^g'
   answer: 1
-  explain: 'Jacobian/Solution.lean line 150 quantifies over `P : Jacobian X`, matching Jacobian/Challenge.lean line 116.'
+  explain: 'Jacobian/Solution.lean line 152 quantifies over `P : Jacobian X`, matching Jacobian/Challenge.lean line 116.'
 - q: 'What is the bottom fact the proof reduces to?'
   type: choice
   choices:
@@ -24,7 +24,7 @@ quiz:
   - 'The period lattice is discrete'
   - 'The degree of the identity map is 1'
   answer: 0
-  explain: '`holomorphicTraceCoord_idU` (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 48–55) rewrites with `pullbackFormsBundledLM_id`, and then `pushforwardTraceLiftLinearMapU_id` (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 74–78) turns the transpose of the identity matrix into the identity.'
+  explain: '`holomorphicTraceCoord_idU` (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 49–56) rewrites with `pullbackFormsBundledLM_id`, and then `pushforwardTraceLiftLinearMapU_id` (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 75–79) turns the transpose of the identity matrix into the identity.'
 - q: 'Why does the proof need `mk_surjective`?'
   type: choice
   choices:
@@ -32,7 +32,7 @@ quiz:
   - 'To prove the Jacobian is compact'
   - 'To choose a basis of 1-forms'
   answer: 0
-  explain: 'Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean line 99 obtains `⟨v, rfl⟩` from `ComplexTorus.mk_surjective` and then argues on `v`.'
+  explain: 'Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean line 100 obtains `⟨v, rfl⟩` from `ComplexTorus.mk_surjective` and then argues on `v`.'
 ---
 ## Plain English
 
@@ -40,7 +40,7 @@ quiz:
 
   `pushforward id contMDiff_id P = P`
 
-(Jacobian/Solution.lean lines 150–154). The second argument `contMDiff_id` is the proof that the identity map is holomorphic, which the definition of `pushforward` requires as an argument.
+(Jacobian/Solution.lean lines 152–156). The second argument `contMDiff_id` is the proof that the identity map is holomorphic, which the definition of `pushforward` requires as an argument.
 
 ## Why it matters
 
@@ -48,9 +48,9 @@ This is half of functoriality. The specification lists it (Jacobian/Challenge.le
 
 ## How the proof goes
 
-The public proof (Jacobian/Solution.lean lines 150–154) unfolds the `ULift` wrapper, rewrites with [analyticPushforward_id_applyU](#/node/TraceDegree.analyticPushforward_id_applyU) (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 97–104), and closes with `rfl`.
+The public proof (Jacobian/Solution.lean lines 152–156) unfolds the `ULift` wrapper, rewrites with [analyticPushforward_id_applyU](#/node/TraceDegree.analyticPushforward_id_applyU) (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 98–105), and closes with `rfl`.
 
-The analytic lemma takes a representative: every class is `mk v` for some `v ∈ ℂ^g`. On representatives the pushforward is the linear map [pushforwardTraceLiftLinearMapU](#/node/TraceDegree.pushforwardTraceLiftLinearMapU), so the goal becomes that this linear map along `id` is the identity. That is `pushforwardTraceLiftLinearMapU_id` (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 74–78): the map is the transpose of the matrix of [holomorphicTraceCoordU](#/node/TraceDegree.holomorphicTraceCoordU), and [holomorphicTraceCoord_idU](#/node/TraceDegree.holomorphicTraceCoord_idU) (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 48–55) shows that coordinate map is the identity, because [pullback of forms along the identity is the identity](#/node/HolomorphicForms.pullbackFormsBundledLM_id). The transpose of the identity matrix is the identity matrix.
+The analytic lemma takes a representative: every class is `mk v` for some `v ∈ ℂ^g`. On representatives the pushforward is the linear map [pushforwardTraceLiftLinearMapU](#/node/TraceDegree.pushforwardTraceLiftLinearMapU), so the goal becomes that this linear map along `id` is the identity. That is `pushforwardTraceLiftLinearMapU_id` (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 75–79): the map is the transpose of the matrix of [holomorphicTraceCoordU](#/node/TraceDegree.holomorphicTraceCoordU), and [holomorphicTraceCoord_idU](#/node/TraceDegree.holomorphicTraceCoord_idU) (Jacobian/TraceDegree/AnalyticPushforwardFunctorialU.lean lines 49–56) shows that coordinate map is the identity, because [pullback of forms along the identity is the identity](#/node/HolomorphicForms.pullbackFormsBundledLM_id). The transpose of the identity matrix is the identity matrix.
 
 This side is cheap. The pushforward is built from pullback-of-forms, whose functoriality is the chain rule and already holds in Mathlib-style generality. The [pullback side](#/node/Jacobian.pullback_id_apply) rests on the trace of forms instead, and there the corresponding fact is a genuine branched-cover argument.
 

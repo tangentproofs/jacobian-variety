@@ -8,8 +8,8 @@ authors:
 caveats:
 - 'The dual map is taken as a *matrix* transpose (`LinearMap.toMatrix''` then `Matrix.transpose` then `Matrix.toLin''`), not as Mathlib''s `LinearMap.dualMap`. That is the same thing only because the source and target are already the coordinate spaces `Fin g → ℂ` with their standard bases; the identification of `Fin g → ℂ` with its own dual is the standard bilinear pairing (no complex conjugation).'
 - 'Everything basis-dependent in [traceFormsCoordU](#/node/TraceDegree.traceFormsCoordU) is inherited here, including the non-canonical choice of basis of H⁰(X, Ω¹) and the `Classical.choose`-selected trace form.'
-- 'No theorem at this point says this map is the dual of the trace in any intrinsic sense. It is a definition; the transpose is simply declared to be "the correct representative for Jacobian pullback" in the docstring (`Jacobian/TraceDegree/PullbackTraceLiftU.lean` lines 62–66). An equivalence identifying `Fin g → ℂ` with the linear dual of the form space does exist (`Jacobian/HolomorphicForms/BasisAlignedDualEquiv.lean` lines 69–72), but nothing in this chain invokes it.'
-- 'The `U` suffix is vestigial: the module docstring points at `Jacobian/TraceDegree/PullbackBasis.lean` and a Type-0 original `traceDualPullbackLift`, and neither exists in the tree (only an unbuilt `Attic/FalseGaps/PullbackBasis.lean` mentioning the old names).'
+- 'No theorem at this point says this map is the dual of the trace in any intrinsic sense. It is a definition; the transpose is simply declared to be "the correct representative for Jacobian pullback" in the docstring (`Jacobian/TraceDegree/PullbackTraceLiftU.lean` lines 63–67). An equivalence identifying `Fin g → ℂ` with the linear dual of the form space does exist (`Jacobian/HolomorphicForms/BasisAlignedDualEquiv.lean` lines 72–75), but nothing in this chain invokes it.'
+- 'The `U` suffix is vestigial: the module docstring points at a Type-0 original `traceDualPullbackLift` in `PullbackBasis.lean`, and says of that file "retired; now `Attic/FalseGaps/PullbackBasis.lean`, not built". Neither is part of the built library, so this is the only version.'
 quiz:
 - q: 'What is the source of `traceDualPullbackLiftU f hf`?'
   type: choice
@@ -18,7 +18,7 @@ quiz:
   - '`Fin (analyticGenus ℂ Y) → ℂ`'
   - '`HolomorphicOneForm ℂ Y`'
   answer: 1
-  explain: '`Jacobian/TraceDegree/PullbackTraceLiftU.lean` lines 67–70 types it `(Fin (analyticGenus ℂ Y) → ℂ) →ₗ[ℂ] (Fin (analyticGenus ℂ X) → ℂ)`, the reverse of `traceFormsCoordU`.'
+  explain: '`Jacobian/TraceDegree/PullbackTraceLiftU.lean` lines 68–71 types it `(Fin (analyticGenus ℂ Y) → ℂ) →ₗ[ℂ] (Fin (analyticGenus ℂ X) → ℂ)`, the reverse of `traceFormsCoordU`.'
 - q: 'Why is a transpose the right thing here?'
   type: choice
   choices:
@@ -46,7 +46,7 @@ quiz:
 ---
 ## Plain English
 
-[traceFormsCoordU](#/node/TraceDegree.traceFormsCoordU) is a matrix sending X-coordinates to Y-coordinates. `traceDualPullbackLiftU f hf` is its transpose, so it sends Y-coordinates to X-coordinates (`Jacobian/TraceDegree/PullbackTraceLiftU.lean` lines 67–70).
+[traceFormsCoordU](#/node/TraceDegree.traceFormsCoordU) is a matrix sending X-coordinates to Y-coordinates. `traceDualPullbackLiftU f hf` is its transpose, so it sends Y-coordinates to X-coordinates (`Jacobian/TraceDegree/PullbackTraceLiftU.lean` lines 68–71).
 
 The one-line body does exactly that and nothing more:
 

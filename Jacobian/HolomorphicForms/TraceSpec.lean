@@ -2363,7 +2363,8 @@ y₀` combined with the eq-on-`V ∩ regular` clause (which identifies
 
 This isolates the **pointwise function-level** gluing obligation —
 the per-branch-point selection via `Classical.choice` plus the local
-holomorphicity verification — deferred as a single `sorry`.
+holomorphicity verification. It was once deferred as a single `sorry`;
+it is now proved.
 -/
 private theorem globalHolomorphicFunction_from_local_extensions
     (regular : Set Y) (hOpen : IsOpen regular) (_hDense : Dense regular)

@@ -14,7 +14,7 @@ This file provides the universe-polymorphic trace identity
 (`AnalyticDegree.lean:476`), which is what the public `pushforward_pullback`
 (`Solution.lean:175`) ultimately calls.
 
-## Structure (route α — the D2 frontier-obligation pattern)
+## Structure (route α — the former frontier-obligation pattern)
 
 The Type-0 descent (`AnalyticDegree.lean`): `analyticPushPull_provider` (`:371`) ←
 vector-level `pushforwardTraceLift_traceDualPullbackLift_eq_degree_smul` (`:316`)
@@ -25,8 +25,8 @@ degree·form identity (`traceFormsRegularSpec_provider` +
 `branchedCoverData_of_nonconstant_holomorphic` + the regular-locus identity
 principle + `trace_pullback_at_regular_value`), `{X Y : Type}`-bound.
 
-The obligation is cut at the LM level: the single named tracked frontier
-obligation `traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smulU` (companion
+The obligation is cut at the LM level: the single named obligation
+`traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smulU` (companion
 of `:236`) isolates exactly `trace_pullback_provider`. Everything above it — the
 matrix-level and vector-level identities and the quotient descent — is proved
 GENUINELY on top (pure linear algebra over the `Type 0` carriers `Fin g → ℂ`,
@@ -36,9 +36,10 @@ plus the universe-`u` descent lemmas `analyticPullback_mk_spec_rawU` /
 `pushforwardTraceLiftCLMU (traceDualPullbackLiftCLMU v) = deg • v`, so the deep
 identity is genuinely required (hence the one obligation, exactly as E2c).
 
-The genuine discharge of the obligation is the later dedicated task (route β: the
-full universe-`u` port of the branched-cover trace machinery), required before
-final Milestone D acceptance; until then this is the only sorry in the file.
+The obligation has since been discharged by the route-β work (the full
+universe-`u` port of the branched-cover trace machinery): it delegates to
+`TracePullbackProviderU.traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smul_genuineU`.
+There are no sorries in this file.
 -/
 
 namespace JacobianChallenge.TraceDegree

@@ -6,7 +6,8 @@ import Jacobian.ComplexTorus.OfClm
 /-!
 # Universe-polymorphic analytic pullback
 
-`Jacobian/TraceDegree/PullbackBasis.lean` defines the Type-0 analytic pullback
+`PullbackBasis.lean` (retired; now `Attic/FalseGaps/PullbackBasis.lean`, not
+built) defined the Type-0 analytic pullback
 `analyticPullback f hf : BasisAnalyticJacobian Y →ₜ+ BasisAnalyticJacobian X`
 (the contravariant `Y → X` direction) as the descent of the dual-pullback
 trace-lift continuous linear map `traceDualPullbackLiftCLM` through the

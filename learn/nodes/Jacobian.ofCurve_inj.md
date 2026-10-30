@@ -10,7 +10,7 @@ caveats:
 - 'Injective, not an embedding. Nothing about immersion, closed image, properness, or the differential being nonzero is proved.'
 - 'The base point P is an argument, and the map depends on it. No theorem compares `ofCurve P` with `ofCurve P''`.'
 - 'This is the two-point separation form of Abel''s theorem only. There is no divisor group, no Pic⁰, no Jacobi inversion (surjectivity), and no Abel criterion for principal divisors in this repository.'
-- 'The lemma does not exhibit any X with `0 < genus X`. The only concrete compact Riemann surface built in the repository is ℂ̂ (Jacobian/HolomorphicForms/OnePointCxChartedSpace.lean line 166), whose genus is proved to be 0 (Jacobian/HolomorphicForms/GenusZeroClassification.lean lines 629–633), so the hypothesis is never discharged on a concrete example.'
+- 'The lemma does not exhibit any X with `0 < genus X`. The only concrete compact Riemann surface built in the repository is ℂ̂ (Jacobian/HolomorphicForms/OnePointCxChartedSpace.lean line 166), whose genus is proved to be 0 (Jacobian/HolomorphicForms/GenusZeroClassification.lean lines 638–642), so the hypothesis is never discharged on a concrete example.'
 quiz:
 - q: 'What is the exact hypothesis under which injectivity is proved?'
   type: choice
@@ -19,7 +19,7 @@ quiz:
   - '`0 < genus X`'
   - '`genus X = 1`'
   answer: 1
-  explain: 'Jacobian/Solution.lean line 117 reads `lemma ofCurve_inj (P : X) (h : 0 < genus X) : Function.Injective (ofCurve P)`.'
+  explain: 'Jacobian/Solution.lean line 119 reads `lemma ofCurve_inj (P : X) (h : 0 < genus X) : Function.Injective (ofCurve P)`.'
 - q: 'Why is the hypothesis necessary?'
   type: choice
   choices:
@@ -51,7 +51,7 @@ quiz:
   - 'No. Only injectivity is stated; `ofCurve_contMDiff` separately gives holomorphy, and no immersion or closed-image claim is made'
   - 'Yes, because X is compact'
   answer: 1
-  explain: 'Jacobian/Solution.lean lines 117–120 prove `Function.Injective` and nothing more. The audit lists "ofCurve is an embedding" on its do-not-say list.'
+  explain: 'Jacobian/Solution.lean lines 119–122 prove `Function.Injective` and nothing more. The audit lists "ofCurve is an embedding" on its do-not-say list.'
 ---
 ## Plain English
 
@@ -63,7 +63,7 @@ for a chosen basis ω₁, …, ω_g of the holomorphic 1-forms, taken modulo the
 
 That is a strong statement. The surface is a two-real-dimensional object and the integrals are a finite list of complex numbers computed along a path; the lemma says they already contain the point.
 
-The Lean statement (Jacobian/Solution.lean lines 117–120) is exactly `(P : X) (h : 0 < genus X) : Function.Injective (ofCurve P)`. The genus hypothesis is not decoration. When `genus X = 0` the Jacobian is a one-point group and `ofCurve P` is constant, so the statement would be false.
+The Lean statement (Jacobian/Solution.lean lines 119–122) is exactly `(P : X) (h : 0 < genus X) : Function.Injective (ofCurve P)`. The genus hypothesis is not decoration. When `genus X = 0` the Jacobian is a one-point group and `ofCurve P` is constant, so the statement would be false.
 
 ## Why it matters
 

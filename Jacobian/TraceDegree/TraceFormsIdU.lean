@@ -9,8 +9,9 @@ import Jacobian.HolomorphicForms.TraceSpec
 This file genuinely discharges the universe-`u` identity trace-functoriality
 `traceFormsBundledLM (id) contMDiff_id = LinearMap.id` (`traceFormsBundledLM_idU`)
 — the E2c route-β obligation `JacobianChallenge.TraceDegree.traceFormsBundledLM_idU`
-(declared as a tracked frontier `sorry` in `AnalyticPullbackFunctorialU.lean`,
-companion of the Type-0 `traceFormsBundledLM_id` in `PullbackBasis.lean:954`).
+(which was a tracked `sorry` in `AnalyticPullbackFunctorialU.lean` and now
+delegates here; companion of the Type-0 `traceFormsBundledLM_id` in the retired
+`Attic/FalseGaps/PullbackBasis.lean:954`).
 
 Unlike the composition case (`traceFormsBundledLM_compU`, which routes through the
 deep `traceFormsBundled_comp_of_nonconstant`), the identity case is purely

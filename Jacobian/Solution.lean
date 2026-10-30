@@ -39,7 +39,9 @@ noncomputable instance (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpac
 /-- The genus of a compact Riemann surface: the complex dimension of its space of
 holomorphic 1-forms. Stated directly as `Module.finrank` (definitionally
 `analyticGenus ℂ X`) so that the *value* does not depend on the finiteness proof; the
-finiteness theorem is a named classical input, used only where a basis is needed. -/
+finiteness theorem (`compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier`,
+whose `_frontier` suffix is only historical — it is proved, by the Montel–Riesz argument in
+`HolomorphicForms/Finiteness.lean`) is used only where a basis is needed. -/
 noncomputable def genus (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]
     [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X] : ℕ :=
   Module.finrank ℂ (JacobianChallenge.HolomorphicForms.HolomorphicOneForm ℂ X)

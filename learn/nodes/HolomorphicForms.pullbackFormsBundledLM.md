@@ -8,7 +8,7 @@ authors:
 caveats:
 - 'This declaration takes `X` and `Y` as *explicit* arguments, unlike its neighbours in the file. Call sites therefore read `pullbackFormsBundledLM X Y f hf`, which is why the argument order looks redundant.'
 - 'The two proofs are pointwise. They apply `ContMDiffSection.coe_inj` to reduce equality of forms to equality of their underlying functions, then unfold `pullbackFormsFunFiber` and finish with `ContinuousLinearMap.add_comp` and `ContinuousLinearMap.smul_comp`. No smoothness or holomorphicity is used in either proof; `hf` appears only because it is needed to form the output.'
-- 'The module header of `Jacobian/HolomorphicForms/PullbackBundled.lean` lines 23–29 still describes this layer as `opaque` with a characterising axiom. That is out of date: this is a concrete `noncomputable def`, and `pullbackFormsBundledLM_apply_fun` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 174–177) is proved by `rfl`.'
+- 'This layer was `opaque` with a characterising axiom at an earlier point in the project. It is not now: this is a concrete `noncomputable def`, `pullbackFormsBundledLM_apply_fun` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 173–176) is proved by `rfl`, and the module header says so at `Jacobian/HolomorphicForms/PullbackBundled.lean` lines 26–31.'
 quiz:
 - q: 'What does this declaration add to `pullbackFormsBundled`?'
   type: choice
@@ -17,7 +17,7 @@ quiz:
   - 'A proof that f* is injective'
   - 'Continuity of f*'
   answer: 0
-  explain: 'The fields are `map_add''` and `map_smul''` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 153–171); the output type is `→ₗ[ℂ]`.'
+  explain: 'The fields are `map_add''` and `map_smul''` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 152–170); the output type is `→ₗ[ℂ]`.'
 - q: 'Which direction is this linear map?'
   type: choice
   choices:
@@ -25,7 +25,7 @@ quiz:
   - '`HolomorphicOneForm ℂ Y →ₗ[ℂ] HolomorphicOneForm ℂ X`'
   - 'It is a linear isomorphism'
   answer: 1
-  explain: 'Pullback is contravariant: forms on the target become forms on the source (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 150–151).'
+  explain: 'Pullback is contravariant: forms on the target become forms on the source (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 149–150).'
 - q: 'What does the linearity proof actually rely on?'
   type: choice
   choices:
@@ -41,11 +41,11 @@ quiz:
   - 'To show the sums of the pulled-back forms are again holomorphic'
   - 'To rule out branch points'
   answer: 0
-  explain: 'Both field proofs reduce to equality of the underlying functions via `ContMDiffSection.coe_inj` and finish with `ContinuousLinearMap.add_comp` / `smul_comp` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 153–171); `hf` only enters through `pullbackFormsBundled`.'
+  explain: 'Both field proofs reduce to equality of the underlying functions via `ContMDiffSection.coe_inj` and finish with `ContinuousLinearMap.add_comp` / `smul_comp` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 152–170); `hf` only enters through `pullbackFormsBundled`.'
 ---
 ## Plain English
 
-[pullbackFormsBundled](#/node/HolomorphicForms.pullbackFormsBundled) takes one form η on Y and returns the form f\*η on X. `pullbackFormsBundledLM X Y f hf` says that this operation is ℂ-linear in η (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 145–171):
+[pullbackFormsBundled](#/node/HolomorphicForms.pullbackFormsBundled) takes one form η on Y and returns the form f\*η on X. `pullbackFormsBundledLM X Y f hf` says that this operation is ℂ-linear in η (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 144–170):
 
 ```
 f* : H⁰(Y, Ω¹) →ₗ[ℂ] H⁰(X, Ω¹)
@@ -67,4 +67,4 @@ Note the direction. Pullback of forms goes Y → X. Transposing it gives a map X
 
 ## How it is used
 
-Three ways. It is conjugated by the chosen bases to give [holomorphicTraceCoordU](#/node/TraceDegree.holomorphicTraceCoordU), whose transpose becomes the Jacobian pushforward. It appears in the change-of-variables statement `∫_{f∘γ} η = ∫_γ f*η` that proves the pushforward preserves periods (`Jacobian/TraceDegree/AnalyticPushforwardU.lean` lines 55–86). And the functoriality lemmas [pullbackFormsBundledLM_id](#/node/HolomorphicForms.pullbackFormsBundledLM_id) and [pullbackFormsBundledLM_comp](#/node/HolomorphicForms.pullbackFormsBundledLM_comp) make it a contravariant functor, which is what makes the Jacobian pushforward functorial.
+Three ways. It is conjugated by the chosen bases to give [holomorphicTraceCoordU](#/node/TraceDegree.holomorphicTraceCoordU), whose transpose becomes the Jacobian pushforward. It appears in the change-of-variables statement `∫_{f∘γ} η = ∫_γ f*η` that proves the pushforward preserves periods (`Jacobian/TraceDegree/AnalyticPushforwardU.lean` lines 57–88). And the functoriality lemmas [pullbackFormsBundledLM_id](#/node/HolomorphicForms.pullbackFormsBundledLM_id) and [pullbackFormsBundledLM_comp](#/node/HolomorphicForms.pullbackFormsBundledLM_comp) make it a contravariant functor, which is what makes the Jacobian pushforward functorial.

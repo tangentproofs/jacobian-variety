@@ -5,7 +5,8 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 /-!
 # Universe-polymorphic trace-lift maps
 
-`Jacobian/TraceDegree/PushforwardBasis.lean` builds the analytic pushforward
+`PushforwardBasis.lean` (retired; now `Attic/FalseGaps/PushforwardBasis.lean`,
+not built) built the analytic pushforward
 `analyticPushforward f hf : BasisAnalyticJacobian X →ₜ+ BasisAnalyticJacobian Y`
 from the trace-coordinate map `holomorphicTraceCoord f hf` and its transpose
 `pushforwardTraceLiftCLM` (a continuous ℂ-linear map between the basis-aligned

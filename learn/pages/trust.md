@@ -6,7 +6,7 @@ This site **explains** a Lean library. It does not re-prove it. Here is exactly 
 
 | | jacobian-variety @ 6b3d4f4b |
 |---|---|
-| Toolchain | `leanprover/lean4:v4.31.0-rc1`, Mathlib `v4.31.0-rc1` (`lean-toolchain`, `lakefile.toml`; the README's "v4.28.0" is out of date) |
+| Toolchain | `leanprover/lean4:v4.31.0-rc1`, Mathlib `v4.31.0-rc1` (`lean-toolchain`, `lakefile.toml`, and `README.md` all agree). Some file-level comments inside `Jacobian/` still reason about what Mathlib v4.28.0 did or did not provide; read those as rationale from when they were written |
 | Builds publicly | **yes.** GitHub CI "Solution linter check" builds `Jacobian.Solution` on every push to `main`; it passed at `6b3d4f4b` ([run 41000926350](https://github.com/tangentproofs/jacobian-variety/actions/runs/41000926350)) |
 | Statements match the challenge | **yes, at this commit.** CI runs the official [comparator](https://github.com/leanprover/comparator) (pinned at `3afea23`) with `comparator/jacobian-smoketest.json`, which checks that each of the eleven theorems and nine definitions has exactly the type it has in `Jacobian/Challenge.lean`. It passed at `6b3d4f4b` ([run 41000926329](https://github.com/tangentproofs/jacobian-variety/actions/runs/41000926329)). The smoketest config still *permits* `sorryAx`, so it does not check axioms |
 | Strict comparator (no `sorry` allowed) | **reported passing on 2026-10-28** by the repair's progress log (`ref/independent-repair-progress.md`, `ref/axiom-audit.md` §0): "Lean default kernel accepts the solution. Your solution is okay!". Not run in CI; `main` has a few later commits (CI fixes) |
@@ -19,7 +19,7 @@ This site **explains** a Lean library. It does not re-prove it. Here is exactly 
 
 - It certifies that the eleven theorem **statements** and the nine definition **types** in `Solution.lean` are exactly those of `Challenge.lean`, and (strict config) that the proofs use only `propext`, `Quot.sound` and `Classical.choice`.
 - It compares a definition's **type**, not its body. So it cannot tell a genuine `Jacobian` from a fake one with the same type. The [review](#/review) is what checks the bodies.
-- It does **not** list the `T2Space`, `CompactSpace`, `IsManifold` and `LieAddGroup` instances on `Jacobian X` that the challenge also asks for. They are proved in `Jacobian/Solution.lean` lines 94–101 and covered by the `#print axioms` re-check above, but the harness does not compare them with the challenge.
+- It does **not** list the `T2Space`, `CompactSpace`, `IsManifold` and `LieAddGroup` instances on `Jacobian X` that the challenge also asks for. They are proved in `Jacobian/Solution.lean` lines 96–103 and covered by the `#print axioms` re-check above, but the harness does not compare them with the challenge.
 
 ## The honesty audit
 

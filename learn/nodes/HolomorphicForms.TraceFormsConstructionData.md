@@ -33,7 +33,7 @@ quiz:
   - Linearity of the trace in the input form
   - Holomorphy of the trace form
   answer: 0
-  explain: 'regular_spec constrains `traceForm` only at regular values of branched-cover data on f; a constant map admits none, so without `map_zero_spec` nothing would pin the trace down there. `traceFormsBundled_eq_zero_of_constant` (Jacobian/HolomorphicForms/TraceSpec.lean lines 2858–2872) is where `map_zero_spec` is cashed in.'
+  explain: 'regular_spec constrains `traceForm` only at regular values of branched-cover data on f; a constant map admits none, so without `map_zero_spec` nothing would pin the trace down there. `traceFormsBundled_eq_zero_of_constant` (Jacobian/HolomorphicForms/TraceSpec.lean lines 2859–2873) is where `map_zero_spec` is cashed in.'
 - q: For a nonconstant f, does the record determine traceForm uniquely?
   type: choice
   choices:
@@ -41,7 +41,7 @@ quiz:
   - No, two different trace forms can satisfy both fields
   - Only up to adding a constant form
   answer: 0
-  explain: 'Uniqueness follows from regularLocus_dense (Jacobian/HolomorphicForms/TraceSpec.lean lines 278–287) and holomorphicOneForm_ext_on (Jacobian/HolomorphicForms/TraceSpec.lean lines 2789–2831), though the record itself does not state it.'
+  explain: 'Uniqueness follows from regularLocus_dense (Jacobian/HolomorphicForms/TraceSpec.lean lines 278–287) and holomorphicOneForm_ext_on (Jacobian/HolomorphicForms/TraceSpec.lean lines 2790–2832), though the record itself does not state it.'
 ---
 ## Plain English
 

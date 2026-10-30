@@ -18,7 +18,7 @@ quiz:
   - 'No. It is not even well defined without choosing a chain, and a holomorphic map from a compact surface to ℂ^g would be constant. Only its class modulo the lattice is holomorphic'
   - 'Only for genus 1'
   answer: 1
-  explain: 'The theorem is about `ofCurve P`, whose values live in the quotient (Jacobian/Solution.lean lines 103–105). Jacobian/AbelJacobi/PathIntegralFunctionalU.lean lines 17–22 note explicitly that a genuine single-valued holomorphic X → ℂ^g would have to be constant.'
+  explain: 'The theorem is about `ofCurve P`, whose values live in the quotient (Jacobian/Solution.lean lines 105–107). Jacobian/AbelJacobi/PathIntegralFunctionalU.lean lines 17–22 note explicitly that a genuine single-valued holomorphic X → ℂ^g would have to be constant.'
 - q: 'What is the local formula used to prove holomorphy near a point Q₀?'
   type: choice
   choices:
@@ -42,7 +42,7 @@ quiz:
   - 'It moves ℂ^g/Λ into the universe of X, as the spec demands; `contMDiff_uLift_up` transports smoothness across it'
   - 'It records the choice of basis of holomorphic 1-forms'
   answer: 1
-  explain: 'Jacobian/Solution.lean lines 107–111 compose `ComplexTorus.contMDiff_uLift_up` (Jacobian/ComplexTorus/ULiftTransport.lean lines 380–386) with the analytic statement.'
+  explain: 'Jacobian/Solution.lean lines 109–113 compose `ComplexTorus.contMDiff_uLift_up` (Jacobian/ComplexTorus/ULiftTransport.lean lines 380–386) with the analytic statement.'
 ---
 ## Plain English
 
@@ -50,7 +50,7 @@ The [Abel–Jacobi map](#/node/Jacobian.ofCurve) sends a point Q of the surface 
 
   `ContMDiff 𝓘(ℂ) (modelWithCornersSelf ℂ (Fin (genus X) → ℂ)) ω (ofCurve P)`
 
-(Jacobian/Solution.lean lines 107–111). The source model is one complex dimension, the target model is `genus X` complex dimensions, and `ω` is the top (analytic) level of Mathlib's smoothness scale.
+(Jacobian/Solution.lean lines 109–113). The source model is one complex dimension, the target model is `genus X` complex dimensions, and `ω` is the top (analytic) level of Mathlib's smoothness scale.
 
 To compute the integrals you need a path, and the definition picks one by [Classical choice](#/node/AbelJacobi.chosenChain). As Q moves the chosen path can jump arbitrarily, so the raw vector of integrals is a wildly discontinuous function of Q. What saves the statement is that two paths with the same endpoints give integrals differing by a lattice element, so after projecting to ℂ^g/Λ the jumps vanish. The quotient is not an inconvenience to be worked around; it is what makes the map continuous at all.
 
@@ -62,7 +62,7 @@ It also uses the manifold structure on the Jacobian: `ContMDiff` into it makes s
 
 ## How the proof goes
 
-Two steps (Jacobian/Solution.lean lines 107–111): compose [contMDiff_uLift_up](#/node/ComplexTorus.contMDiff_uLift_up) (Jacobian/ComplexTorus/ULiftTransport.lean lines 380–386), the universe move, with [analyticOfCurve_contMDiffU](#/node/AbelJacobi.analyticOfCurve_contMDiffU) (Jacobian/AbelJacobi/AnalyticOfCurveU.lean lines 82–128).
+Two steps (Jacobian/Solution.lean lines 109–113): compose [contMDiff_uLift_up](#/node/ComplexTorus.contMDiff_uLift_up) (Jacobian/ComplexTorus/ULiftTransport.lean lines 380–386), the universe move, with [analyticOfCurve_contMDiffU](#/node/AbelJacobi.analyticOfCurve_contMDiffU) (Jacobian/AbelJacobi/AnalyticOfCurveU.lean lines 82–128).
 
 The analytic statement is proved pointwise. Fix Q₀. Let `c` be the chart at Q₀ and take a ball `B = ball (c Q₀) r` inside the chart's target. Define, for `w ∈ B`,
 

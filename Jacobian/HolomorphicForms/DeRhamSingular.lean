@@ -37,11 +37,14 @@ the integer-cycle module.
 
 ## What this file provides
 
+Nothing: the file declares no theorems or definitions. It is kept for its
+imports and for the plan note below.
+
 ## TOPDOWN role
 
-This is the *de Rham side* of the rank chain. It is the first of two
-named obligations (the other being the *Hodge side*) that the top-down
-refinement of `hodge_deRham_rank_eq` delegates to.
+This was to be the *de Rham side* of the rank chain, the first of two named
+obligations (the other being the *Hodge side*). Neither was declared, and no
+`hodge_deRham_rank_eq` exists; the public solution does not use this chain.
 -/
 
 namespace JacobianChallenge.HolomorphicForms

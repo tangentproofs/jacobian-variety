@@ -6,7 +6,8 @@ import Jacobian.ComplexTorus.OfClm
 /-!
 # Universe-polymorphic analytic pushforward
 
-`Jacobian/TraceDegree/PushforwardBasis.lean` defines the Type-0 analytic
+`PushforwardBasis.lean` (retired; now `Attic/FalseGaps/PushforwardBasis.lean`,
+not built) defined the Type-0 analytic
 pushforward
 `analyticPushforward f hf : BasisAnalyticJacobian X →ₜ+ BasisAnalyticJacobian Y`
 as the descent of the trace-lift continuous linear map `pushforwardTraceLiftCLM`
@@ -25,7 +26,8 @@ Descending the ambient map to the tori needs `pushforwardTraceLift_preserves_lat
 periods of `X` go to periods of `Y`. This used to be "proved" by a `⊥` shortcut — the old
 period subgroup was `⊥` because the period pairing was the zero placeholder. With the
 genuine period lattice (`Periods/GenuinePeriodLattice.lean`) it is a real statement,
-currently a labelled gap (change of variables `∫_{f∘γ} ω = ∫_γ f^*ω`).
+and it is proved below from `Periods.exists_pushforward_chain` (the change of
+variables `∫_{f∘γ} ω = ∫_γ f^*ω`).
 
 The continuous-smoothness lemma `analyticPushforward_contMDiffU` and the
 functoriality laws (`_id_applyU` / `_comp_applyU`) are deferred to E1b.

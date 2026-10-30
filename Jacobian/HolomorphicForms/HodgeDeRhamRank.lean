@@ -7,6 +7,13 @@ import Jacobian.HolomorphicForms.AnalyticGenus
 /-!
 # Top-level assembly: `2g = rank ℤ H₁(X, ℤ)` (Hodge / de Rham bridge)
 
+**Status: plan only.** This file declares nothing, and none of the names cited
+below (`realDimDeRhamH1_eq_two_analyticGenus`,
+`realDim_deRhamH1_eq_finrank_intH1`, `hodge_deRham_rank_eq`) exists in the
+tree; the `HodgeDecomposition` module was retired to `Attic/FalseGaps/`. The
+public solution does not use this bridge — period-lattice fullness is proved
+directly in `Jacobian/Periods/GenuinePeriodLattice*.lean`.
+
 * `Jacobian.HolomorphicForms.HodgeDecomposition`
   (`realDimDeRhamH1_eq_two_analyticGenus`):
   `realDimDeRhamH1 X = 2 * analyticGenus ℂ X` — Hodge side.

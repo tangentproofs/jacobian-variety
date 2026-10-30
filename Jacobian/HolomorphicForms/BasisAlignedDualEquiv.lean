@@ -14,9 +14,10 @@ holomorphicOneFormDualEquiv :
   (HolomorphicOneForm E X →ₗ[ℂ] ℂ) ≃ₗ[ℂ] (Fin (analyticGenus E X) → ℂ)
 ```
 
-This is the bridge that lets period-lattice work in
-`Jacobian/Periods/PeriodLattice.lean` (basis-aligned model) connect to
-the period-pairing image in `Jacobian/Periods/PeriodFunctional.lean`
+This is the bridge that lets period-lattice work in the basis-aligned model
+(originally `Jacobian/Periods/PeriodLattice.lean`, since retired to
+`Attic/FalseGaps/`; now `Jacobian/Periods/GenuinePeriodLattice.lean`) connect
+to the period-pairing image in `Jacobian/Periods/PeriodFunctional.lean`
 (linear-dual space). It uses Mathlib's `Module.finBasis` (an arbitrary
 basis) and `Module.Basis.dualBasis` to dualize.
 
@@ -29,8 +30,10 @@ but its abstract isomorphism class (and all topological/discreteness
 properties) does not.
 
 This file is a Claude-owned design move (commit aa2e593 next-tick plan):
-the bottom-up infrastructure that future ticks can use to unfreeze the
-`opaque periodSubgroup` in `PeriodLattice.lean`.
+the bottom-up infrastructure introduced to unfreeze the then-`opaque`
+`periodSubgroup`. That is done — `PeriodLattice.lean` is retired to
+`Attic/FalseGaps/`, and `Periods.periodSubgroup` is now a definition
+(the range of `periodPairing`).
 -/
 
 namespace JacobianChallenge.HolomorphicForms

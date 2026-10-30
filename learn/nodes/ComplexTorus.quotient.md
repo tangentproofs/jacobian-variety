@@ -68,6 +68,6 @@ Charts, analyticity and smoothness of the group law are built in other files, on
 
 ## Where it is used
 
-`Jacobian X` is this quotient for `V = Fin (genus X) → ℂ`, that is ℂ^g, and `Λ` the period lattice, wrapped in a `ULift` to land in the right universe (Jacobian/Solution.lean lines 74–77). So every statement about a general complex torus in this layer is a statement about the Jacobian once the lattice is specialised. See [Jacobian](#/node/Jacobian).
+`Jacobian X` is this quotient for `V = Fin (genus X) → ℂ`, that is ℂ^g, and `Λ` the period lattice, wrapped in a `ULift` to land in the right universe (Jacobian/Solution.lean lines 76–79). So every statement about a general complex torus in this layer is a statement about the Jacobian once the lattice is specialised. See [Jacobian](#/node/Jacobian).
 
 One caution about reading the name. The definition takes a `Λ` whose three conditions — closed, discrete, compact fundamental domain — already force the quotient to be a compact Hausdorff group with charts, and already prevent it from collapsing to a point when `V` is nonzero. What the definition does not fix is the dimension: `V` is any complex normed space, and the real content of "the Jacobian is a torus of dimension `g`" is in which `V` and which lattice get plugged in.

@@ -9,9 +9,9 @@ This file genuinely discharges the universe-`u` trace-of-pullback identity
 (`traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smulU`) — the E3b route-β
 obligation
 `JacobianChallenge.TraceDegree.traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smulU`
-(declared as a tracked frontier `sorry` in `AnalyticPushPullU.lean`, companion of
-the Type-0 `traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smul` in
-`AnalyticDegree.lean:236`).
+(which was a tracked `sorry` in `AnalyticPushPullU.lean` and now delegates here;
+companion of the Type-0 `traceFormsBundledLM_pullbackFormsBundledLM_eq_degree_smul`
+in `AnalyticDegree.lean:236`).
 
 The proof ports the Type-0 `trace_pullback_provider` (`AnalyticDegree.lean:191`)
 to independent universes `{X : Type u} {Y : Type v}`: case on whether `f` is

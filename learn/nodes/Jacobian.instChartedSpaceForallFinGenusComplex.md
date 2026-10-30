@@ -6,7 +6,7 @@ review: draft
 authors:
 - claude
 caveats:
-- 'The instance is anonymous in the source — Jacobian/Solution.lean lines 96–97. The id used on this site, `Jacobian.instChartedSpaceForallFinGenusComplex`, is the name Lean generates for it; it is recorded in `comparator/jacobian.json`.'
+- 'The instance is anonymous in the source — Jacobian/Solution.lean lines 98–99. The id used on this site, `Jacobian.instChartedSpaceForallFinGenusComplex`, is the name Lean generates for it; it is recorded in `comparator/jacobian.json`.'
 - 'The charts are not canonical. `chartAtPoint` picks a representative of the quotient point with `Function.surjInv`, which uses `Classical.choice`, and picks the isolation radius δ with `.choose` from an existence lemma (Jacobian/ComplexTorus/ChartedSpace.lean lines 32–40). The atlas is the range of this one chosen chart per point, not a maximal atlas.'
 - 'The chart radius is the same δ/4 everywhere. The file''s own docstring says this "keeps the construction simple" and that "a real mathlib-bound treatment would prefer either a global δ derived once or per-point optimal radii" (Jacobian/ComplexTorus/ChartedSpace.lean lines 18–20).'
 - '`ChartedSpace` alone is weaker than "complex manifold". It says the space is covered by homeomorphisms onto open subsets of ℂ^g; it says nothing about the chart transitions. Holomorphy of the transitions is the separate [IsManifold](#/node/Jacobian.instIsManifoldModelWithCornersSelfComplexFinGenusForallComplex) instance.'

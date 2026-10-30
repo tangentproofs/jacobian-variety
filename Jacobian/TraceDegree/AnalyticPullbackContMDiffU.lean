@@ -3,7 +3,8 @@ import Jacobian.TraceDegree.AnalyticPullbackU
 /-!
 # Universe-polymorphic analytic-pullback smoothness
 
-`Jacobian/TraceDegree/PullbackBasis.lean` proves the holomorphicity of the Type-0
+`PullbackBasis.lean` (retired; now `Attic/FalseGaps/PullbackBasis.lean`, not
+built) proved the holomorphicity of the Type-0
 analytic pullback (`analyticPullback_contMDiff_raw`, line 440) by a chart-based
 `ContMDiffOn` argument: on each chart source, `analyticPullback` agrees with
 `mk ∘ traceDualPullbackLiftCLM ∘ chart`, which is smooth as a composition of the
@@ -20,9 +21,9 @@ Both declarations are verbatim mirrors of their Type-0 originals (the same proof
 as the pushforward side `analyticPushforward_contMDiff`, with the contravariant
 `Y → X` direction and `traceDualPullbackLiftCLMU` in place of the pushforward
 trace lift). The chart machinery is universe-polymorphic and the carriers
-`Fin (analyticGenus ℂ X) → ℂ` are `Type 0`. Genuine — no sorry; the only `sorryAx`
-dependence is transitive, through `periodFullComplexLatticeU`'s inherited Periods
-layer-frontier obligations.
+`Fin (analyticGenus ℂ X) → ℂ` are `Type 0`. Genuine — no sorry, and no `sorryAx`
+dependence: the Periods-layer inputs reached through `periodFullComplexLatticeU`
+are all proved.
 -/
 
 namespace JacobianChallenge.TraceDegree

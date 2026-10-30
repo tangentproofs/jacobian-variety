@@ -18,7 +18,8 @@ Every holomorphic 1-form on `OnePoint ℂ ≅ ℂℙ¹` is identically zero
 trivially because the function is identically zero.
 
 The proof decomposes into:
-1. **Identity chart coefficient is entire** (from G2a / chart-trivialisation API)
+1. **Identity chart coefficient is entire** (step G2a; the chart-trivialisation
+   API it needs is proved in `ChartSectionContDiff.lean`)
 2. **Identity chart coefficient tends to 0 at infinity** (from the
    inversion-chart trivialization analysis: the trivialized representative
    H(w) is smooth at 0, and `f(w⁻¹) = -w² H(w)(1)` gives `|f(z)| ≤ C/|z|²`)
@@ -47,14 +48,17 @@ theorem clm_eq_zero_of_apply_one_eq_zero' (f : ℂ →L[ℂ] ℂ) (h : f 1 = 0) 
 /-!
 ### Step 1: Identity chart coefficient is entire
 
-This is the content of the structural axiom G2a. The proof requires
-the chart-trivialisation API for `ContMDiffSection` on the cotangent
-bundle, which is a Mathlib v4.28.0 gap. We accept this as given.
+This is the content of step G2a. It needs the chart-trivialisation API for
+`ContMDiffSection` on the cotangent bundle, which Mathlib does not provide;
+that API is built project-locally in
+`Jacobian/HolomorphicForms/ChartSectionContDiff.lean`
+(`contMDiffSection_localRepr_identityChart_contDiff`), so nothing is assumed
+here.
 -/
 
 /--
 The identity chart coefficient `z ↦ ω(↑z)(1)` is `ContDiff`.
-This is equivalent to the structural axiom G2a.
+This is step G2a, proved by `contMDiffSection_localRepr_identityChart_contDiff`.
 -/
 theorem identityChartCoeff_contDiff (ω : HolomorphicOneForm ℂ (OnePoint ℂ)) :
     ContDiff ℂ ⊤ (fun z : ℂ => ω.toFun (↑z : OnePoint ℂ)

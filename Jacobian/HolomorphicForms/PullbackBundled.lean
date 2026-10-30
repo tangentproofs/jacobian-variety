@@ -19,17 +19,16 @@ holomorphic 1-form `HolomorphicOneForm ℂ X`, given that `f` is `ContMDiff ω`.
 
 The construction requires section-level smoothness through chart
 trivializations of the cotangent bundle (a `Bundle.ContinuousLinearMap`
-bundle). Mathlib v4.28.0 lacks user-facing chart-transition / `localCoeff`
-API for such sections — see `Jacobian/HolomorphicForms/ChartCoeffExtractionRecon.lean`
-for the detailed analysis.
+bundle). Mathlib lacks user-facing chart-transition / `localCoeff` API for
+such sections; the needed composition lemma is supplied project-locally by
+`Jacobian/HolomorphicForms/CLMBundleCompose.lean`.
 
-We therefore expose the bundled pullback as **`opaque`** for now, with two
-named obligations characterising its function-level behavior:
+The bundled pullback is a plain definition (it was `opaque` at one point; it
+no longer is). Its underlying function is `pullbackFormsFunFiber`, so
 
 * `pullbackFormsBundledLM_apply_fun` — the underlying function of the
-  bundled pullback equals `pullbackFormsFun f η`. This is a "section
-  extraction" axiom: once the chart-coefficient API exists, this becomes
-  `rfl` for a concrete construction.
+  bundled pullback equals `pullbackFormsFun f η` — holds by `rfl`. It is not
+  an axiom.
 
 ## API exposed
 -/
@@ -66,9 +65,10 @@ noncomputable def pullbackFormsFunFiber
 /--
 Section-level smoothness of the chain-rule pullback.
 
-The lone bottom-up obligation of the `PullbackBundled` module:
+This was the lone bottom-up obligation of the `PullbackBundled` module —
 smoothness of a `Bundle.ContinuousLinearMap`-valued section formed by
-composing two smooth CLM-bundle sections.
+composing two smooth CLM-bundle sections. It is now proved (see
+`#### Project status` below).
 
 Specifically `pullbackFormsFunFiber f η x = (η.toFun (f x)).comp (mfderiv f x)`
 is the composition (in `→L[ℂ]`) of:
@@ -79,7 +79,7 @@ is the composition (in `→L[ℂ]`) of:
   — smooth as a section of the cotangent bundle along `f`, by
   composition of `η`'s smoothness with `f`'s smoothness.
 
-Mathlib v4.28.0 provides `ContMDiff.clm_bundle_apply` (CLM-section applied
+Mathlib provides `ContMDiff.clm_bundle_apply` (CLM-section applied
 to a vector-section is a vector-section) and the underlying
 `ContMDiffWithinAt.clm_apply_of_inCoordinates` primitive, but it lacks
 the dual-position analogue **`ContMDiff.clm_bundle_compose`** (CLM-section
@@ -88,11 +88,10 @@ composed with a CLM-section is a CLM-section), and likewise lacks
 
 #### Project status
 
-This is the documented project gap, partially overlapping with
-`ChartCoeffExtractionRecon.lean`. Discharging it requires either:
-1. The Mathlib PR above, or
-2. A project-local proof of `clm_bundle_compose` (in this file or a
-   `Jacobian/HolomorphicForms/CLMBundleCompose.lean` sibling).
+Closed. The missing Mathlib lemma was built project-locally as
+`ContMDiffAt.clm_compose_of_inCoordinates` in
+`Jacobian/HolomorphicForms/CLMBundleCompose.lean`, and the proof below
+applies it directly. No gap remains here.
 -/
 theorem pullbackFormsFunFiber_contMDiff_section
     (f : X → Y) (hf : ContMDiff 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (⊤ : WithTop ℕ∞) f)

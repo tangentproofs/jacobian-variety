@@ -6,7 +6,7 @@ review: draft
 authors:
 - claude
 caveats:
-- 'The instance is anonymous in the source — Jacobian/Solution.lean lines 98–99. The id used on this site is the name Lean is expected to generate, not a name written in the file.'
+- 'The instance is anonymous in the source — Jacobian/Solution.lean lines 100–101. The id used on this site is the name Lean is expected to generate, not a name written in the file.'
 - 'This instance is not listed in `comparator/jacobian.json` and does not occur in any checked statement — `ContMDiff` needs only `ChartedSpace`, not `IsManifold` — so the harness that compares the solution with the frozen spec does not certify it. The proof is real; it is just checked by reading.'
 - 'The smoothness exponent is `ω`, written `(⊤ : WithTop ℕ∞)` in the torus layer: analytic, the strongest level in Mathlib''s hierarchy. The model is `modelWithCornersSelf ℂ (Fin (genus X) → ℂ)`, a boundaryless model on ℂ^g, so "complex manifold of dimension g" is the right reading.'
 - 'The instance body for the torus is an empty `where` (Jacobian/ComplexTorus/IsManifold.lean lines 66–68) and for the `ULift` likewise (Jacobian/ComplexTorus/ULiftTransport.lean lines 134–138). The content lives entirely in the `HasGroupoid` instances those bodies pick up, at Jacobian/ComplexTorus/IsManifold.lean lines 26–60 and Jacobian/ComplexTorus/ULiftTransport.lean lines 116–126.'

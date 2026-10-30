@@ -6,7 +6,8 @@ import Jacobian.HolomorphicForms.TraceSpec
 /-!
 # Universe-polymorphic pullback trace-lift maps
 
-`Jacobian/TraceDegree/PullbackBasis.lean` builds the analytic pullback
+`PullbackBasis.lean` (retired; now `Attic/FalseGaps/PullbackBasis.lean`, not
+built) built the analytic pullback
 `analyticPullback f hf : BasisAnalyticJacobian Y →ₜ+ BasisAnalyticJacobian X`
 from the trace-forms coordinate map `traceFormsCoord` and the dual-pullback
 trace-lift `traceDualPullbackLift` (the transpose of `traceFormsCoord`), at

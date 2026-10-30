@@ -21,8 +21,21 @@ combination of singular 1-simplices, modulo boundaries) and a
 holomorphic 1-form `ω`, the pairing returns `∫_σ ω`. This is the
 classical period pairing.
 
-Until those land, this file uses `opaque` to give the type its
-public name without committing to an implementation.
+`periodPairing` is a definition here; the `opaque` placeholder this file
+once used is gone.
+
+**Warning: this file is placeholder scaffolding, not the classical theory.**
+`periodPairing` and `periodPairingComplex` bind the integral to `0` in a `let`, so
+both are the zero map, and `periodSubgroup` / `basisAlignedPeriodSubmoduleℤ` below are
+`⊥`. Several theorems here carry classical names but are vacuous or hypothesis-laden:
+`period_homology_invariance` assumes `σ = τ`; `wedge_integration_pairing_exists` takes
+`Q := 0`; `riemann_bilinear_identity` / `periodPairing_satisfies_bilinear_identity` are
+discharged by choosing `Q` to be the formula; `hodge_form_posDef` uses a hand-written
+coordinate form; `hodge_form_posDef_on_periods` has a hypothesis that is unsatisfiable
+for `g ≥ 1`; `RiemannClassicalPeriodBasis` is an assumption structure. None of this is
+used by `Jacobian/Solution.lean`'s public declarations: the real period lattice is
+`genuinePeriodSubgroup` (see `ref/axiom-audit.md` §0.3 and
+`learn/JACOBIAN_CLAUDE_AUDIT.md`).
 -/
 
 namespace JacobianChallenge.Periods
@@ -87,7 +100,8 @@ noncomputable def holomorphicFormBridgeComplex
 /--
 The period pairing
 `IntegralOneCycle X →+ (HolomorphicOneForm E X →ₗ[ℂ] ℂ)`.
-Mathematically: integrate the form over the cycle.
+Intended meaning: integrate the form over the cycle. **As defined it is the zero map**
+(the integral is bound to `0` below); it is not used by the public API.
 
 For the main complex-model route, prefer `periodPairingComplex` below.
 -/
@@ -119,8 +133,9 @@ noncomputable def periodPairing
     (periodPairing_descent_aux S Im hI_sc)).hom.toAddMonoidHom
 
 /--
-Complex-model period pairing. This is the period API used by the
-Jacobian/trace route; it keeps all forms in the `ℂ` model.
+Complex-model period pairing, keeping all forms in the `ℂ` model. **As defined it is
+the zero map** (the integral is bound to `0` below). The public Jacobian does not use it;
+its lattice is `genuinePeriodSubgroup`.
 -/
 noncomputable def periodPairingComplex
     (X : Type) [TopologicalSpace X] [ChartedSpace ℂ X]
@@ -170,11 +185,15 @@ theorem period_homology_invariance
 /-!
 ### TOPDOWN decomposition of `periodVectors_linearIndependent`
 (integrated from Aristotle 0cfa1878)
+
+No declaration of that name exists; the section below is empty.
 -/
 
 /-!
 ### TOPDOWN decomposition of `h1_basis_of_compact_riemann_surface`
 (integrated from Aristotle 921772f5)
+
+No declaration of that name exists; what follows is the plan only.
 
 Each sub-obligation maps to a substantial multi-month Mathlib
 formalization effort (≈ 5,000–15,000 lines total): cellular
@@ -199,8 +218,10 @@ Classical proof of `H₁(X, ℤ)` free of rank `2 * topologicalGenus`:
    the cellular `2g`-rank computation to the project's
    `IntegralOneCycle X = H_1^sing(X, ℤ)`.
 
-All three are MASSIVE Mathlib formalisation efforts and are kept as
-named delegation sorries here.
+All three are MASSIVE Mathlib formalisation efforts. None of
+`stageA_surface_CW` / `stageA_cellular_H1` / `stageA_singular_eq_cellular`
+was ever declared, and there are no sorries in this file; the paragraph
+above is a plan sketch only.
 -/
 
 
@@ -218,8 +239,11 @@ Classical proof that `dim_ℂ H⁰(Ω¹) = (1/2) rank_ℤ H₁(X, ℤ)`:
 4. **Comparing rank to dim** (`stageB_rank_finrank`):
    `rank_ℤ H₁(X, ℤ) = 2g` (matches `topologicalGenus`).
 
-The combined assembly, packaged into the single Stage-B leaf
-`stageB_analytic_eq_topological`, is the named delegation point.
+This Stage-B plan was never declared either (no `stageB_*` leaf exists), and
+there are no sorries in this file. The public solution does not go through
+this rank bridge: lattice fullness is proved directly for the genuine period
+lattice (`Jacobian/Periods/GenuinePeriodLattice.lean` and
+`GenuinePeriodLatticeDiscrete.lean`).
 -/
 
 
@@ -445,6 +469,11 @@ The single field is the coordinate nondegeneracy consequence that the local
 linear-algebra assembly consumes. The missing analytic/geometric proof of this
 predicate belongs to the classical symplectic-basis + Stokes/Hodge frontier, not
 to the arbitrary-injective public API.
+
+Nothing in the tree constructs this predicate, and nothing outside this file
+uses it or the three lemmas below that take it as a hypothesis; the public
+solution gets period-lattice fullness from
+`Jacobian/Periods/GenuinePeriodLattice.lean` instead.
 -/
 structure RiemannClassicalPeriodBasis
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]
@@ -712,10 +741,16 @@ noncomputable def periodSubgroup
 /-!
 ### Bridge: assembling `IsZLattice ℝ` from the three leaves
 
-This section bridges the three named bottom-up obligations above
+This section describes how the three planned bottom-up obligations
 (`periodSubgroup_isZLattice`, `periodSubgroup_spans_real`,
-`exists_compact_periodFundamentalDomain`) to the
-Mathlib `IsZLattice ℝ` typeclass.
+`exists_compact_periodFundamentalDomain`) were to be bridged to the
+Mathlib `IsZLattice ℝ` typeclass. None of those three names was ever
+declared; the lattice properties the project actually uses are proved for
+the genuine period lattice in
+`Jacobian/Periods/GenuinePeriodLatticeDiscrete.lean`
+(`periodLattice_discrete_and_span`, `genuinePeriodSubmodule_isZLattice`,
+`exists_compact_genuinePeriodFundamentalDomain`). The explanation below is
+still accurate about the `AddSubgroup` → `Submodule ℤ` bridge.
 
 `IsZLattice ℝ L` (in `Mathlib.Algebra.Module.ZLattice.Basic`) is a
 typeclass on a `Submodule ℤ E` carrying the field
@@ -747,13 +782,14 @@ of the model space `Fin (analyticGenus ℂ X) → ℂ`.
 This is the `Submodule ℤ` form of the period subgroup that Mathlib's
 `IsZLattice` API consumes. It is built by applying
 `AddSubgroup.toIntSubmodule` to the same `AddSubgroup.map` image
-that the three named bottom-up obligations above (and
-`Jacobian/Periods/PeriodLattice.lean`'s
-`basisAlignedPeriodSubgroup`) refer to.
+that the planned obligations above (and the retired
+`Attic/FalseGaps/PeriodLattice.lean`'s `basisAlignedPeriodSubgroup`)
+referred to.
 
-Bottom-up content: nothing new — purely a type-level repackaging.
-The mathematical content (discreteness, full ℝ-rank, compact
-fundamental domain) is delegated to the three theorems above.
+Bottom-up content: nothing new — purely a type-level repackaging. No
+discreteness / full-rank / fundamental-domain statement is attached to it
+here; those are proved for the genuine period lattice in
+`Jacobian/Periods/GenuinePeriodLatticeDiscrete.lean`.
 -/
 noncomputable def basisAlignedPeriodSubmoduleℤ
     (X : Type) [TopologicalSpace X] [T2Space X] [CompactSpace X]

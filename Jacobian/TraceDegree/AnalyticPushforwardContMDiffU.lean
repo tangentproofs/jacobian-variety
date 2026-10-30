@@ -3,7 +3,8 @@ import Jacobian.TraceDegree.AnalyticPushforwardU
 /-!
 # Universe-polymorphic analytic-pushforward smoothness
 
-`Jacobian/TraceDegree/PushforwardBasis.lean` proves the holomorphicity of the
+`PushforwardBasis.lean` (retired; now `Attic/FalseGaps/PushforwardBasis.lean`,
+not built) proved the holomorphicity of the
 Type-0 analytic pushforward (`analyticPushforward_contMDiff_raw`, line 417) by a
 chart-based `ContMDiffOn` argument: on each chart source, `analyticPushforward`
 agrees with `mk ∘ pushforwardTraceLiftCLM ∘ chart`, which is smooth as a
@@ -22,8 +23,8 @@ chart machinery (`contMDiffOn_chart`, `ContinuousLinearMap.contMDiff`,
 `ComplexTorus.contMDiff_mk`, `OpenPartialHomeomorph.left_inv'`,
 `ContMDiff.comp_contMDiffOn`, `ContMDiffOn.congr`, `ContMDiffOn.contMDiffAt`) is
 all universe-polymorphic, and the carriers `Fin (analyticGenus ℂ X) → ℂ` are
-`Type 0`. Genuine — no sorry; the only `sorryAx` dependence is transitive, through
-`periodFullComplexLatticeU`'s inherited Periods layer-frontier obligations.
+`Type 0`. Genuine — no sorry, and no `sorryAx` dependence: the Periods-layer
+inputs reached through `periodFullComplexLatticeU` are all proved.
 -/
 
 namespace JacobianChallenge.TraceDegree

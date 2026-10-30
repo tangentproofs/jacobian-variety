@@ -13,7 +13,10 @@ universe-`u` companions of the Type-0 `analyticPullback_id_apply`
 the public `pullback_id_apply` / `pullback_comp_apply` for `X : Type u`
 (Milestone C).
 
-## Structure (route α — the D2 frontier-obligation pattern)
+(All `PullbackBasis.lean` references in this file are to retired code:
+the file now lives at `Attic/FalseGaps/PullbackBasis.lean` and is not built.)
+
+## Structure (route α — the former frontier-obligation pattern)
 
 The pullback side differs from the pushforward side (E1c, genuinely sorry-free)
 in ONE place: its bottom functoriality lemma is the **trace** map's
@@ -28,16 +31,17 @@ identity-principle apparatus. (Contrast the pushforward side, whose bottom lemma
 universe-polymorphic at `{X Y Z : Type*}` in
 `HolomorphicForms/PullbackBundled.lean:179/190`.)
 
-That deep trace identity is isolated here into exactly TWO named tracked frontier
-obligations `traceFormsBundledLM_idU` / `traceFormsBundledLM_compU` — exactly as
-D2 isolated `pathIntegralFunctional_separates_pointsU` for the Abel content. The
-ENTIRE downstream chain — `traceFormsCoordU_id`/`_comp` →
+That deep trace identity is isolated here into exactly TWO named obligations
+`traceFormsBundledLM_idU` / `traceFormsBundledLM_compU` — exactly as D2 isolated
+`pathIntegralFunctional_separates_pointsU` for the Abel content. The ENTIRE
+downstream chain — `traceFormsCoordU_id`/`_comp` →
 `traceDualPullbackLiftU_id`/`_comp` → `analyticPullback_id_applyU`/`_comp_applyU`
-— is proved GENUINELY on top (no sorry of its own). The genuine discharge of the
-two obligations is a later dedicated task ("E2-trace-id", route β: the full
-universe-`u` port of the branched-cover trace machinery), required before final
-Milestone D acceptance; until then these two obligations are the only sorries in
-this file.
+— is proved GENUINELY on top (no sorry of its own). Both obligations have since
+been discharged by the "E2-trace-id" route-β work (the universe-`u` port of the
+branched-cover trace machinery): `traceFormsBundledLM_idU` delegates to
+`TraceFormsIdU.traceFormsBundledLM_id_genuineU` and `traceFormsBundledLM_compU`
+to `TraceFormsBundledCompU.traceFormsBundledLM_comp_genuineU`. There are no
+sorries in this file.
 -/
 
 namespace JacobianChallenge.TraceDegree
@@ -62,15 +66,15 @@ variable {Z : Type w} [TopologicalSpace Z] [T2Space Z] [CompactSpace Z]
   [FiniteDimensionalHolomorphicOneForms ℂ Z]
 
 /-!
-### Named tracked frontier obligations (deep branched-cover trace identity)
+### The two deep branched-cover trace-identity obligations (both discharged)
 
 The universe-`u` companions of the Type-0 `traceFormsBundledLM_id`
 (`PullbackBasis.lean:954`) / `traceFormsBundledLM_comp` (`:1477`). Their genuine
 proofs are the branched-cover trace identity (id case: identity principle on the
 dense regular locus of `idBranchedCoverData`; comp case:
-`traceFormsBundled_comp_of_nonconstant` plus the constant-map vanishing), Type-0
-in `PullbackBasis.lean`. Genuine discharge is the later "E2-trace-id" task; these
-two are the ONLY sorries in this file.
+`traceFormsBundled_comp_of_nonconstant` plus the constant-map vanishing). Both
+were discharged at `Type u` by the "E2-trace-id" task, in `TraceFormsIdU.lean`
+and `TraceFormsBundledCompU.lean`; the two statements below just re-export them.
 -/
 
 omit [FiniteDimensionalHolomorphicOneForms ℂ X] in
@@ -82,9 +86,10 @@ theorem traceFormsBundledLM_idU :
     traceFormsBundledLM (X := X) (Y := X) (id : X → X) contMDiff_id = LinearMap.id :=
   TraceFormsIdU.traceFormsBundledLM_id_genuineU
 
-/-- **Frontier obligation (comp).** Universe-`u` trace functoriality along
-`g ∘ f`; companion of the Type-0 `traceFormsBundledLM_comp`
-(`PullbackBasis.lean:1477`). -/
+/-- **Universe-`u` trace functoriality along `g ∘ f`** — GENUINELY DISCHARGED
+(R-comp). Companion of the Type-0 `traceFormsBundledLM_comp`
+(`PullbackBasis.lean:1477`); the genuine proof is
+`TraceFormsBundledCompU.traceFormsBundledLM_comp_genuineU` (no sorry). -/
 theorem traceFormsBundledLM_compU
     (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f)
     (g : Y → Z) (hg : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω g) :

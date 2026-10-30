@@ -26,7 +26,7 @@ quiz:
   - Because the unprimed version is unsound
   - Because the Jacobian is infinite-dimensional
   answer: 0
-  explain: The docstring at Jacobian/ComplexTorus/ULiftTransport.lean lines 425–428 says the public functorial block "has its source and target curves in independent universes", and the solution pins them as `u_1`, `u_2` and `u_3` at Jacobian/Solution.lean line 88, Jacobian/Solution.lean line 125 and Jacobian/Solution.lean line 158.
+  explain: The docstring at Jacobian/ComplexTorus/ULiftTransport.lean lines 425–428 says the public functorial block "has its source and target curves in independent universes", and the solution pins them as `u_1`, `u_2` and `u_3` at Jacobian/Solution.lean line 90, Jacobian/Solution.lean line 127 and Jacobian/Solution.lean line 160.
 - q: Does this definition assume the spaces are groups?
   type: choice
   choices:
@@ -46,7 +46,7 @@ quiz:
 ---
 ## Plain English
 
-Lean sorts types into a hierarchy of universes. The challenge specification insists that for a surface `X : Type u`, its Jacobian is also in `Type u` (Jacobian/Challenge.lean lines 56–60). But the thing the project actually builds — ℂ^g modulo the period lattice — sits in the lowest universe, because ℂ and `Fin g` do. So [Jacobian](#/node/Jacobian) is defined as a `ULift` of that quotient: a one-field wrapper that carries the same data up to the universe Lean demands (Jacobian/Solution.lean lines 74–77).
+Lean sorts types into a hierarchy of universes. The challenge specification insists that for a surface `X : Type u`, its Jacobian is also in `Type u` (Jacobian/Challenge.lean lines 56–60). But the thing the project actually builds — ℂ^g modulo the period lattice — sits in the lowest universe, because ℂ and `Fin g` do. So [Jacobian](#/node/Jacobian) is defined as a `ULift` of that quotient: a one-field wrapper that carries the same data up to the universe Lean demands (Jacobian/Solution.lean lines 76–79).
 
 Having wrapped the Jacobian, every map between Jacobians has to be wrapped too. That is all this definition does (Jacobian/ComplexTorus/ULiftTransport.lean lines 429–443): take a continuous additive homomorphism `φ : A →ₜ+ B`, and produce the homomorphism between the wrapped versions that unwraps its input, applies `φ`, and wraps the result.
 
@@ -60,8 +60,8 @@ The three things that have to be checked — that it sends zero to zero, that it
 
 There are two versions in the file. The unprimed [ULiftContinuousAddMonoidHom](#/node/ComplexTorus.ULiftContinuousAddMonoidHom) (Jacobian/ComplexTorus/ULiftTransport.lean lines 405–419) sends `ULift.{u} A` to `ULift.{u} B`, the same level on both sides. The primed one (Jacobian/ComplexTorus/ULiftTransport.lean lines 429–443) allows `ULift.{u} A → ULift.{v} B`, two unrelated levels.
 
-The primed version is the one the public interface needs. `pushforward` goes from the Jacobian of `X : Type u_1` to the Jacobian of `Y : Type u_2`, and those are different universe parameters by design — the comparator that checks the solution against the frozen spec compares universe parameter *names* literally, so the solution pins them (Jacobian/Solution.lean lines 82–88).
+The primed version is the one the public interface needs. `pushforward` goes from the Jacobian of `X : Type u_1` to the Jacobian of `Y : Type u_2`, and those are different universe parameters by design — the comparator that checks the solution against the frozen spec compares universe parameter *names* literally, so the solution pins them (Jacobian/Solution.lean lines 84–90).
 
 ## Where it is used
 
-Exactly twice: to define [pushforward](#/node/Jacobian.pushforward) (Jacobian/Solution.lean lines 132–136) and [pullback](#/node/Jacobian.pullback) (Jacobian/Solution.lean lines 172–176). The real content of those maps sits inside the `analyticPushforwardU` and `analyticPullbackU` arguments: pulling 1-forms back along `f` for the first, taking the trace of 1-forms along `f` for the second, each transposed into coordinates. This definition only moves them to the right floor of the universe hierarchy.
+Exactly twice: to define [pushforward](#/node/Jacobian.pushforward) (Jacobian/Solution.lean lines 134–138) and [pullback](#/node/Jacobian.pullback) (Jacobian/Solution.lean lines 174–178). The real content of those maps sits inside the `analyticPushforwardU` and `analyticPullbackU` arguments: pulling 1-forms back along `f` for the first, taking the trace of 1-forms along `f` for the second, each transposed into coordinates. This definition only moves them to the right floor of the universe hierarchy.

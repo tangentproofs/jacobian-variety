@@ -8,7 +8,7 @@ authors:
 caveats:
 - '`Module.finrank` returns 0 for an infinite-dimensional space. So the number this definition produces is only the genus because finite-dimensionality is separately proved; the `[FiniteDimensionalHolomorphicOneForms E X]` instance argument records the intent but the value does not depend on it.'
 - 'This is a definition, not a theorem, and it is not connected to the topological genus here. The only tie to topology in the project is at genus zero, through [genus_eq_zero_iff_homeo](#/node/genus_eq_zero_iff_homeo), which says genus 0 iff X is *homeomorphic* to the round 2-sphere. That is a weaker statement than the classical "biholomorphic to ℙ¹".'
-- 'The public [genus](#/node/genus) does not call this declaration. Jacobian/Solution.lean lines 43–45 inlines `Module.finrank ℂ (HolomorphicOneForm ℂ X)` instead, which is definitionally the same thing but keeps the *value* independent of the finiteness instance. The docstring at Jacobian/Solution.lean lines 39–42 says this is deliberate.'
+- 'The public [genus](#/node/genus) does not call this declaration. Jacobian/Solution.lean lines 45–47 inlines `Module.finrank ℂ (HolomorphicOneForm ℂ X)` instead, which is definitionally the same thing but keeps the *value* independent of the finiteness instance. The docstring at Jacobian/Solution.lean lines 39–44 says this is deliberate.'
 - Nothing in the signature requires X to be compact or connected.
 quiz:
 - q: What number does `analyticGenus E X` compute?

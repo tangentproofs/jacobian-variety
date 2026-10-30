@@ -7,8 +7,8 @@ authors:
 - claude
 caveats:
 - 'No hypothesis on `f` is required. `mfderiv` is a total function: by Mathlib''s convention it is `0` at points where `f` is not `MDifferentiableAt`. So for a badly behaved `f` this definition quietly returns the zero functional rather than failing. Every use in the project supplies an analytic `f`, but the definition itself does not demand one.'
-- 'The docstring (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 53–55) states the composition is natively a map `TangentSpace 𝓘(ℂ,ℂ) x →L[ℂ] TangentSpace 𝓘(ℂ,ℂ) (f x)`. That is a slip: the target of the composition is the trivial-bundle fibre, which reduces to ℂ. The rest of the docstring''s point stands, which is that `(Bundle.Trivial Y ℂ) (f x)` and `(Bundle.Trivial X ℂ) x` are both ℂ, so the composite already has the cotangent-fibre type over `x`.'
-- 'This is only the value at one point. That the resulting family of functionals is a smooth section is a separate theorem, `pullbackFormsFunFiber_contMDiff_section` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 97–126).'
+- 'The docstring (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 52–54) states the composition is natively a map `TangentSpace 𝓘(ℂ,ℂ) x →L[ℂ] TangentSpace 𝓘(ℂ,ℂ) (f x)`. That is a slip: the target of the composition is the trivial-bundle fibre, which reduces to ℂ. The rest of the docstring''s point stands, which is that `(Bundle.Trivial Y ℂ) (f x)` and `(Bundle.Trivial X ℂ) x` are both ℂ, so the composite already has the cotangent-fibre type over `x`.'
+- 'This is only the value at one point. That the resulting family of functionals is a smooth section is a separate theorem, `pullbackFormsFunFiber_contMDiff_section` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 96–125).'
 quiz:
 - q: 'What is the formula being written down here?'
   type: choice
@@ -25,7 +25,7 @@ quiz:
   - '`MDifferentiableAt` at the point x'
   - 'None at all'
   answer: 2
-  explain: 'The signature in `Jacobian/HolomorphicForms/PullbackBundled.lean` lines 59–64 takes only `f`, `η` and `x`; `mfderiv` is total and returns 0 where `f` is not differentiable.'
+  explain: 'The signature in `Jacobian/HolomorphicForms/PullbackBundled.lean` lines 58–63 takes only `f`, `η` and `x`; `mfderiv` is total and returns 0 where `f` is not differentiable.'
 - q: 'Why does the composite already have the right type, without a cast?'
   type: choice
   choices:
@@ -53,7 +53,7 @@ Given a map f : X → Y, you can move η backwards to X by the chain rule. At a 
 (f*η)_x (v) = η_{f(x)} (df_x v)
 ```
 
-That is exactly the body of `pullbackFormsFunFiber` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 59–64): the composition of `η.toFun (f x)` with `mfderiv 𝓘(ℂ,ℂ) 𝓘(ℂ,ℂ) f x`.
+That is exactly the body of `pullbackFormsFunFiber` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 58–63): the composition of `η.toFun (f x)` with `mfderiv 𝓘(ℂ,ℂ) 𝓘(ℂ,ℂ) f x`.
 
 In coordinates, if η reads as h(w) dw near f(x) and f reads as w = φ(z), this is h(φ(z)) φ'(z) dz. The familiar substitution rule for integrals.
 

@@ -3,7 +3,8 @@ import Jacobian.TraceDegree.AnalyticPushforwardContMDiffU
 /-!
 # Universe-polymorphic analytic-pushforward functoriality
 
-`Jacobian/TraceDegree/PushforwardBasis.lean` proves the identity/composition laws
+`PushforwardBasis.lean` (retired; now `Attic/FalseGaps/PushforwardBasis.lean`,
+not built) proved the identity/composition laws
 of the Type-0 analytic pushforward (`analyticPushforward_id_apply` line 626 /
 `analyticPushforward_comp_apply` line 599) by reducing — via `mk_surjective` and
 the descent compatibility `analyticPushforward_mk_spec` — to the functoriality of
@@ -17,9 +18,9 @@ from E1-core/E1b, functoriality here). They are needed by the public
 
 Every declaration is a verbatim mirror of its Type-0 original; the matrix /
 linear-map machinery (`LinearMap.toMatrix'`, `Matrix.transpose`, `Matrix.toLin'`,
-`pullbackFormsBundledLM_id`/`_comp`) is universe-polymorphic. Genuine — no sorry;
-the only `sorryAx` dependence is transitive, through `periodFullComplexLatticeU`'s
-inherited Periods layer-frontier obligations.
+`pullbackFormsBundledLM_id`/`_comp`) is universe-polymorphic. Genuine — no sorry,
+and no `sorryAx` dependence: the Periods-layer inputs reached through
+`periodFullComplexLatticeU` are all proved.
 -/
 
 namespace JacobianChallenge.TraceDegree

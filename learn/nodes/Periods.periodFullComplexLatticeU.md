@@ -1,12 +1,12 @@
 ---
 id: Periods.periodFullComplexLatticeU
 title: The lattice name the public Jacobian uses
-summary: 'This is a one-line alias for the genuine period lattice, kept because the public Jacobian refers to it by this name; its docstring still calls discreteness a classical input, which it no longer is.'
+summary: 'This is a one-line alias for the genuine period lattice, kept because the public Jacobian refers to it by this name; discreteness and fullness are proved, not assumed.'
 review: draft
 authors:
 - claude
 caveats:
-- 'The docstring says "Conditional on the classical input `periodLattice_discrete_and_span`". That wording is left over from an earlier state. `periodLattice_discrete_and_span` is a proved theorem at Jacobian/Periods/GenuinePeriodLatticeDiscrete.lean lines 30–35. There is no assumption here.'
+- 'Nothing here is conditional. The docstring at Jacobian/Periods/PeriodFullComplexLatticeU.lean lines 34–39 says discreteness and fullness "are supplied by the proved `periodLattice_discrete_and_span`", which is a theorem at Jacobian/Periods/GenuinePeriodLatticeDiscrete.lean lines 30–35.'
 - 'The definition adds no mathematics. It is `genuinePeriodLattice X`, with the surrounding `variable` line listing the hypotheses in a different order.'
 - 'All the caveats about the underlying bundle still apply: the lattice lives in a basis-aligned ℂ^g for an arbitrary chosen basis of forms, and its compact covering set is chosen by `Classical.choose`.'
 quiz:
@@ -17,7 +17,7 @@ quiz:
   - 'Literally `genuinePeriodLattice X`'
   - 'The lattice ℤ^{2g} inside ℂ^g'
   answer: 1
-  explain: 'At Jacobian/Periods/PeriodFullComplexLatticeU.lean lines 39–45 the body is exactly `genuinePeriodLattice X`, and a simp lemma records that its subgroup is `genuinePeriodSubgroup X` by `rfl`.'
+  explain: 'At Jacobian/Periods/PeriodFullComplexLatticeU.lean lines 41–47 the body is exactly `genuinePeriodLattice X`, and a simp lemma records that its subgroup is `genuinePeriodSubgroup X` by `rfl`.'
 - q: 'What was here before, according to the file history note?'
   type: choice
   choices:
@@ -25,7 +25,7 @@ quiz:
   - 'A lattice built from a chosen homology basis'
   - 'Nothing; the file is new'
   answer: 0
-  explain: 'Lines 12–19 of Jacobian/Periods/PeriodFullComplexLatticeU.lean describe the old `basisAlignedPeriodSubgroupConcreteU` chain, with an in-tree lemma proving the subgroup was the bottom subgroup.'
+  explain: 'Lines 12–20 of Jacobian/Periods/PeriodFullComplexLatticeU.lean describe the old `basisAlignedPeriodSubgroupConcreteU` chain, with an in-tree lemma proving the subgroup was the bottom subgroup.'
 - q: 'Why does the project keep a separate name for this?'
   type: choice
   choices:
@@ -33,12 +33,12 @@ quiz:
   - 'Because it uses a different universe of X'
   - 'Because the genuine lattice is only defined for genus at least one'
   answer: 0
-  explain: 'Jacobian/Solution.lean lines 74–77 define `Jacobian X` as a `ULift` of `ComplexTorus.quotient (Fin (genus X) → ℂ) (periodFullComplexLatticeU X)`.'
+  explain: 'Jacobian/Solution.lean lines 76–79 define `Jacobian X` as a `ULift` of `ComplexTorus.quotient (Fin (genus X) → ℂ) (periodFullComplexLatticeU X)`.'
 - q: 'Is discreteness of the lattice assumed at this point?'
   type: choice
   choices:
   - 'Yes, it is a hypothesis of the definition'
-  - 'No, it is a theorem, even though the docstring calls it an input'
+  - 'No, it is a proved theorem, and the docstring calls it proved'
   - 'It is an axiom declared in this file'
   answer: 1
   explain: '`periodLattice_discrete_and_span` at Jacobian/Periods/GenuinePeriodLatticeDiscrete.lean lines 30–35 is a `theorem` whose first component comes from the Hodge-theoretic proof in Jacobian/Surface/PeriodDiscrete.lean lines 685–686.'
@@ -49,12 +49,10 @@ This definition exists for plumbing, not for mathematics. `Jacobian/Solution.lea
 
   `Jacobian X = ULift (ComplexTorus.quotient (Fin (genus X) → ℂ) (periodFullComplexLatticeU X))`
 
-(Jacobian/Solution.lean lines 74–77), so the lattice argument needs a stable name with the right hypotheses in the right order. `periodFullComplexLatticeU X` is that name, and its body is one expression: [genuinePeriodLattice](#/node/Periods.genuinePeriodLattice) X (`Jacobian/Periods/PeriodFullComplexLatticeU.lean` lines 39–42). A simp lemma records that its subgroup is [Λ](#/node/Periods.genuinePeriodSubgroup) on the nose (Jacobian/Periods/PeriodFullComplexLatticeU.lean lines 44–45).
+(Jacobian/Solution.lean lines 76–79), so the lattice argument needs a stable name with the right hypotheses in the right order. `periodFullComplexLatticeU X` is that name, and its body is one expression: [genuinePeriodLattice](#/node/Periods.genuinePeriodLattice) X (`Jacobian/Periods/PeriodFullComplexLatticeU.lean` lines 41–44). A simp lemma records that its subgroup is [Λ](#/node/Periods.genuinePeriodSubgroup) on the nose (Jacobian/Periods/PeriodFullComplexLatticeU.lean lines 46–47).
 
 ## Why the file is worth reading anyway
 
-The history note at Jacobian/Periods/PeriodFullComplexLatticeU.lean lines 12–19 is the most informative part. An earlier version of this project assembled the lattice through a chain whose period pairing was a placeholder returning 0. The subgroup was therefore the trivial group, and there was even an in-tree lemma saying so. The "Jacobian" was then all of ℂ^g: not compact, not a torus. The challenge is designed to make such a construction look fine locally while failing the global checks.
+The history note at Jacobian/Periods/PeriodFullComplexLatticeU.lean lines 12–20 is the most informative part. An earlier version of this project assembled the lattice through a chain whose period pairing was a placeholder returning 0. The subgroup was therefore the trivial group, and there was even an in-tree lemma saying so. The "Jacobian" was then all of ℂ^g: not compact, not a torus. The challenge is designed to make such a construction look fine locally while failing the global checks.
 
-What replaced it is the real thing: a subgroup generated by actual integrals of actual holomorphic 1-forms, with [discreteness](#/node/Periods.genuinePeriodSubgroup_discrete) and [spanning](#/node/Periods.periodLattice_span) proved.
-
-One stale phrase survives. The docstring calls `periodLattice_discrete_and_span` a "classical input". At the commit this site describes, it is a theorem with a proof, so nothing here is conditional. The wording is a leftover, not a hidden assumption.
+What replaced it is the real thing: a subgroup generated by actual integrals of actual holomorphic 1-forms, with [discreteness](#/node/Periods.genuinePeriodSubgroup_discrete) and [spanning](#/node/Periods.periodLattice_span) proved. The file says as much in both places: the header note ends "which is proved — not assumed", and the declaration's own docstring (Jacobian/Periods/PeriodFullComplexLatticeU.lean lines 34–39) calls `periodLattice_discrete_and_span` proved. Nothing here is conditional.

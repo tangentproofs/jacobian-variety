@@ -7,7 +7,7 @@ authors:
 - claude
 caveats:
 - 'This is an `abbrev`, so it is not a new type: it unfolds to `ComplexTorus.quotient (Fin (analyticGenus ℂ X) → ℂ) (periodFullComplexLatticeU X)`, which in turn unfolds to the Mathlib quotient `V ⧸ Λ.subgroup`.'
-- 'Its type is `Type`, not `Type u`, because `Fin g → ℂ` lives in `Type 0` no matter which universe X lives in. The public `Jacobian X` has to be in the same universe as X, hence the `ULift` in Jacobian/Solution.lean lines 74–77.'
+- 'Its type is `Type`, not `Type u`, because `Fin g → ℂ` lives in `Type 0` no matter which universe X lives in. The public `Jacobian X` has to be in the same universe as X, hence the `ULift` in Jacobian/Solution.lean lines 76–79.'
 - 'The group, topology, Hausdorff and compactness structure all come from the lattice bundle rather than from X. Nothing here depends on X beyond the number g and the subgroup Λ.'
 - 'For genus 0 this is the quotient of the zero vector space, that is, a one-point group. The project never claims Abel–Jacobi is injective in that case.'
 quiz:
@@ -26,7 +26,7 @@ quiz:
   - 'To move it into the same universe as X, since this carrier is in `Type 0`'
   - 'To make the quotient Hausdorff'
   answer: 1
-  explain: 'The declared type at Jacobian/AbelJacobi/AnalyticOfCurveU.lean lines 45–46 is `Type`. Jacobian/Solution.lean lines 74–77 wrap it in `ULift.{u}` so that `Jacobian (X : Type u) : Type u`.'
+  explain: 'The declared type at Jacobian/AbelJacobi/AnalyticOfCurveU.lean lines 45–46 is `Type`. Jacobian/Solution.lean lines 76–79 wrap it in `ULift.{u}` so that `Jacobian (X : Type u) : Type u`.'
 - q: 'Where do Hausdorffness and compactness of this quotient come from?'
   type: choice
   choices:
@@ -42,7 +42,7 @@ quiz:
   - 'ℂ'
   - 'Empty'
   answer: 0
-  explain: '`Fin 0 → ℂ` is the zero vector space, so the quotient has exactly one element. This is consistent with `ofCurve_inj` in Jacobian/Solution.lean lines 117–120 requiring `0 < genus X`.'
+  explain: '`Fin 0 → ℂ` is the zero vector space, so the quotient has exactly one element. This is consistent with `ofCurve_inj` in Jacobian/Solution.lean lines 119–122 requiring `0 < genus X`.'
 ---
 ## Plain English
 
@@ -52,6 +52,6 @@ All the structure you want on a Jacobian is already available on this type, and 
 
 ## Why there are two Jacobians in the code
 
-The letter U in the name means "universe-polymorphic in X", but the carrier itself is not. `Fin g → ℂ` lives in `Type 0` whatever universe X lives in, so this quotient is a `Type 0` as well. The challenge specification demands `Jacobian (X : Type u) : Type u`. The fix is a `ULift`: the public `Jacobian X` of `Jacobian/Solution.lean` lines 72–77 is this type lifted into X's universe, and the manifold structure is transported along the obvious bijection in `Jacobian/ComplexTorus/ULiftTransport.lean`.
+The letter U in the name means "universe-polymorphic in X", but the carrier itself is not. `Fin g → ℂ` lives in `Type 0` whatever universe X lives in, so this quotient is a `Type 0` as well. The challenge specification demands `Jacobian (X : Type u) : Type u`. The fix is a `ULift`: the public `Jacobian X` of `Jacobian/Solution.lean` lines 74–79 is this type lifted into X's universe, and the manifold structure is transported along the obvious bijection in `Jacobian/ComplexTorus/ULiftTransport.lean`.
 
 So when reading the public theorems, treat `Jacobian X` and this type as the same object with a relabelling applied. The map [ofCurve](#/node/Jacobian.ofCurve) is [analyticOfCurveU](#/node/AbelJacobi.analyticOfCurveU) followed by that relabelling.

@@ -406,20 +406,24 @@ on each chart disc make the chart representatives uniformly
 Lipschitz (hence equicontinuous); Arzelà–Ascoli on the compact
 base + finite chart cover gives total boundedness.
 
-Mathlib gaps: Cauchy derivative estimate must be composed from
-`DiffContOnCl.circleIntegral_sub_inv_smul` +
-`circleIntegral.norm_integral_le_of_norm_le_const`; Weierstrass
-convergence theorem absent in v4.28.0.
+Mathlib gaps noted when this route was planned: the Cauchy derivative estimate
+must be composed from `DiffContOnCl.circleIntegral_sub_inv_smul` +
+`circleIntegral.norm_integral_le_of_norm_le_const`, and there is no
+Weierstrass convergence theorem.
 
-Restructured (iteration 3): split into named sub-axioms CRS-tbA
-(equiboundedness), CRS-tbB (equicontinuity), and CRS-tb-arzela
-(Arzelà–Ascoli assembly).
+Status: this `HolomorphicOneFormBanachData` / total-boundedness scaffolding is
+historical and is not what the final theorem uses. Finiteness is proved
+directly by the Montel–Riesz argument of
+`HolomorphicForms/Finiteness.lean` (`finiteDimensional_holomorphicOneForm`),
+which `compactRiemannSurface_finiteDimensionalHolomorphicOneForms_frontier`
+below applies. The planning labels "CRS-tbA / CRS-tbB / CRS-tb-arzela" never
+became declarations.
 -/
 
 /--
-This is the exact Mathlib Arzelà–Ascoli step used in the planned proof of
-`holomorphicOneForm_arzela_ascoli`, after chartwise reduction from sections
-to bounded continuous representatives.
+This is the Mathlib Arzelà–Ascoli step that the (historical) chartwise-reduction
+route above was to use, after reducing from sections to bounded continuous
+representatives.
 -/
 theorem bcf_totallyBounded_of_range_compact_of_equicontinuous
     {α β : Type*} [TopologicalSpace α] [CompactSpace α]
@@ -780,6 +784,9 @@ class HolomorphicOneFormMontelData
 `HolomorphicOneForm ℂ X` is finite-dimensional (Forster, *Lectures on Riemann Surfaces*,
 §14). Proved in `HolomorphicForms/Finiteness.lean` by the Montel–Riesz argument on a finite
 cover by chart discs (`finiteDimensional_holomorphicOneForm`).
+
+The `_frontier` suffix in the name is historical and is kept only for call-site stability;
+the theorem is proved.
 
 History: this was first "proved" through the refuted `StableChartAt` global frame (retired
 to `Attic/StableChartRetired/CompactRiemannSurface.lean`), then stood as a named classical

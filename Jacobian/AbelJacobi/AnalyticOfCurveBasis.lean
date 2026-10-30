@@ -28,6 +28,13 @@ step can identify the two; until then this carrier is the one Solution
 talks about.
 
 Following the project's preference for *small* named obligations:
+
+**Warning.** The Serre / Riemann–Roch-named declarations in this file
+(`serre_vanishing_high_degree`, `serre_duality_h1_eq_ℓKD`,
+`riemannRoch_formula_high_degree` / `_low_degree` / `_general`) are not Serre duality or
+Riemann–Roch: they are trivial statements (`h → h`, `⟨0, 0, rfl⟩`, arithmetic about
+natural numbers with `g := 0`). No public declaration of `Jacobian/Solution.lean` uses
+them (see `ref/axiom-audit.md` §0.3).
 -/
 
 namespace JacobianChallenge.AbelJacobi
@@ -677,8 +684,10 @@ zero* at `Q₁` and a *simple pole* at `Q₂` (and is finite-and-nonzero
 elsewhere), so its canonical zero/pole decomposition is forced.
 Formally, this requires reading the per-point analytic order off of
 `data.meromorphicMap.toMap` — content the current
-`RawMeromorphicWithPrincipal` interface does not expose, so the proof
-remains a single named obligation here.
+`RawMeromorphicWithPrincipal` interface does not expose, so the statement is
+cut as a single named obligation here. It is discharged below by
+`assemble_meromorphicMap`, which reassigns the divisor data rather than
+reading the analytic order off `data`.
 
 #### Implementation
 -/

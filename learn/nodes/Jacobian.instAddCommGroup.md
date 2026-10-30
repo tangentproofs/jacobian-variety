@@ -6,7 +6,7 @@ review: draft
 authors:
 - claude
 caveats:
-- 'The instance is anonymous in the source — `noncomputable instance : AddCommGroup (Jacobian X) := inferInstanceAs (AddCommGroup (ULift _))` at Jacobian/Solution.lean line 92. The id used on this site, `Jacobian.instAddCommGroup`, is the name Lean generates for it; it is recorded in `comparator/jacobian.json`, which checks this definition against the frozen spec.'
+- 'The instance is anonymous in the source — `noncomputable instance : AddCommGroup (Jacobian X) := inferInstanceAs (AddCommGroup (ULift _))` at Jacobian/Solution.lean line 94. The id used on this site, `Jacobian.instAddCommGroup`, is the name Lean generates for it; it is recorded in `comparator/jacobian.json`, which checks this definition against the frozen spec.'
 - 'Nothing is proved here. `inferInstanceAs` asks Lean to find an instance for a type it already knows, so this line only certifies that unfolding [Jacobian](#/node/Jacobian) reaches a type with a known `AddCommGroup`.'
 - 'It is marked `noncomputable`, which is incidental: the data it points at is the quotient group structure, and `Jacobian` itself is noncomputable through the chosen period lattice.'
 - 'The group is additive and commutative, nothing more. No ℂ-action, no ring structure, and in particular no claim that the Jacobian is an abelian *variety* — that would need a projective embedding, which this repository does not build.'
@@ -18,7 +18,7 @@ quiz:
   - A group law defined by the Abel–Jacobi map
   - A chart-by-chart construction
   answer: 0
-  explain: Jacobian/Solution.lean line 92 is `inferInstanceAs (AddCommGroup (ULift _))`, which resolves to Mathlib's `ULift` instance over `quotient_addCommGroup` at Jacobian/ComplexTorus/Defs.lean lines 76–77.
+  explain: Jacobian/Solution.lean line 94 is `inferInstanceAs (AddCommGroup (ULift _))`, which resolves to Mathlib's `ULift` instance over `quotient_addCommGroup` at Jacobian/ComplexTorus/Defs.lean lines 76–77.
 - q: What does `inferInstanceAs` do in this line?
   type: choice
   choices:
@@ -34,7 +34,7 @@ quiz:
   - Yes, that is what `AddCommGroup` means for a torus
   - Yes, together with `CompactSpace`
   answer: 0
-  explain: The instance at Jacobian/Solution.lean line 92 is only `AddCommGroup (Jacobian X)`. Nothing in Jacobian/Challenge.lean or Jacobian/Solution.lean mentions projective space or algebraicity.
+  explain: The instance at Jacobian/Solution.lean line 94 is only `AddCommGroup (Jacobian X)`. Nothing in Jacobian/Challenge.lean or Jacobian/Solution.lean mentions projective space or algebraicity.
 - q: In classical terms, what does adding two Jacobian points amount to?
   type: choice
   choices:
@@ -42,13 +42,13 @@ quiz:
   - Concatenating the two paths used to define them
   - Multiplying the corresponding divisors
   answer: 0
-  explain: Points of `Jacobian X` are classes of vectors in `Fin (genus X) → ℂ` (Jacobian/Solution.lean lines 74–77), and the group law is the quotient of coordinatewise addition.
+  explain: Points of `Jacobian X` are classes of vectors in `Fin (genus X) → ℂ` (Jacobian/Solution.lean lines 76–79), and the group law is the quotient of coordinatewise addition.
 ---
 ## Plain English
 
 The challenge specification asks for the Jacobian to be an additive commutative group, and marks that requirement "data" — it is part of the structure, not a theorem about it (Jacobian/Challenge.lean lines 64–66).
 
-In the solution it costs one line (Jacobian/Solution.lean line 92):
+In the solution it costs one line (Jacobian/Solution.lean line 94):
 
 ```
 noncomputable instance : AddCommGroup (Jacobian X) := inferInstanceAs (AddCommGroup (ULift _))

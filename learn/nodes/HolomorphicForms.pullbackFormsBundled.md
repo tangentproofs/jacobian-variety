@@ -1,14 +1,14 @@
 ---
 id: HolomorphicForms.pullbackFormsBundled
 title: f*η as an honest holomorphic 1-form
-summary: 'The file header still says this is exposed as `opaque` with a section-extraction axiom, but it is not: the definition is a plain structure literal and the smoothness field is a proved theorem.'
+summary: 'The definition is a plain structure literal and the smoothness field is a proved theorem; it was `opaque` at one point in the project''s history, and is not any more.'
 review: draft
 authors:
 - claude
 caveats:
-- 'The module header of `Jacobian/HolomorphicForms/PullbackBundled.lean` lines 23–29 says the bundled pullback is exposed as `opaque` with `pullbackFormsBundledLM_apply_fun` as a "section extraction axiom". That is stale. The definition is concrete, `pullbackFormsBundledLM_apply_fun` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 174–177) is proved by `rfl`, and there is no `opaque` or `axiom` anywhere in `Jacobian/`.'
-- 'The docstring on `pullbackFormsFunFiber_contMDiff_section` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 66–96) likewise calls the smoothness of this section "the documented project gap", pending a Mathlib lemma `clm_bundle_compose`. That is stale too: the proof at `Jacobian/HolomorphicForms/PullbackBundled.lean` lines 104–126 is complete, and it calls `clm_compose_of_inCoordinates`, which the project supplies itself in `Jacobian/HolomorphicForms/CLMBundleCompose.lean`.'
-- 'Both of those docstrings reason about Mathlib v4.28.0. The project is pinned to `v4.31.0-rc1` (`lean-toolchain` and `lakefile.toml`), so their claims about what Mathlib does and does not provide are not claims about the Mathlib actually being built against.'
+- 'The bundled pullback was `opaque` at one point, with `pullbackFormsBundledLM_apply_fun` as a "section extraction axiom". It is not any more, and the module header says so (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 26–31): it is a plain definition, `pullbackFormsBundledLM_apply_fun` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 173–176) holds by `rfl`, and there is no `opaque` or `axiom` anywhere in `Jacobian/`.'
+- 'The section-smoothness of this construction was once the module''s one open obligation, pending a Mathlib lemma `clm_bundle_compose`. The docstring on `pullbackFormsFunFiber_contMDiff_section` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 65–95) now records it as closed, and the proof at `Jacobian/HolomorphicForms/PullbackBundled.lean` lines 103–125 is complete: it calls `clm_compose_of_inCoordinates`, which the project supplies itself in `Jacobian/HolomorphicForms/CLMBundleCompose.lean`.'
+- 'The header''s claim about what Mathlib lacks is relative to the pin. `Jacobian/HolomorphicForms/CLMBundleCompose.lean` lines 7–11, where the replacement lemma lives, still reasons about Mathlib v4.28.0, while the project is pinned to `v4.31.0-rc1` (`lean-toolchain` and `lakefile.toml`); read it as the rationale at the time of writing, not as a check against the current Mathlib.'
 - 'The smoothness hypothesis is `ContMDiff 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ) (⊤ : WithTop ℕ∞) f`, the analytic class. The underlying function, [pullbackFormsFunFiber](#/node/HolomorphicForms.pullbackFormsFunFiber), takes no hypothesis; `hf` is used only to supply the section-smoothness field.'
 - 'Holomorphicity of the result is encoded as `ContMDiff` smoothness of a section at the top smoothness exponent, which for charted ℂ-spaces modelled on ℂ is the project''s notion of holomorphic. No separate Cauchy–Riemann check appears.'
 quiz:
@@ -19,15 +19,15 @@ quiz:
   - 'A chart and a transition map'
   - 'A real part and an imaginary part'
   answer: 0
-  explain: '`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 134–139 set `toFun := pullbackFormsFunFiber f η` and `contMDiff_toFun := pullbackFormsFunFiber_contMDiff_section f hf η`.'
-- q: 'Is this definition opaque, as its file header claims?'
+  explain: '`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 133–138 set `toFun := pullbackFormsFunFiber f η` and `contMDiff_toFun := pullbackFormsFunFiber_contMDiff_section f hf η`.'
+- q: 'Is this definition opaque?'
   type: choice
   choices:
   - 'Yes, it is `opaque` with a characterising axiom'
-  - 'No, it is a concrete structure literal; the header is out of date'
+  - 'No, it is a concrete structure literal; it was `opaque` only at an earlier point in the project'
   - 'It is opaque only in universe 0'
   answer: 1
-  explain: 'The declaration is a `noncomputable def` with explicit fields, and its own docstring says "Concrete (non-opaque)".'
+  explain: 'The declaration is a `noncomputable def` with explicit fields, and its own docstring says "Concrete (non-opaque)"; the module header notes "it was `opaque` at one point; it no longer is".'
 - q: 'What is `hf` actually used for?'
   type: choice
   choices:
@@ -47,7 +47,7 @@ quiz:
 ---
 ## Plain English
 
-[pullbackFormsFunFiber](#/node/HolomorphicForms.pullbackFormsFunFiber) gives the pullback of a 1-form at each point separately. To call the result a holomorphic 1-form on X you also need the whole family to vary smoothly with the point. `pullbackFormsBundled f hf η` packages both (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 134–139):
+[pullbackFormsFunFiber](#/node/HolomorphicForms.pullbackFormsFunFiber) gives the pullback of a 1-form at each point separately. To call the result a holomorphic 1-form on X you also need the whole family to vary smoothly with the point. `pullbackFormsBundled f hf η` packages both (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 133–138):
 
 ```lean
 toFun := pullbackFormsFunFiber f η
@@ -60,7 +60,7 @@ The output has type `HolomorphicOneForm ℂ X`. So f\*η is a genuine object of 
 
 A holomorphic 1-form is a section of the cotangent bundle, which is a bundle of continuous linear maps. The pullback at x is the composition of two such sections: the derivative `mfderiv f` (a section of maps from the tangent space of X to the tangent space of Y, along f) and η read along f (a section of maps from the tangent space of Y to ℂ). Each is smooth, but "composition of two smooth bundle-of-linear-maps sections is smooth" is not free in bundle coordinates. Mathlib has the version where a linear-map section is *applied* to a vector section; the project's own notes record that it did not ship the version where two linear-map sections are *composed*.
 
-So the project proves that lemma itself, `ContMDiffAt.clm_compose_of_inCoordinates` in `Jacobian/HolomorphicForms/CLMBundleCompose.lean`, and the proof of `pullbackFormsFunFiber_contMDiff_section` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 97–126) decomposes the section with `contMDiffAt_hom_bundle` and applies it. The file header still describes this as an open gap. It is not; the header predates the lemma.
+So the project proves that lemma itself, `ContMDiffAt.clm_compose_of_inCoordinates` in `Jacobian/HolomorphicForms/CLMBundleCompose.lean`, and the proof of `pullbackFormsFunFiber_contMDiff_section` (`Jacobian/HolomorphicForms/PullbackBundled.lean` lines 96–125) decomposes the section with `contMDiffAt_hom_bundle` and applies it. This was the module's last open obligation; its docstring now marks it "Closed".
 
 ## How it is used
 

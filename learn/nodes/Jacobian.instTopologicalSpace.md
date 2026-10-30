@@ -6,7 +6,7 @@ review: draft
 authors:
 - claude
 caveats:
-- 'The instance is anonymous in the source — `noncomputable instance : TopologicalSpace (Jacobian X) := inferInstanceAs (TopologicalSpace (ULift _))` at Jacobian/Solution.lean line 93. The id used on this site, `Jacobian.instTopologicalSpace`, is the name Lean generates for it; it is recorded in `comparator/jacobian.json`.'
+- 'The instance is anonymous in the source — `noncomputable instance : TopologicalSpace (Jacobian X) := inferInstanceAs (TopologicalSpace (ULift _))` at Jacobian/Solution.lean line 95. The id used on this site, `Jacobian.instTopologicalSpace`, is the name Lean generates for it; it is recorded in `comparator/jacobian.json`.'
 - 'Nothing is proved. The line certifies that `Jacobian X` unfolds to a type Lean already topologizes.'
 - 'The challenge marks this requirement "data" (Jacobian/Challenge.lean lines 68–70), so a hack answer could in principle have supplied any topology at all. What rules that out is not this instance but the ones after it: Hausdorff, compact, and charted on ℂ^g.'
 quiz:
@@ -17,7 +17,7 @@ quiz:
   - The discrete topology
   - The topology induced by a metric chosen with `Classical.choice`
   answer: 0
-  explain: Jacobian/Solution.lean line 93 resolves to Mathlib's `ULift` topology over `quotient_topologicalSpace` at Jacobian/ComplexTorus/Defs.lean lines 79–80, which is the quotient topology on `V ⧸ Λ.subgroup`.
+  explain: Jacobian/Solution.lean line 95 resolves to Mathlib's `ULift` topology over `quotient_topologicalSpace` at Jacobian/ComplexTorus/Defs.lean lines 79–80, which is the quotient topology on `V ⧸ Λ.subgroup`.
 - q: Why is a bare `TopologicalSpace` instance not enough to rule out a fake Jacobian?
   type: choice
   choices:
@@ -39,7 +39,7 @@ quiz:
 
 A point of the Jacobian is a tuple in ℂ^g taken modulo the period lattice. Two Jacobian points are close when you can choose representatives in ℂ^g that are close. That is the quotient topology, and it is what the Lean uses.
 
-The line is (Jacobian/Solution.lean line 93):
+The line is (Jacobian/Solution.lean line 95):
 
 ```
 noncomputable instance : TopologicalSpace (Jacobian X) := inferInstanceAs (TopologicalSpace (ULift _))

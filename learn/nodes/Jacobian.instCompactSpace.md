@@ -6,7 +6,7 @@ review: draft
 authors:
 - claude
 caveats:
-- 'The instance is anonymous in the source — `instance : CompactSpace (Jacobian X) := inferInstanceAs (CompactSpace (ULift _))` at Jacobian/Solution.lean line 95. The id used on this site is the name Lean is expected to generate, not a name written in the file.'
+- 'The instance is anonymous in the source — `instance : CompactSpace (Jacobian X) := inferInstanceAs (CompactSpace (ULift _))` at Jacobian/Solution.lean line 97. The id used on this site is the name Lean is expected to generate, not a name written in the file.'
 - 'This instance is not listed in `comparator/jacobian.json` and does not occur in any checked statement, so the harness that compares the solution with the frozen spec does not certify it. The proof is real; it is just checked by reading.'
 - 'The fundamental domain is a *chosen* set. `genuinePeriodLattice` fills the field with `(exists_compact_genuinePeriodFundamentalDomain X).choose` (Jacobian/Periods/GenuinePeriodLatticeDiscrete.lean lines 85–87), and the existence proof itself picks a ℤ-basis of the lattice by `Module.Free.chooseBasis` (Jacobian/Periods/GenuinePeriodLatticeDiscrete.lean line 60). So the domain is some closed parallelepiped, not a canonical one.'
 - 'The covering condition in the lattice bundle is "every `v` has a lattice element `g` with `v - g` in the domain" (Jacobian/ComplexTorus/Defs.lean lines 68–69). It does not say the translates are disjoint, so "fundamental domain" is used loosely: it is a compact set of representatives, possibly overlapping.'
@@ -48,7 +48,7 @@ quiz:
 
 A torus is compact: it is a bounded square with its edges glued, and gluing does not add room. The same argument works in ℂ^g. If you can find one compact chunk `K` of ℂ^g such that every vector differs from something in `K` by a lattice vector, then the projection maps `K` onto the whole quotient. A continuous image of a compact set is compact, so the quotient is compact.
 
-That is exactly the proof in the Lean (Jacobian/ComplexTorus/Defs.lean lines 97–112): show `mk '' K = Set.univ`, then apply `hK.image`. The lattice bundle carries `K` as a field, so the instance for the Jacobian is one line (Jacobian/Solution.lean line 95).
+That is exactly the proof in the Lean (Jacobian/ComplexTorus/Defs.lean lines 97–112): show `mk '' K = Set.univ`, then apply `hK.image`. The lattice bundle carries `K` as a field, so the instance for the Jacobian is one line (Jacobian/Solution.lean line 97).
 
 ## Where the chunk comes from
 

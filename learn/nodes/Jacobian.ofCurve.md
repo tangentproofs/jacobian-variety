@@ -6,7 +6,7 @@ review: draft
 authors:
 - claude
 caveats:
-- 'The body is `ULift.up` applied to `analyticOfCurveU`, so all the mathematics is in that definition. `ULift.up` is a bijection, which is why injectivity transfers by `ULift.up_injective` (Jacobian/Solution.lean lines 117–120).'
+- 'The body is `ULift.up` applied to `analyticOfCurveU`, so all the mathematics is in that definition. `ULift.up` is a bijection, which is why injectivity transfers by `ULift.up_injective` (Jacobian/Solution.lean lines 119–122).'
 - 'The base point P is an argument. The map is not canonical, and no theorem relates the maps for two different base points.'
 - '`ofCurve` is not a group homomorphism and is not stated to be one. X is not a group.'
 - 'The injectivity theorem assumes `0 < genus X`. For genus 0 it is false: the Jacobian is a one-point group, so the map is constant.'
@@ -19,7 +19,7 @@ quiz:
   - 'A fresh definition independent of the analytic layer'
   - 'The zero map'
   answer: 0
-  explain: 'Jacobian/Solution.lean lines 103–105 give exactly that body, where `analyticOfCurveU` is the analytic Abel–Jacobi map.'
+  explain: 'Jacobian/Solution.lean lines 105–107 give exactly that body, where `analyticOfCurveU` is the analytic Abel–Jacobi map.'
 - q: 'Which public theorem is the anti-hack check on the Jacobian, and what does it need?'
   type: choice
   choices:
@@ -27,7 +27,7 @@ quiz:
   - '`ofCurve_inj`, needing `0 < genus X`'
   - '`ofCurve_contMDiff`, needing compactness'
   answer: 1
-  explain: 'Jacobian/Solution.lean lines 117–120 prove injectivity under `0 < genus X`. An injective map from a positive-genus surface forces the Jacobian to be big, which a definition like `Jacobian X := PUnit` could not satisfy.'
+  explain: 'Jacobian/Solution.lean lines 119–122 prove injectivity under `0 < genus X`. An injective map from a positive-genus surface forces the Jacobian to be big, which a definition like `Jacobian X := PUnit` could not satisfy.'
 - q: 'What does `ofCurve_self` say?'
   type: choice
   choices:
@@ -35,7 +35,7 @@ quiz:
   - 'That `ofCurve` is injective at the base point'
   - 'That the integral from P to P is literally the zero vector of ℂ^g'
   answer: 0
-  explain: 'Jacobian/Solution.lean lines 113–115 prove `ofCurve P P = 0`, by rewriting with `analyticOfCurve_selfU`. The underlying vector is only a period, not necessarily zero.'
+  explain: 'Jacobian/Solution.lean lines 115–117 prove `ofCurve P P = 0`, by rewriting with `analyticOfCurve_selfU`. The underlying vector is only a period, not necessarily zero.'
 - q: 'What smoothness is proved for `ofCurve`?'
   type: choice
   choices:
@@ -43,7 +43,7 @@ quiz:
   - 'Holomorphy, as a map of complex manifolds into ℂ^g/Λ'
   - 'Real smoothness but not holomorphy'
   answer: 1
-  explain: 'Jacobian/Solution.lean lines 107–111 give `ContMDiff` at level ω, which is the analytic level in `WithTop ℕ∞`, between X and the Jacobian modelled on `Fin (genus X) → ℂ`.'
+  explain: 'Jacobian/Solution.lean lines 109–113 give `ContMDiff` at level ω, which is the analytic level in `WithTop ℕ∞`, between X and the Jacobian modelled on `Fin (genus X) → ℂ`.'
 - q: 'Why is `ULift` involved at all?'
   type: choice
   choices:
@@ -51,19 +51,19 @@ quiz:
   - 'Because the spec demands `Jacobian (X : Type u) : Type u` while ℂ^g/Λ lives in `Type 0`'
   - 'To make the quotient compact'
   answer: 1
-  explain: 'Jacobian/Solution.lean lines 74–77 define `Jacobian X` as `ULift.{u}` of the quotient, and the manifold structure is transported along the lift in Jacobian/ComplexTorus/ULiftTransport.lean.'
+  explain: 'Jacobian/Solution.lean lines 76–79 define `Jacobian X` as `ULift.{u}` of the quotient, and the manifold structure is transported along the lift in Jacobian/ComplexTorus/ULiftTransport.lean.'
 ---
 ## Plain English
 
-This is the declaration the challenge specification asks for: given a compact Riemann surface X and a base point P, a map from X to [its Jacobian](#/node/Jacobian). The body is one line (`Jacobian/Solution.lean` lines 103–105): take the [analytic Abel–Jacobi map](#/node/AbelJacobi.analyticOfCurveU) and apply `ULift.up`.
+This is the declaration the challenge specification asks for: given a compact Riemann surface X and a base point P, a map from X to [its Jacobian](#/node/Jacobian). The body is one line (`Jacobian/Solution.lean` lines 105–107): take the [analytic Abel–Jacobi map](#/node/AbelJacobi.analyticOfCurveU) and apply `ULift.up`.
 
-The `ULift` is pure bookkeeping. The analytic Jacobian carrier ℂ^g/Λ lives in the smallest type universe, while the specification requires `Jacobian X` to live in the same universe as X, so the quotient gets relabelled (Jacobian/Solution.lean lines 74–77). Because `ULift.up` is a bijection, every property passes back and forth unchanged.
+The `ULift` is pure bookkeeping. The analytic Jacobian carrier ℂ^g/Λ lives in the smallest type universe, while the specification requires `Jacobian X` to live in the same universe as X, so the quotient gets relabelled (Jacobian/Solution.lean lines 76–79). Because `ULift.up` is a bijection, every property passes back and forth unchanged.
 
 Three public theorems accompany it:
 
-- `ofCurve_contMDiff` (Jacobian/Solution.lean lines 107–111): the map is holomorphic.
-- `ofCurve_self` (Jacobian/Solution.lean lines 113–115): the base point maps to 0. Note it is the class that vanishes; the underlying integral around the chosen closed chain is a period, not necessarily zero.
-- `ofCurve_inj` (Jacobian/Solution.lean lines 117–120): if the genus is positive, the map is injective.
+- `ofCurve_contMDiff` (Jacobian/Solution.lean lines 109–113): the map is holomorphic.
+- `ofCurve_self` (Jacobian/Solution.lean lines 115–117): the base point maps to 0. Note it is the class that vanishes; the underlying integral around the chosen closed chain is a period, not necessarily zero.
+- `ofCurve_inj` (Jacobian/Solution.lean lines 119–122): if the genus is positive, the map is injective.
 
 ## What the injectivity theorem is for
 

@@ -61,7 +61,7 @@ The honest thing to say is that this structure *assumes* the hard theorems rathe
 
 ## Why that is not cheating
 
-Assuming the hard facts in a structure would be cheating if nothing ever built one. Two declarations close the loop. [branchedCoverData_of_nonconstant_holomorphic](#/node/Blueprint.branchedCoverData_of_nonconstant_holomorphic) constructs the data for a genuine nonconstant holomorphic map, taking `ramificationIndex` to be the local order of vanishing [mapAnalyticOrderAt](#/node/HolomorphicForms.mapAnalyticOrderAt) and proving each remaining field. And `ContMDiff.exists_branchedCoverData` (Jacobian/Solution.lean lines 252–261) shows that for every nonconstant complex-smooth map of compact Riemann surfaces such data exists, so the public [ContMDiff.degree](#/node/ContMDiff.degree) never has to fall back on a default value.
+Assuming the hard facts in a structure would be cheating if nothing ever built one. Two declarations close the loop. [branchedCoverData_of_nonconstant_holomorphic](#/node/Blueprint.branchedCoverData_of_nonconstant_holomorphic) constructs the data for a genuine nonconstant holomorphic map, taking `ramificationIndex` to be the local order of vanishing [mapAnalyticOrderAt](#/node/HolomorphicForms.mapAnalyticOrderAt) and proving each remaining field. And `ContMDiff.exists_branchedCoverData` (Jacobian/Solution.lean lines 254–263) shows that for every nonconstant complex-smooth map of compact Riemann surfaces such data exists, so the public [ContMDiff.degree](#/node/ContMDiff.degree) never has to fall back on a default value.
 
 ## How it is used
 

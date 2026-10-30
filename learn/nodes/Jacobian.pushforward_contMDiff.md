@@ -17,7 +17,7 @@ quiz:
   - 'Because the map is the descent of a continuous linear map on ℂ^g, and locally the charts on the torus are sections of the quotient, so it is a composition of analytic maps'
   - 'Because the degree is finite'
   answer: 1
-  explain: 'Jacobian/TraceDegree/AnalyticPushforwardContMDiffU.lean lines 64–111 run exactly that: `mk ∘ pushforwardTraceLiftCLMU ∘ chart` on each chart source, using `ContinuousLinearMap.contMDiff`.'
+  explain: 'Jacobian/TraceDegree/AnalyticPushforwardContMDiffU.lean lines 65–112 run exactly that: `mk ∘ pushforwardTraceLiftCLMU ∘ chart` on each chart source, using `ContinuousLinearMap.contMDiff`.'
 - q: 'What are the two source-to-target models in the statement?'
   type: choice
   choices:
@@ -25,7 +25,7 @@ quiz:
   - '`modelWithCornersSelf ℂ (Fin (genus X) → ℂ)` to `modelWithCornersSelf ℂ (Fin (genus Y) → ℂ)`'
   - 'ℝ² to ℝ²'
   answer: 1
-  explain: 'Jacobian/Solution.lean lines 138–140 state the models explicitly; the Jacobians have complex dimension `genus X` and `genus Y`.'
+  explain: 'Jacobian/Solution.lean lines 140–142 state the models explicitly; the Jacobians have complex dimension `genus X` and `genus Y`.'
 - q: 'What does the `show` step at the start of the Lean proof accomplish?'
   type: choice
   choices:
@@ -33,7 +33,7 @@ quiz:
   - 'It applies the chain rule'
   - 'It changes the smoothness index'
   answer: 0
-  explain: 'Jacobian/Solution.lean lines 141–148 rewrite to that function and then compose `contMDiff_uLift_up`, `analyticPushforward_contMDiffU` and `contMDiff_uLift_down`.'
+  explain: 'Jacobian/Solution.lean lines 143–150 rewrite to that function and then compose `contMDiff_uLift_up`, `analyticPushforward_contMDiffU` and `contMDiff_uLift_down`.'
 ---
 ## Plain English
 
@@ -41,7 +41,7 @@ A holomorphic map `f : X → Y` of compact Riemann surfaces induces [pushforward
 
   `ContMDiff (modelWithCornersSelf ℂ (Fin (genus X) → ℂ)) (modelWithCornersSelf ℂ (Fin (genus Y) → ℂ)) ω (pushforward f hf)`
 
-(Jacobian/Solution.lean lines 138–148). The source has complex dimension `genus X`, the target `genus Y`, which need not be equal.
+(Jacobian/Solution.lean lines 140–150). The source has complex dimension `genus X`, the target `genus Y`, which need not be equal.
 
 Why it is true is structural rather than deep. The pushforward on Jacobians is not defined directly on the quotients. It is defined upstairs, as a continuous linear map on ℂ^g, and then shown to carry the [period lattice](#/node/Periods.periodFullComplexLatticeU) of X into the period lattice of Y, which is what lets it descend. Continuous linear maps are analytic, and the charts on a complex torus are local sections of the quotient projection. So the composite is analytic chart by chart.
 
@@ -51,13 +51,13 @@ The specification asks for it (Jacobian/Challenge.lean lines 110–113). Togethe
 
 ## How the proof goes
 
-The public proof (Jacobian/Solution.lean lines 141–148) unfolds the bundled homomorphism to a plain function and composes three facts: [contMDiff_uLift_down](#/node/ComplexTorus.contMDiff_uLift_down) to leave the universe wrapper, [analyticPushforward_contMDiffU](#/node/TraceDegree.analyticPushforward_contMDiffU) for the real statement, and [contMDiff_uLift_up](#/node/ComplexTorus.contMDiff_uLift_up) to re-enter it (Jacobian/ComplexTorus/ULiftTransport.lean lines 380–399).
+The public proof (Jacobian/Solution.lean lines 143–150) unfolds the bundled homomorphism to a plain function and composes three facts: [contMDiff_uLift_down](#/node/ComplexTorus.contMDiff_uLift_down) to leave the universe wrapper, [analyticPushforward_contMDiffU](#/node/TraceDegree.analyticPushforward_contMDiffU) for the real statement, and [contMDiff_uLift_up](#/node/ComplexTorus.contMDiff_uLift_up) to re-enter it (Jacobian/ComplexTorus/ULiftTransport.lean lines 380–399).
 
-The analytic statement (Jacobian/TraceDegree/AnalyticPushforwardContMDiffU.lean lines 64–111) is checked at each point `q` of the torus. On the source of the chart at `q`, the pushforward agrees with
+The analytic statement (Jacobian/TraceDegree/AnalyticPushforwardContMDiffU.lean lines 65–112) is checked at each point `q` of the torus. On the source of the chart at `q`, the pushforward agrees with
 
   `q' ↦ mk (pushforwardTraceLiftCLMU f hf (chart q'))`
 
-because the chart is a section of `mk` (`chart.left_inv'`) and the descent is compatible with representatives ([analyticPushforward_mk_spec_rawU](#/node/TraceDegree.analyticPushforward_mk_spec_rawU), Jacobian/TraceDegree/AnalyticPushforwardContMDiffU.lean lines 51–57, which holds by `rfl`). That composite is analytic: `contMDiffOn_chart` for the chart, `ContinuousLinearMap.contMDiff` for [pushforwardTraceLiftCLMU](#/node/TraceDegree.pushforwardTraceLiftCLMU), and [contMDiff_mk](#/node/ComplexTorus.contMDiff_mk) for the projection. `ContMDiffOn.congr` transfers it, and `ContMDiffOn.contMDiffAt` concludes.
+because the chart is a section of `mk` (`chart.left_inv'`) and the descent is compatible with representatives ([analyticPushforward_mk_spec_rawU](#/node/TraceDegree.analyticPushforward_mk_spec_rawU), Jacobian/TraceDegree/AnalyticPushforwardContMDiffU.lean lines 52–58, which holds by `rfl`). That composite is analytic: `contMDiffOn_chart` for the chart, `ContinuousLinearMap.contMDiff` for [pushforwardTraceLiftCLMU](#/node/TraceDegree.pushforwardTraceLiftCLMU), and [contMDiff_mk](#/node/ComplexTorus.contMDiff_mk) for the projection. `ContMDiffOn.congr` transfers it, and `ContMDiffOn.contMDiffAt` concludes.
 
 ## What it does not say
 

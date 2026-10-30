@@ -6,7 +6,7 @@ review: draft
 authors:
 - claude
 caveats:
-- 'The instance is anonymous in the source — Jacobian/Solution.lean lines 100–101. The id used on this site is the name Lean is expected to generate, not a name written in the file.'
+- 'The instance is anonymous in the source — Jacobian/Solution.lean lines 102–103. The id used on this site is the name Lean is expected to generate, not a name written in the file.'
 - 'This instance is not listed in `comparator/jacobian.json` and does not occur in any checked statement, so the harness that compares the solution with the frozen spec does not certify it. The proof is real; it is just checked by reading.'
 - '`LieAddGroup` in Mathlib extends `ContMDiffAdd`, so the instance body only supplies `contMDiff_neg`; smoothness of addition is registered by the preceding `ContMDiffAdd` instance (Jacobian/ComplexTorus/LieAddGroup.lean lines 17–20, and Jacobian/ComplexTorus/ULiftTransport.lean lines 328–333 for the lifted version).'
 - 'The regularity is `ω`, written `(⊤ : WithTop ℕ∞)` in the torus layer: addition and negation are analytic, not merely smooth.'

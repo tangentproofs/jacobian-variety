@@ -42,7 +42,7 @@ quiz:
   - 'It shows the branched-cover data the degree chooses actually exists, so the `else 0` fallback never fires'
   - It proves the degree is positive
   answer: 1
-  explain: '`ContMDiff.exists_branchedCoverData` (Jacobian/Solution.lean lines 252–261) calls this definition to produce the existence witness that `ContMDiff.degree` tests for.'
+  explain: '`ContMDiff.exists_branchedCoverData` (Jacobian/Solution.lean lines 254–263) calls this definition to produce the existence witness that `ContMDiff.degree` tests for.'
 ---
 ## Plain English
 
@@ -65,4 +65,4 @@ The whole definition would be worthless if `ramificationIndex` were allowed to b
 
 ## How it is used
 
-`ContMDiff.exists_branchedCoverData` (Jacobian/Solution.lean lines 252–261) derives the two analytic inputs from a `ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω` hypothesis and calls this definition. That is the existence statement the public [ContMDiff.degree](#/node/ContMDiff.degree) tests for, so the degree's `else 0` branch is provably dead for every nonconstant holomorphic map of compact Riemann surfaces.
+`ContMDiff.exists_branchedCoverData` (Jacobian/Solution.lean lines 254–263) derives the two analytic inputs from a `ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω` hypothesis and calls this definition. That is the existence statement the public [ContMDiff.degree](#/node/ContMDiff.degree) tests for, so the degree's `else 0` branch is provably dead for every nonconstant holomorphic map of compact Riemann surfaces.

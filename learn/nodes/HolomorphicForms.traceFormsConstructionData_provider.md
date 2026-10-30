@@ -8,7 +8,7 @@ authors:
 caveats:
 - 'The definition is assembled by tactic-level case analysis (`by_cases`) on classically decidable propositions, so it is noncomputable and has no single uniform formula: its value is whichever leaf applies.'
 - 'Two of the three branches are degenerate. The zero-form branch is arithmetic, and the constant-map branch is a convention whose specification is discharged by a case split. All analytic content is in the third branch.'
-- 'The branches can still be reasoned through: traceFormsBundled_eq_zero_of_constant unfolds this definition and selects the constant branch with `simp [hη, hconst]` (Jacobian/HolomorphicForms/TraceSpec.lean lines 2858–2872).'
+- 'The branches can still be reasoned through: traceFormsBundled_eq_zero_of_constant unfolds this definition and selects the constant branch with `simp [hη, hconst]` (Jacobian/HolomorphicForms/TraceSpec.lean lines 2859–2873).'
 quiz:
 - q: How does the provider split the problem?
   type: choice
@@ -17,7 +17,7 @@ quiz:
   - First on whether f is constant, then on the genus of X
   - On whether y is a regular value
   answer: 0
-  explain: 'The body is `by_cases hη : η = 0` followed by `by_cases hconst : ∃ y₀, ∀ x, f x = y₀` (Jacobian/HolomorphicForms/TraceSpec.lean lines 2768–2774).'
+  explain: 'The body is `by_cases hη : η = 0` followed by `by_cases hconst : ∃ y₀, ∀ x, f x = y₀` (Jacobian/HolomorphicForms/TraceSpec.lean lines 2769–2775).'
 - q: Which branch contains the analysis?
   type: choice
   choices:
@@ -25,7 +25,7 @@ quiz:
   - The zero-form branch
   - The constant-map branch
   answer: 0
-  explain: 'That branch delegates to traceFormsConstructionData_nonconstant_nonzero_provider, which wraps the holomorphic extension theorem (Jacobian/HolomorphicForms/TraceSpec.lean line 2774).'
+  explain: 'That branch delegates to traceFormsConstructionData_nonconstant_nonzero_provider, which wraps the holomorphic extension theorem (Jacobian/HolomorphicForms/TraceSpec.lean line 2775).'
 - q: What hypotheses does the provider itself demand about f?
   type: choice
   choices:
@@ -33,7 +33,7 @@ quiz:
   - That f is nonconstant
   - That f admits a compatible branched-cover datum
   answer: 0
-  explain: 'Its signature takes `f` and `hf : ContMDiff …` and nothing else (Jacobian/HolomorphicForms/TraceSpec.lean lines 2763–2766).'
+  explain: 'Its signature takes `f` and `hf : ContMDiff …` and nothing else (Jacobian/HolomorphicForms/TraceSpec.lean lines 2764–2767).'
 - q: Why is the result noncomputable?
   type: choice
   choices:
@@ -47,7 +47,7 @@ quiz:
 
 This is the single entry point for the trace construction. Given any smooth map f : X → Y between compact Riemann surfaces and any holomorphic 1-form η on X, it produces an element of [TraceFormsConstructionData](#/node/HolomorphicForms.TraceFormsConstructionData): a global trace form on Y together with proofs of the two requirements.
 
-It works by a three-way case split (`Jacobian/HolomorphicForms/TraceSpec.lean` lines 2763–2774).
+It works by a three-way case split (`Jacobian/HolomorphicForms/TraceSpec.lean` lines 2764–2775).
 
 If η is zero, the trace is zero, by [traceFormsConstructionData_zero](#/node/HolomorphicForms.traceFormsConstructionData_zero). The Lean uses `cases hη` to replace η by the literal zero form so the types match.
 
@@ -59,6 +59,6 @@ Otherwise f is nonconstant and η is nonzero, and the work is handed to [traceFo
 
 The project's stated policy is to keep each piece of analysis in the smallest possible declaration. Splitting the construction here means the one genuinely analytic obligation is a single leaf with narrow hypotheses, and the two easy cases cannot hide behind it.
 
-The price is that this definition is noncomputable and case-dependent: it is not a formula, it is "whichever of three leaves applies". That is normally awkward to reason about, but downstream proofs can still see through it. [traceFormsBundled_eq_zero_of_constant](#/node/HolomorphicForms.traceFormsBundled_eq_zero_of_constant) (`Jacobian/HolomorphicForms/TraceSpec.lean` lines 2858–2872) unfolds the provider and picks out the constant branch with `simp [hη, hconst]`, which is how the constant-map case gets used later.
+The price is that this definition is noncomputable and case-dependent: it is not a formula, it is "whichever of three leaves applies". That is normally awkward to reason about, but downstream proofs can still see through it. [traceFormsBundled_eq_zero_of_constant](#/node/HolomorphicForms.traceFormsBundled_eq_zero_of_constant) (`Jacobian/HolomorphicForms/TraceSpec.lean` lines 2859–2873) unfolds the provider and picks out the constant branch with `simp [hη, hconst]`, which is how the constant-map case gets used later.
 
 Everything above this point in the project reads only the fields. [traceFormsBundled](#/node/HolomorphicForms.traceFormsBundled) is literally the `traceForm` field of this provider.

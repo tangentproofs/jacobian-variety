@@ -1625,8 +1625,10 @@ modulus-divergence data, and no analytic-extension fields. Those are
 local consequences of the algebraic data, isolated as separate provider
 lemmas below.
 
-The Riemann-Roch provider `genusZero_pointRRSection_outside_constants_exists`
-asks for the algebraic input only. The order-extraction lemma
+The Riemann-Roch provider asks for the algebraic input only; in the tree it is
+`genusZero_pointRRSection_outside_constants_exists_with_meromorphic_getD`
+(no declaration named `genusZero_pointRRSection_outside_constants_exists`
+exists). The order-extraction lemma
 `PointRiemannRochSection.orderAt_P_eq_neg_one` deduces
 `orderAt P f = -1` from the algebraic data plus the compact-Liouville
 provider `meromorphic_no_poles_constant`. The conversion
@@ -2582,8 +2584,9 @@ and consumes the existing sorry-free field bridges:
 The convenience wrapper `of_meromorphicMap_analyticData_simple_pole`
 below takes a full `AnalyticData` record instead and delegates here.
 
-This assembly is **independent of the L2779 sorry**: it consumes only
-sorry-free bridges and the explicit input hypotheses. Future
+This assembly was **independent of the former L2779 sorry** (that sorry is
+gone): it consumes only sorry-free bridges and the explicit input
+hypotheses. Future
 consumers with granular hypotheses (or a full `AnalyticData` record,
 via the wrapper) in hand can call this to obtain a
 `PointRiemannRochSection X P` directly.
@@ -2788,10 +2791,9 @@ The convenience wrapper
 `genusZero_pointRRSection_outside_constants_exists_with_analyticData`
 below takes a full `AnalyticData` record instead and delegates here.
 
-The bare form `genusZero_pointRRSection_outside_constants_exists`
-(above) remains as `sorry` until the upstream genus-zero RR chain is
-dependency-broken to produce `MeromorphicMapToSphere` plus granular
-analytic content honestly.
+The bare form `genusZero_pointRRSection_outside_constants_exists` (which
+would have taken no analytic input) was never declared; only this
+explicit-input form exists.
 -/
 theorem genusZero_pointRRSection_outside_constants_exists_with_meromorphic_getD
     (X : Type*) [TopologicalSpace X] [T2Space X] [CompactSpace X]

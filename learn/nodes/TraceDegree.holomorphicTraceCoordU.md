@@ -6,10 +6,10 @@ review: draft
 authors:
 - claude
 caveats:
-- 'The name is misleading. The body is built from [pullbackFormsBundledLM](#/node/HolomorphicForms.pullbackFormsBundledLM), the chain-rule pullback, not from the trace [traceFormsBundledLM](#/node/HolomorphicForms.traceFormsBundledLM). The docstring (`Jacobian/TraceDegree/PushforwardTraceLiftU.lean` lines 45–48) says so: "the basis-coordinate form of the chain-rule pullback `f^* : H⁰(Y, Ω¹) → H⁰(X, Ω¹)`". The genuinely trace-based coordinate map is [traceFormsCoordU](#/node/TraceDegree.traceFormsCoordU).'
-- 'The matrix depends on the choice of basis on both surfaces. `holomorphicOneFormFinBasis` comes from `Module.Free.chooseBasis` and its docstring (`Jacobian/HolomorphicForms/BasisAlignedDualEquiv.lean` lines 45–49) says the choice is non-canonical. No basis-independence lemma accompanies this definition.'
-- 'The `FiniteDimensionalHolomorphicOneForms` instances for X and Y are bound in the signature here, not in the file''s `variable` block. They are what make `analyticGenus` and the finite basis available, and they are not an assumption: finite-dimensionality is proved by a Montel–Riesz argument (`finiteDimensional_holomorphicOneForm`, `Jacobian/HolomorphicForms/Finiteness.lean` lines 323–324, registered as an instance at `Jacobian/HolomorphicForms/Finiteness.lean` lines 372–373), and `Jacobian/Solution.lean` lines 34–37 installs it globally for every compact Riemann surface. The docstring there still calls it "a named classical input" (`Jacobian/Solution.lean` lines 39–42) and the theorem it uses is still named `…_frontier`; both labels are stale.'
-- 'The `U` suffix is vestigial: the module docstring names a Type-0 original `holomorphicTraceCoord` in `Jacobian/TraceDegree/PushforwardBasis.lean`, and neither the declaration nor the file exists in the tree.'
+- 'The name is misleading. The body is built from [pullbackFormsBundledLM](#/node/HolomorphicForms.pullbackFormsBundledLM), the chain-rule pullback, not from the trace [traceFormsBundledLM](#/node/HolomorphicForms.traceFormsBundledLM). The docstring (`Jacobian/TraceDegree/PushforwardTraceLiftU.lean` lines 46–49) says so: "the basis-coordinate form of the chain-rule pullback `f^* : H⁰(Y, Ω¹) → H⁰(X, Ω¹)`". The genuinely trace-based coordinate map is [traceFormsCoordU](#/node/TraceDegree.traceFormsCoordU).'
+- 'The matrix depends on the choice of basis on both surfaces. `holomorphicOneFormFinBasis` comes from `Module.Free.chooseBasis` and its docstring (`Jacobian/HolomorphicForms/BasisAlignedDualEquiv.lean` lines 48–52) says the choice is non-canonical. No basis-independence lemma accompanies this definition.'
+- 'The `FiniteDimensionalHolomorphicOneForms` instances for X and Y are bound in the signature here, not in the file''s `variable` block. They are what make `analyticGenus` and the finite basis available, and they are not an assumption: finite-dimensionality is proved by a Montel–Riesz argument (`finiteDimensional_holomorphicOneForm`, `Jacobian/HolomorphicForms/Finiteness.lean` lines 323–324, registered as an instance at `Jacobian/HolomorphicForms/Finiteness.lean` lines 372–373), and `Jacobian/Solution.lean` lines 34–37 installs it globally for every compact Riemann surface. The theorem it goes through is named `…_frontier`, which is historical only: the docstring at `Jacobian/Solution.lean` lines 39–44 says the suffix "is only historical — it is proved".'
+- 'The `U` suffix is vestigial: the module docstring names a Type-0 original `holomorphicTraceCoord` in `PushforwardBasis.lean`, a file it describes as "retired; now `Attic/FalseGaps/PushforwardBasis.lean`, not built". Neither the declaration nor the file is part of the built library, so this is the only version.'
 quiz:
 - q: 'Which operation on forms does this map actually encode?'
   type: choice
@@ -18,7 +18,7 @@ quiz:
   - 'The chain-rule pullback f*'
   - 'Integration over a closed chain'
   answer: 1
-  explain: 'The body (`Jacobian/TraceDegree/PushforwardTraceLiftU.lean` lines 50–57) sandwiches `pullbackFormsBundledLM X Y f hf` between the two basis isomorphisms.'
+  explain: 'The body (`Jacobian/TraceDegree/PushforwardTraceLiftU.lean` lines 51–58) sandwiches `pullbackFormsBundledLM X Y f hf` between the two basis isomorphisms.'
 - q: 'Which direction does it go?'
   type: choice
   choices:
@@ -46,7 +46,7 @@ quiz:
 ---
 ## Plain English
 
-Fix once and for all a basis of the holomorphic 1-forms on each surface, so that a form is the same as its vector of coordinates in `Fin g → ℂ`. `holomorphicTraceCoordU f hf` is the chain-rule pullback f\* written in those coordinates (`Jacobian/TraceDegree/PushforwardTraceLiftU.lean` lines 50–57):
+Fix once and for all a basis of the holomorphic 1-forms on each surface, so that a form is the same as its vector of coordinates in `Fin g → ℂ`. `holomorphicTraceCoordU f hf` is the chain-rule pullback f\* written in those coordinates (`Jacobian/TraceDegree/PushforwardTraceLiftU.lean` lines 51–58):
 
 ```
 (Fin g_Y → ℂ) --equivFun.symm--> H⁰(Y, Ω¹) --f*--> H⁰(X, Ω¹) --equivFun--> (Fin g_X → ℂ)

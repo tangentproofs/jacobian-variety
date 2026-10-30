@@ -41,7 +41,7 @@ quiz:
   - It builds the charts on the Jacobian
   - It proves the period lattice is discrete
   answer: 0
-  explain: Jacobian/TraceDegree/AnalyticPushforwardU.lean line 130 and Jacobian/TraceDegree/AnalyticPullbackU.lean line 102 both set `toFun := ComplexTorus.mapClm (…)`.
+  explain: Jacobian/TraceDegree/AnalyticPushforwardU.lean line 132 and Jacobian/TraceDegree/AnalyticPullbackU.lean line 103 both set `toFun := ComplexTorus.mapClm (…)`.
 ---
 ## Plain English
 
@@ -60,7 +60,7 @@ Continuity is restored immediately afterwards, as its own lemma (Jacobian/Comple
 
 ## Why it exists separately
 
-The point of the wrapper is to be the shape downstream code wants. Both of the Jacobian's functorial maps are built exactly this way: an operation on holomorphic 1-forms is transposed into a continuous linear map on ℂ^g, that map is shown to carry periods to periods, and `mapClm` turns it into a map of Jacobians. The two inputs are different. For [pushforward](#/node/Jacobian.pushforward) the linear map is `pushforwardTraceLiftCLMU`, the transpose in basis coordinates of pullback of forms `f^*` (Jacobian/TraceDegree/AnalyticPushforwardU.lean lines 90–91 and 130). For [pullback](#/node/Jacobian.pullback) it is `traceDualPullbackLiftCLMU`, the transpose of the trace of forms along `f` (Jacobian/TraceDegree/PullbackTraceLiftU.lean lines 62–70; Jacobian/TraceDegree/AnalyticPullbackU.lean line 102). In each case the result is repackaged as a *continuous* additive homomorphism using `mapClm_continuous`.
+The point of the wrapper is to be the shape downstream code wants. Both of the Jacobian's functorial maps are built exactly this way: an operation on holomorphic 1-forms is transposed into a continuous linear map on ℂ^g, that map is shown to carry periods to periods, and `mapClm` turns it into a map of Jacobians. The two inputs are different. For [pushforward](#/node/Jacobian.pushforward) the linear map is `pushforwardTraceLiftCLMU`, the transpose in basis coordinates of pullback of forms `f^*` (Jacobian/TraceDegree/AnalyticPushforwardU.lean lines 92–93 and 130). For [pullback](#/node/Jacobian.pullback) it is `traceDualPullbackLiftCLMU`, the transpose of the trace of forms along `f` (Jacobian/TraceDegree/PullbackTraceLiftU.lean lines 63–71; Jacobian/TraceDegree/AnalyticPullbackU.lean line 103). In each case the result is repackaged as a *continuous* additive homomorphism using `mapClm_continuous`.
 
 ## Functoriality
 
