@@ -8,6 +8,7 @@ The classical mathematical source-of-truth lives in the Lean blueprint, which an
 
 - 📘 [Blueprint web build](https://tangentstorm.github.io/JacobianChallenge/blueprint/) — has a Plain-English toggle so every node reads cleanly to a non-mathematician.
 - 🕸️ [Dependency graph](https://tangentstorm.github.io/JacobianChallenge/blueprint/dep_graph_collapsible.html) — section-collapsed overview, click any box to drill in (this is also the live progress tracker). The flat [full graph](https://tangentstorm.github.io/JacobianChallenge/blueprint/dep_graph_document.html) is also linked from the header.
+- 📖 [Jacobian, explained](https://tangentproofs.github.io/jacobian-variety/learn/) — plain-English walkthrough of the eleven challenge theorems and the 71 definitions they use, with an honesty review of what is and is not proved.
 - 📄 PDFs: [formal only](https://tangentstorm.github.io/JacobianChallenge/jacobian-informal-proof.pdf) · [with Plain-English companion](https://tangentstorm.github.io/JacobianChallenge/jacobian-informal-proof-with-layman.pdf).
 
 ## What the project asks for
