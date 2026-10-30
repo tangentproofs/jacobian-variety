@@ -56,7 +56,31 @@ declarations including gap 19, was deleted 2026-10-28.)
 Every placeholder declaration (`True`-valued theorems, `opaque`s, `Unit`/`PUnit`/`0`-valued
 definitions, `Unit`-witness structures) and everything built on one, plus every module with
 no declaration used by the public API or cited by the blueprint, is deleted (384 Lean files;
-see `ref/independent-repair-progress.md`). Placeholder count in the compiled tree: **0**.
+see `ref/independent-repair-progress.md`).
+
+**Correction (2026-10-30).** The claim that once stood here, "Placeholder count in the compiled
+tree: **0**", was wrong. An independent audit (`learn/JACOBIAN_CLAUDE_AUDIT.md`, "Smuggled
+hypotheses and dead placeholders") found vacuous declarations with classical names in two files
+that are still in `Jacobian.lean`'s import closure, though no public declaration uses them:
+
+- `Jacobian/Periods/PeriodFunctional.lean`: `periodPairing` / `periodPairingComplex` are the zero
+  map (their body binds the integral to `0` in a `let`), so `periodSubgroup` and `basisAlignedPeriodSubmoduleℤ` are `⊥`;
+  `period_homology_invariance` assumes `σ = τ`; `wedge_integration_pairing_exists` takes `Q := 0`;
+  `riemann_bilinear_identity` / `periodPairing_satisfies_bilinear_identity` are discharged by
+  `ring` and, with `periodPairing = 0`, say only that `0` is antisymmetric; `hodge_form_posDef`
+  uses a hand-written coordinate form, and `hodge_form_posDef_on_periods` has a hypothesis that is
+  unsatisfiable for `g ≥ 1`; `RiemannClassicalPeriodBasis` is an assumption structure.
+- `Jacobian/AbelJacobi/AnalyticOfCurveBasis.lean`: `serre_vanishing_high_degree` is `h → h`;
+  `serre_duality_h1_eq_ℓKD` is proved by `⟨0, 0, rfl⟩`; `riemannRoch_formula_high_degree` /
+  `_low_degree` / `_general` are arithmetic facts about natural numbers proved by choosing `g := 0`.
+  None of these is Serre duality or Riemann–Roch.
+
+The public API does not depend on any of them: `Solution.lean` uses the genuine lattice
+`genuinePeriodSubgroup` and the Abel–Jacobi construction in `AnalyticOfCurveU.lean` /
+`AnalyticOfCurveInjectiveU.lean`, and `#print axioms` on every public declaration (2026-10-30,
+`6b3d4f4b`) shows only `propext`, `Classical.choice`, `Quot.sound`. Placeholder count in the
+compiled tree: **at least the declarations listed above, in 2 files, all off the public path.**
+Removing or quarantining them (e.g. to `Attic/`) is open work.
 
 ### §0.4 Retired (not built; `Attic/`)
 
