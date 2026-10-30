@@ -31,7 +31,7 @@ GitHub Actions builds the same file on pushes and pull requests that touch
 artifact. Pushes also publish a small GitHub Pages site with the PDF at:
 
 ```text
-https://tangentstorm.github.io/JacobianChallenge/jacobian-informal-proof.pdf
+https://tangentproofs.github.io/jacobian-variety/jacobian-informal-proof.pdf
 ```
 
 The site publishes the Lean Blueprint dependency graph at `/blueprint/`, built

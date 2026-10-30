@@ -6,10 +6,10 @@ A Lean 4 / Mathlib formalization of Kevin Buzzard's Jacobian challenge: the Jaco
 
 The classical mathematical source-of-truth lives in the Lean blueprint, which annotates each node with `\lean{...}` references to the corresponding Lean declarations.
 
-- 📘 [Blueprint web build](https://tangentstorm.github.io/JacobianChallenge/blueprint/) — has a Plain-English toggle so every node reads cleanly to a non-mathematician.
-- 🕸️ [Dependency graph](https://tangentstorm.github.io/JacobianChallenge/blueprint/dep_graph_collapsible.html) — section-collapsed overview, click any box to drill in (this is also the live progress tracker). The flat [full graph](https://tangentstorm.github.io/JacobianChallenge/blueprint/dep_graph_document.html) is also linked from the header.
+- 📘 [Blueprint web build](https://tangentproofs.github.io/jacobian-variety/blueprint/) — has a Plain-English toggle so every node reads cleanly to a non-mathematician.
+- 🕸️ [Dependency graph](https://tangentproofs.github.io/jacobian-variety/blueprint/dep_graph_collapsible.html) — section-collapsed overview, click any box to drill in (this is also the live progress tracker). The flat [full graph](https://tangentproofs.github.io/jacobian-variety/blueprint/dep_graph_document.html) is also linked from the header.
 - 📖 [Jacobian, explained](https://tangentproofs.github.io/jacobian-variety/learn/) — plain-English walkthrough of the eleven challenge theorems and the 71 definitions they use, with an honesty review of what is and is not proved.
-- 📄 PDFs: [formal only](https://tangentstorm.github.io/JacobianChallenge/jacobian-informal-proof.pdf) · [with Plain-English companion](https://tangentstorm.github.io/JacobianChallenge/jacobian-informal-proof-with-layman.pdf).
+- 📄 PDFs: [formal only](https://tangentproofs.github.io/jacobian-variety/jacobian-informal-proof.pdf) · [with Plain-English companion](https://tangentproofs.github.io/jacobian-variety/jacobian-informal-proof-with-layman.pdf).
 
 ## What the project asks for
 
@@ -29,8 +29,10 @@ Four anti-hack theorems in `Challenge.lean` rule out trivial fake constructions 
 Analytic period-lattice construction:
 
 ```
-Jacobian X = H⁰(X, Ω¹)* / H₁(X, ℤ)
+Jacobian X = ℂ^g / Λ,   g = genus X,   Λ = periods of a basis of H⁰(X, Ω¹) over closed chains
 ```
+
+This is the classical `H⁰(X, Ω¹)* / H₁(X, ℤ)`, with the lattice built directly from period integrals over closed chains of chart segments; the identification of that lattice with `H₁(X, ℤ)` is not formalized.
 
 built bottom-up through reusable layers — complex tori → holomorphic forms → period integration → analytic Jacobian → Abel–Jacobi → trace/degree.
 
@@ -38,11 +40,11 @@ See `ref/plan.md` for the full roadmap, phase breakdown, anti-hack audit, and de
 
 ## Build
 
-Pinned to `leanprover/lean4:v4.28.0` and `mathlib v4.28.0`.
+Pinned to `leanprover/lean4:v4.31.0-rc1` and Mathlib `v4.31.0-rc1` (see `lean-toolchain` and `lakefile.toml`).
 
 ```bash
 lake build Jacobian.Challenge                    # the public target
-lake build Jacobian.Solution                     # the assembled solution skeleton
+lake build Jacobian.Solution                     # the assembled solution
 lake build Jacobian                              # everything (slow)
 ```
 
@@ -50,8 +52,8 @@ Prefer the narrowest module build after a code change (e.g. `lake build Jacobian
 
 ## Layout
 
-- `Jacobian/Challenge.lean` — frozen public API; every theorem is a `sorry` to be discharged.
-- `Jacobian/Solution.lean` — assembled solution skeleton; bodies delegate to production decls.
+- `Jacobian/Challenge.lean` — frozen public API (the challenge statements, each a `sorry` there by design).
+- `Jacobian/Solution.lean` — the assembled solution: every challenge declaration, proved, delegating to production decls. `comparator/` checks it against `Challenge.lean`.
 - `ref/Inventory.md` — narrative inventory of the pinned Mathlib commit (PRESENT / PARTIAL / ABSENT per prerequisite).
 - `Jacobian/<Layer>/*.lean` — production infrastructure modules.
 - `tex/` — blueprint LaTeX sources.

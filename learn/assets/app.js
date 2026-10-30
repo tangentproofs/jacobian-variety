@@ -6,7 +6,7 @@ import { statementSet } from "./statement.js";
 import { REPO, sourceUrl, githubSourceUrl, sourceLabel } from "./source.js";
 import { mountProofView } from "./proofview.js";
 // Comments: off until the repo exists with Discussions enabled; then fill in repoId / categoryId (CONVENTIONS §3).
-const GISCUS = { repo: REPO, repoId: "", category: "Announcements", categoryId: "" };
+const GISCUS = { repo: REPO, repoId: "R_kgDOSL_4Lg", category: "Announcements", categoryId: "DIC_kwDOSL_4Ls4DJ_sm" };
 const MATHLIB_DOCS = (n) => `https://leanprover-community.github.io/mathlib4_docs/find/?pattern=${encodeURIComponent(n)}#doc`;
 const app = document.getElementById("app");
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
